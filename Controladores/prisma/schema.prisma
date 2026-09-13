@@ -1,0 +1,2325 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+  engineType      = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["finanzas", "inventario", "terreno"]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model afp {
+  id_afp     Int        @id @default(autoincrement())
+  nombre_afp String     @unique @db.VarChar(100)
+  estado_afp String     @default("activo") @db.VarChar(20)
+  empleado   empleado[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model alerta_financiera {
+  id_alerta_financiera     Int                        @id @default(autoincrement())
+  tipo_alerta              String                     @db.VarChar(80)
+  fecha_generacion         DateTime                   @default(now()) @db.Timestamp(6)
+  descripcion_alerta       String
+  nivel_alerta             String                     @default("media") @db.VarChar(30)
+  estado_alerta            String                     @default("abierta") @db.VarChar(30)
+  fecha_cierre             DateTime?                  @db.Timestamp(6)
+  observacion              String?
+  origen_alerta_financiera origen_alerta_financiera[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model asignacion_pago_cliente {
+  id_asignacion_pago_cliente Int                   @id @default(autoincrement())
+  id_pago_cliente            Int                   @unique
+  id_nota_venta              Int
+  id_documento_tributario    Int?
+  id_hito_cobro              Int?
+  monto_asignado             Decimal               @db.Decimal(14, 2)
+  fecha_asignacion           DateTime              @default(now()) @db.Timestamp(6)
+  observacion                String?
+  documento_tributario       documento_tributario? @relation(fields: [id_documento_tributario], references: [id_documento_tributario], onDelete: Restrict, onUpdate: NoAction, map: "fk_asignacion_pago_cliente_documento")
+  hito_cobro                 hito_cobro?           @relation(fields: [id_hito_cobro], references: [id_hito_cobro], onDelete: Restrict, onUpdate: NoAction, map: "fk_asignacion_pago_cliente_hito")
+  nota_venta                 nota_venta            @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict, onUpdate: NoAction, map: "fk_asignacion_pago_cliente_nota")
+  pago_cliente               pago_cliente          @relation(fields: [id_pago_cliente], references: [id_pago_cliente], onUpdate: NoAction, map: "fk_asignacion_pago_cliente_pago")
+
+  @@index([id_pago_cliente], map: "idx_asignacion_pago_cliente_pago")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model asignacion_pago_proveedor {
+  id_asignacion_pago_proveedor  Int                        @id @default(autoincrement())
+  id_pago_proveedor             Int
+  id_documento_compra_proveedor Int
+  monto_asignado                Decimal                    @db.Decimal(14, 2)
+  fecha_asignacion              DateTime                   @default(now()) @db.Timestamp(6)
+  observacion                   String?
+  documento_compra_proveedor    documento_compra_proveedor @relation(fields: [id_documento_compra_proveedor], references: [id_documento_compra_proveedor], onUpdate: NoAction, map: "fk_asignacion_pago_proveedor_documento")
+  pago_proveedor                pago_proveedor             @relation(fields: [id_pago_proveedor], references: [id_pago_proveedor], onUpdate: NoAction, map: "fk_asignacion_pago_proveedor_pago")
+
+  @@index([id_pago_proveedor], map: "idx_asignacion_pago_proveedor_pago")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model cargo {
+  id_cargo          Int        @id @default(autoincrement())
+  nombre_cargo      String     @unique @db.VarChar(100)
+  descripcion_cargo String?
+  estado_cargo      String     @default("activo") @db.VarChar(20)
+  empleado          empleado[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cliente_financiero {
+  /// CLIENTE provisional de I2: reutiliza la extensión financiera; ubicación definitiva pendiente.
+  referencia_demostracion String?               @unique @db.VarChar(80)
+  nivel_formalizacion     String                @default("formal") @db.VarChar(20)
+  saldo_favor_cliente     saldo_favor_cliente[]
+
+  id_cliente_financiero             Int                     @id @default(autoincrement())
+  rut_cliente                       String?                 @unique @db.VarChar(15)
+  id_tipo_cliente_financiero        Int
+  nombre_razon_social_referencia    String                  @db.VarChar(150)
+  contacto_financiero               String?                 @db.VarChar(150)
+  correo_financiero                 String?                 @db.VarChar(150)
+  telefono_financiero               String?                 @db.VarChar(30)
+  estado_financiero                 String                  @default("activo") @db.VarChar(20)
+  fecha_actualizacion_datos_cliente DateTime                @default(now()) @db.Timestamp(6)
+  tipo_cliente_financiero           tipo_cliente_financiero @relation(fields: [id_tipo_cliente_financiero], references: [id_tipo_cliente_financiero], onUpdate: NoAction, map: "fk_cliente_financiero_tipo_cliente")
+  ficha_cliente                     ficha_cliente?
+
+  @@index([id_tipo_cliente_financiero], map: "idx_cliente_financiero_tipo")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model concepto_remuneracion {
+  id_concepto_remuneracion         Int                                @id @default(autoincrement())
+  nombre_concepto                  String                             @unique @db.VarChar(100)
+  descripcion_concepto             String?
+  naturaleza_concepto              String                             @db.VarChar(30)
+  estado_concepto                  String                             @default("activo") @db.VarChar(20)
+  detalle_liquidacion_remuneracion detalle_liquidacion_remuneracion[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model conciliacion {
+  /// CU58: conciliación de pago sin obligar a crear movimientos de otros módulos.
+  id_pago_cliente Int?
+  evidencia       String?
+  pago_cliente    pago_cliente? @relation(fields: [id_pago_cliente], references: [id_pago_cliente], onDelete: Restrict)
+
+  id_conciliacion          Int                    @id @default(autoincrement())
+  id_movimiento_financiero Int?
+  id_movimiento_bancario   Int?
+  fecha_conciliacion       DateTime               @default(now()) @db.Timestamp(6)
+  monto_conciliado         Decimal                @db.Decimal(14, 2)
+  diferencia_conciliacion  Decimal?               @default(0) @db.Decimal(14, 2)
+  estado_conciliacion      String                 @default("pendiente") @db.VarChar(30)
+  responsable_conciliacion String?                @db.VarChar(150)
+  observacion              String?
+  movimiento_bancario      movimiento_bancario?   @relation(fields: [id_movimiento_bancario], references: [id_movimiento_bancario], onUpdate: NoAction, map: "fk_conciliacion_movimiento_bancario")
+  movimiento_financiero    movimiento_financiero? @relation(fields: [id_movimiento_financiero], references: [id_movimiento_financiero], onUpdate: NoAction, map: "fk_conciliacion_movimiento_financiero")
+  detalle_conciliacion     detalle_conciliacion[]
+
+  @@index([id_movimiento_financiero, id_movimiento_bancario], map: "idx_conciliacion_movimientos")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model costo_proyecto {
+  id_costo_proyecto                          Int                                          @id @default(autoincrement())
+  id_proyecto_financiero                     Int
+  id_moneda                                  Int
+  descripcion_costo                          String
+  categoria_costo                            String?                                      @db.VarChar(80)
+  monto_costo                                Decimal                                      @db.Decimal(14, 2)
+  fecha_costo                                DateTime                                     @db.Date
+  origen_costo                               String?                                      @db.VarChar(80)
+  estado_costo                               String                                       @default("registrado") @db.VarChar(30)
+  observacion                                String?
+  moneda                                     moneda                                       @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_costo_proyecto_moneda")
+  proyecto_financiero                        proyecto_financiero                          @relation(fields: [id_proyecto_financiero], references: [id_proyecto_financiero], onUpdate: NoAction, map: "fk_costo_proyecto_proyecto")
+  detalle_costo_proyecto_documento_proveedor detalle_costo_proyecto_documento_proveedor[]
+
+  @@index([id_proyecto_financiero], map: "idx_costo_proyecto_proyecto")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model cotizacion {
+  /// Campos comerciales I2; no se deducen desde observaciones.
+  referencia_demostracion String?              @unique @db.VarChar(80)
+  exento_iva              Boolean              @default(false)
+  descuento_tipo          String?              @db.VarChar(20)
+  descuento_valor         Decimal              @default(0) @db.Decimal(14, 2)
+  monto_neto              Decimal?             @db.Decimal(14, 2)
+  monto_impuesto          Decimal?             @db.Decimal(14, 2)
+  cotizacion_version      cotizacion_version[]
+  orden_compra_b2b        orden_compra_b2b?
+
+  id_cotizacion             Int                  @id @default(autoincrement())
+  id_ficha_cliente          Int
+  id_moneda                 Int
+  fecha_emision             DateTime             @db.Date
+  fecha_vigencia            DateTime?            @db.Date
+  subtotal_costos_estimados Decimal              @default(0) @db.Decimal(14, 2)
+  margen_esperado           Decimal?             @db.Decimal(5, 2)
+  precio_sugerido           Decimal?             @db.Decimal(14, 2)
+  monto_total_estimado      Decimal?             @db.Decimal(14, 2)
+  estado_cotizacion         String               @default("emitida") @db.VarChar(30)
+  observacion               String?
+  ficha_cliente             ficha_cliente        @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_cotizacion_ficha_cliente")
+  moneda                    moneda               @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_cotizacion_moneda")
+  detalle_cotizacion        detalle_cotizacion[]
+  nota_venta                nota_venta?
+
+  @@index([id_ficha_cliente], map: "idx_cotizacion_ficha")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model credito_proyecto {
+  id_credito_proyecto       Int                    @id @default(autoincrement())
+  id_ficha_cliente          Int
+  id_proyecto_financiero    Int?
+  id_limite_credito_cliente Int
+  id_fondo_global_credito   Int
+  id_evaluacion_credito     Int
+  monto_credito             Decimal                @db.Decimal(14, 2)
+  fecha_otorgamiento        DateTime               @db.Date
+  fecha_vencimiento         DateTime?              @db.Date
+  estado_credito            String                 @default("vigente") @db.VarChar(30)
+  motivo_aprobacion         String?
+  observacion               String?
+  evaluacion_credito        evaluacion_credito     @relation(fields: [id_evaluacion_credito], references: [id_evaluacion_credito], onUpdate: NoAction, map: "fk_credito_proyecto_evaluacion")
+  ficha_cliente             ficha_cliente          @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_credito_proyecto_ficha_cliente")
+  fondo_global_credito      fondo_global_credito   @relation(fields: [id_fondo_global_credito], references: [id_fondo_global_credito], onUpdate: NoAction, map: "fk_credito_proyecto_fondo")
+  limite_credito_cliente    limite_credito_cliente @relation(fields: [id_limite_credito_cliente], references: [id_limite_credito_cliente], onUpdate: NoAction, map: "fk_credito_proyecto_limite")
+  proyecto_financiero       proyecto_financiero?   @relation(fields: [id_proyecto_financiero], references: [id_proyecto_financiero], onDelete: Restrict, onUpdate: NoAction, map: "fk_credito_proyecto_proyecto")
+
+  @@index([id_ficha_cliente], map: "idx_credito_proyecto_ficha")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model detalle_conciliacion {
+  id_detalle_conciliacion Int          @id @default(autoincrement())
+  id_conciliacion         Int
+  descripcion_diferencia  String?
+  monto_diferencia        Decimal?     @db.Decimal(14, 2)
+  tipo_diferencia         String?      @db.VarChar(50)
+  estado_revision         String       @default("pendiente") @db.VarChar(30)
+  observacion             String?
+  conciliacion            conciliacion @relation(fields: [id_conciliacion], references: [id_conciliacion], onUpdate: NoAction, map: "fk_detalle_conciliacion_conciliacion")
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model detalle_costo_material_cotizacion {
+  id_detalle_costo_material_cotizacion Int                       @id @default(autoincrement())
+  id_detalle_cotizacion                Int
+  id_historial_precio_material         Int
+  cantidad_material_estimada           Decimal                   @db.Decimal(14, 4)
+  precio_unitario_usado                Decimal                   @db.Decimal(14, 2)
+  subtotal_material_estimado           Decimal                   @db.Decimal(14, 2)
+  observacion                          String?
+  detalle_cotizacion                   detalle_cotizacion        @relation(fields: [id_detalle_cotizacion], references: [id_detalle_cotizacion], onUpdate: NoAction, map: "fk_detalle_costo_material_detalle_cotizacion")
+  historial_precio_material            historial_precio_material @relation(fields: [id_historial_precio_material], references: [id_historial_precio_material], onUpdate: NoAction, map: "fk_detalle_costo_material_historial_precio")
+
+  @@index([id_detalle_cotizacion], map: "idx_detalle_costo_material_detalle")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model detalle_costo_proyecto_documento_proveedor {
+  id_detalle_costo_proyecto_documento_proveedor Int                        @id @default(autoincrement())
+  id_documento_compra_proveedor                 Int
+  id_costo_proyecto                             Int
+  monto_imputado                                Decimal                    @db.Decimal(14, 2)
+  porcentaje_imputado                           Decimal?                   @db.Decimal(5, 2)
+  observacion                                   String?
+  costo_proyecto                                costo_proyecto             @relation(fields: [id_costo_proyecto], references: [id_costo_proyecto], onUpdate: NoAction, map: "fk_detalle_costo_proyecto_costo")
+  documento_compra_proveedor                    documento_compra_proveedor @relation(fields: [id_documento_compra_proveedor], references: [id_documento_compra_proveedor], onUpdate: NoAction, map: "fk_detalle_costo_proyecto_documento")
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model detalle_cotizacion {
+  id_detalle_cotizacion             Int                                 @id @default(autoincrement())
+  id_cotizacion                     Int
+  id_item_comercial                 Int
+  cantidad_item                     Decimal                             @default(1) @db.Decimal(12, 2)
+  medida_alto_referencial           Decimal?                            @db.Decimal(10, 2)
+  medida_ancho_referencial          Decimal?                            @db.Decimal(10, 2)
+  medida_espesor_referencial        Decimal?                            @db.Decimal(10, 2)
+  descripcion_item_cotizado         String?
+  observacion_medidas               String?
+  subtotal_item_estimado            Decimal                             @default(0) @db.Decimal(14, 2)
+  detalle_costo_material_cotizacion detalle_costo_material_cotizacion[]
+  item_comercial                    item_comercial                      @relation(fields: [id_item_comercial], references: [id_item_comercial], onUpdate: NoAction, map: "fk_det_cot_item_ext")
+  cotizacion                        cotizacion                          @relation(fields: [id_cotizacion], references: [id_cotizacion], onUpdate: NoAction, map: "fk_detalle_cotizacion_cotizacion")
+
+  @@index([id_cotizacion], map: "idx_detalle_cotizacion_cotizacion")
+  @@index([id_item_comercial], map: "idx_detalle_cotizacion_item")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model detalle_documento_compra_proveedor {
+  id_detalle_documento_compra_proveedor Int                        @id @default(autoincrement())
+  id_documento_compra_proveedor         Int
+  id_historial_precio_material          Int
+  cantidad_material                     Decimal                    @db.Decimal(14, 4)
+  unidad_medida                         String?                    @db.VarChar(30)
+  precio_unitario_documento             Decimal                    @db.Decimal(14, 2)
+  subtotal_linea                        Decimal                    @db.Decimal(14, 2)
+  observacion                           String?
+  documento_compra_proveedor            documento_compra_proveedor @relation(fields: [id_documento_compra_proveedor], references: [id_documento_compra_proveedor], onUpdate: NoAction, map: "fk_detalle_documento_compra_documento")
+  historial_precio_material             historial_precio_material  @relation(fields: [id_historial_precio_material], references: [id_historial_precio_material], onUpdate: NoAction, map: "fk_detalle_documento_compra_historial")
+
+  @@index([id_documento_compra_proveedor], map: "idx_detalle_doc_compra_documento")
+  @@schema("finanzas")
+}
+
+model detalle_evento_auditoria {
+  id_detalle_evento_auditoria Int              @id @default(autoincrement())
+  id_evento_auditoria         Int
+  atributo_modificado         String           @db.VarChar(100)
+  valor_anterior              String?
+  valor_nuevo                 String?
+  observacion                 String?
+  evento_auditoria            evento_auditoria @relation(fields: [id_evento_auditoria], references: [id_evento_auditoria], onUpdate: NoAction, map: "fk_detalle_evento_auditoria_evento")
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model detalle_liquidacion_remuneracion {
+  id_detalle_liquidacion_remuneracion Int                      @id @default(autoincrement())
+  id_liquidacion_remuneracion         Int
+  id_concepto_remuneracion            Int
+  monto_concepto                      Decimal                  @db.Decimal(14, 2)
+  observacion                         String?
+  concepto_remuneracion               concepto_remuneracion    @relation(fields: [id_concepto_remuneracion], references: [id_concepto_remuneracion], onUpdate: NoAction, map: "fk_detalle_liquidacion_concepto")
+  liquidacion_remuneracion            liquidacion_remuneracion @relation(fields: [id_liquidacion_remuneracion], references: [id_liquidacion_remuneracion], onUpdate: NoAction, map: "fk_detalle_liquidacion_liquidacion")
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model documento_compra_proveedor {
+  id_documento_compra_proveedor              Int                                          @id @default(autoincrement())
+  id_proveedor                               Int
+  id_tipo_documento                          Int
+  id_moneda                                  Int
+  numero_documento                           String                                       @db.VarChar(80)
+  fecha_emision                              DateTime                                     @db.Date
+  fecha_vencimiento                          DateTime?                                    @db.Date
+  monto_neto                                 Decimal                                      @default(0) @db.Decimal(14, 2)
+  monto_impuesto                             Decimal                                      @default(0) @db.Decimal(14, 2)
+  monto_total                                Decimal                                      @default(0) @db.Decimal(14, 2)
+  tipo_cambio_usado                          Decimal?                                     @db.Decimal(14, 4)
+  fecha_tipo_cambio                          DateTime?                                    @db.Date
+  monto_convertido                           Decimal?                                     @db.Decimal(14, 2)
+  estado_documento                           String                                       @default("registrado") @db.VarChar(30)
+  respaldo_documento                         String?
+  observacion                                String?
+  asignacion_pago_proveedor                  asignacion_pago_proveedor[]
+  detalle_costo_proyecto_documento_proveedor detalle_costo_proyecto_documento_proveedor[]
+  detalle_documento_compra_proveedor         detalle_documento_compra_proveedor[]
+  moneda                                     moneda                                       @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_documento_compra_proveedor_moneda")
+  proveedor                                  proveedor                                    @relation(fields: [id_proveedor], references: [id_proveedor], onUpdate: NoAction, map: "fk_documento_compra_proveedor_proveedor")
+  tipo_documento                             tipo_documento                               @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onUpdate: NoAction, map: "fk_documento_compra_proveedor_tipo_documento")
+
+  @@unique([id_proveedor, numero_documento, id_tipo_documento], map: "uq_documento_compra_proveedor_numero")
+  @@index([id_proveedor], map: "idx_documento_compra_proveedor_proveedor")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model documento_tributario {
+  documento_tributario_nota_venta documento_tributario_nota_venta[]
+
+  id_documento_tributario    Int                       @id @default(autoincrement())
+  id_ficha_cliente           Int
+  id_nota_venta              Int?
+  id_tipo_documento          Int
+  id_moneda                  Int
+  id_documento_referencia    Int?
+  folio_documento            String                    @db.VarChar(80)
+  fecha_emision              DateTime                  @db.Date
+  fecha_vencimiento          DateTime?                 @db.Date
+  monto_neto                 Decimal                   @default(0) @db.Decimal(14, 2)
+  monto_impuesto             Decimal                   @default(0) @db.Decimal(14, 2)
+  monto_total                Decimal                   @default(0) @db.Decimal(14, 2)
+  estado_documento           String                    @default("emitido") @db.VarChar(30)
+  fecha_anulacion            DateTime?                 @db.Timestamp(6)
+  respaldo_documento         String?
+  observacion                String?
+  asignacion_pago_cliente    asignacion_pago_cliente[]
+  ficha_cliente              ficha_cliente             @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_documento_tributario_ficha_cliente")
+  moneda                     moneda                    @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_documento_tributario_moneda")
+  nota_venta                 nota_venta?               @relation(fields: [id_nota_venta], references: [id_nota_venta], onUpdate: NoAction, map: "fk_documento_tributario_nota_venta")
+  documento_tributario       documento_tributario?     @relation("documento_tributarioTodocumento_tributario", fields: [id_documento_referencia], references: [id_documento_tributario], onDelete: Restrict, onUpdate: NoAction, map: "fk_documento_tributario_referencia")
+  other_documento_tributario documento_tributario[]    @relation("documento_tributarioTodocumento_tributario")
+  tipo_documento             tipo_documento            @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onUpdate: NoAction, map: "fk_documento_tributario_tipo_documento")
+
+  @@unique([id_tipo_documento, folio_documento], map: "uq_documento_tributario_folio")
+  @@index([id_ficha_cliente], map: "idx_documento_tributario_ficha")
+  @@index([id_nota_venta], map: "idx_documento_tributario_nota")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model empleado {
+  cuenta_m4 usuario? @relation("empleado_m4")
+  rut_empleado             String                     @id @db.VarChar(15)
+  id_cargo                 Int
+  id_tipo_vinculo_laboral  Int
+  id_prevision_salud       Int?
+  id_afp                   Int?
+  nombres                  String                     @db.VarChar(120)
+  apellido_paterno         String                     @db.VarChar(80)
+  apellido_materno         String?                    @db.VarChar(80)
+  fecha_nacimiento         DateTime?                  @db.Date
+  fecha_ingreso            DateTime                   @db.Date
+  sueldo_base              Decimal                    @db.Decimal(14, 2)
+  seguro_cesantia          Boolean                    @default(true)
+  estado_laboral           String                     @default("activo") @db.VarChar(30)
+  afp                      afp?                       @relation(fields: [id_afp], references: [id_afp], onDelete: Restrict, onUpdate: NoAction, map: "fk_empleado_afp")
+  cargo                    cargo                      @relation(fields: [id_cargo], references: [id_cargo], onUpdate: NoAction, map: "fk_empleado_cargo")
+  prevision_salud          prevision_salud?           @relation(fields: [id_prevision_salud], references: [id_prevision_salud], onDelete: Restrict, onUpdate: NoAction, map: "fk_empleado_prevision_salud")
+  tipo_vinculo_laboral     tipo_vinculo_laboral       @relation(fields: [id_tipo_vinculo_laboral], references: [id_tipo_vinculo_laboral], onUpdate: NoAction, map: "fk_empleado_tipo_vinculo")
+  liquidacion_remuneracion liquidacion_remuneracion[]
+  tarea_remunerable        tarea_remunerable[]
+  prestamo_herramientas    prestamo_herramientas[]
+  usuario                  usuario[]
+
+  @@index([id_cargo], map: "idx_empleado_cargo")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model evaluacion_credito {
+  id_evaluacion_credito        Int                      @id @default(autoincrement())
+  id_ficha_cliente             Int
+  fecha_evaluacion             DateTime                 @db.Date
+  resultado_evaluacion         String                   @db.VarChar(50)
+  puntaje_riesgo               Decimal?                 @db.Decimal(6, 2)
+  comportamiento_pago_evaluado String?
+  fundamento_evaluacion        String?
+  estado_evaluacion            String                   @default("vigente") @db.VarChar(30)
+  observacion                  String?
+  credito_proyecto             credito_proyecto[]
+  ficha_cliente                ficha_cliente            @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_evaluacion_credito_ficha_cliente")
+  limite_credito_cliente       limite_credito_cliente[]
+
+  @@index([id_ficha_cliente], map: "idx_evaluacion_credito_ficha")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model evento_auditoria {
+  id_evento_auditoria      Int                        @id @default(autoincrement())
+  id_usuario               BigInt
+  fecha_evento             DateTime                   @default(now()) @db.Timestamp(6)
+  tipo_evento              String                     @db.VarChar(80)
+  entidad_afectada         String                     @db.VarChar(80)
+  id_registro_afectado     Int
+  accion_realizada         String                     @db.VarChar(100)
+  descripcion_evento       String?
+  resultado_evento         String                     @default("registrado") @db.VarChar(30)
+  observacion              String?
+  detalle_evento_auditoria detalle_evento_auditoria[]
+  usuario                  usuario                    @relation(fields: [id_usuario], references: [usuario_id_usuario], onUpdate: NoAction, map: "fk_evento_aud_usuario_ext")
+
+  @@index([entidad_afectada, id_registro_afectado], map: "idx_evento_auditoria_entidad")
+  @@index([id_usuario], map: "idx_evento_auditoria_usuario")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ficha_cliente {
+  id_ficha_cliente               Int                      @id @default(autoincrement())
+  id_cliente_financiero          Int                      @unique
+  fecha_creacion                 DateTime                 @default(now()) @db.Timestamp(6)
+  estado_ficha                   String                   @default("activa") @db.VarChar(20)
+  fecha_ultima_revision          DateTime?                @db.Timestamp(6)
+  observacion_financiera_general String?
+  cotizacion                     cotizacion[]
+  credito_proyecto               credito_proyecto[]
+  documento_tributario           documento_tributario[]
+  evaluacion_credito             evaluacion_credito[]
+  cliente_financiero             cliente_financiero       @relation(fields: [id_cliente_financiero], references: [id_cliente_financiero], onUpdate: NoAction, map: "fk_ficha_cliente_cliente_financiero")
+  limite_credito_cliente         limite_credito_cliente[]
+  nota_venta                     nota_venta[]
+  pago_cliente                   pago_cliente[]
+  proyecto_financiero            proyecto_financiero[]
+
+  @@index([id_cliente_financiero], map: "idx_ficha_cliente_cliente")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model fondo_global_credito {
+  id_fondo_global_credito Int                @id @default(autoincrement())
+  fecha_calculo           DateTime           @db.Date
+  monto_disponible        Decimal            @db.Decimal(14, 2)
+  monto_comprometido      Decimal            @default(0) @db.Decimal(14, 2)
+  monto_restante          Decimal            @db.Decimal(14, 2)
+  estado_fondo            String             @default("vigente") @db.VarChar(30)
+  observacion             String?
+  credito_proyecto        credito_proyecto[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model gasto_caja_chica {
+  id_gasto_caja_chica Int      @id @default(autoincrement())
+  fecha_gasto         DateTime @db.Date
+  monto_gasto         Decimal  @db.Decimal(14, 2)
+  descripcion_gasto   String
+  motivo_gasto        String?
+  categoria_gasto     String?  @db.VarChar(80)
+  responsable_gasto   String?  @db.VarChar(150)
+  respaldo_gasto      String?
+  estado_validacion   String   @default("pendiente") @db.VarChar(30)
+  observacion         String?
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model historial_precio_material {
+  id_historial_precio_material       Int                                  @id @default(autoincrement())
+  material_sku                       String                               @db.VarChar(50)
+  id_proveedor                       Int?
+  id_moneda                          Int
+  precio_unitario                    Decimal                              @db.Decimal(14, 2)
+  tipo_cambio_usado                  Decimal?                             @db.Decimal(14, 4)
+  precio_unitario_convertido         Decimal?                             @db.Decimal(14, 2)
+  fecha_registro                     DateTime                             @default(now()) @db.Timestamp(6)
+  fecha_vigencia_inicio              DateTime                             @db.Date
+  fecha_vigencia_fin                 DateTime?                            @db.Date
+  estado_precio                      String                               @default("vigente") @db.VarChar(20)
+  observacion                        String?
+  detalle_costo_material_cotizacion  detalle_costo_material_cotizacion[]
+  detalle_documento_compra_proveedor detalle_documento_compra_proveedor[]
+  moneda                             moneda                               @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_historial_precio_material_moneda")
+  proveedor                          proveedor?                           @relation(fields: [id_proveedor], references: [id_proveedor], onDelete: Restrict, onUpdate: NoAction, map: "fk_historial_precio_material_proveedor")
+  material                           material                             @relation(fields: [material_sku], references: [material_sku], onUpdate: NoAction, map: "fk_hpm_material_ext")
+
+  @@index([id_proveedor], map: "idx_historial_precio_material_proveedor")
+  @@index([material_sku], map: "idx_historial_precio_material_sku")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model historial_tarifa_tarea {
+  id_historial_tarifa_tarea Int                 @id @default(autoincrement())
+  id_tarea_catalogada       Int
+  valor_unitario_tarea      Decimal             @db.Decimal(14, 2)
+  fecha_vigencia_inicio     DateTime            @db.Date
+  fecha_vigencia_fin        DateTime?           @db.Date
+  estado_tarifa             String              @default("vigente") @db.VarChar(30)
+  observacion               String?
+  tarea_catalogada          tarea_catalogada    @relation(fields: [id_tarea_catalogada], references: [id_tarea_catalogada], onUpdate: NoAction, map: "fk_historial_tarifa_tarea_tarea")
+  tarea_remunerable         tarea_remunerable[]
+
+  @@index([id_tarea_catalogada], map: "idx_historial_tarifa_tarea_tarea")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model hito_cobro {
+  id_hito_cobro           Int                       @id @default(autoincrement())
+  id_nota_venta           Int
+  id_proyecto_financiero  Int?
+  descripcion_hito        String                    @db.VarChar(150)
+  fecha_programada_cobro  DateTime                  @db.Date
+  monto_programado        Decimal                   @db.Decimal(14, 2)
+  estado_hito             String                    @default("pendiente") @db.VarChar(30)
+  fecha_pago_real         DateTime?                 @db.Date
+  observacion             String?
+  asignacion_pago_cliente asignacion_pago_cliente[]
+  nota_venta              nota_venta                @relation(fields: [id_nota_venta], references: [id_nota_venta], onUpdate: NoAction, map: "fk_hito_cobro_nota_venta")
+  proyecto_financiero     proyecto_financiero?      @relation(fields: [id_proyecto_financiero], references: [id_proyecto_financiero], onDelete: Restrict, onUpdate: NoAction, map: "fk_hito_cobro_proyecto_financiero")
+
+  @@index([id_nota_venta], map: "idx_hito_cobro_nota")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model limite_credito_cliente {
+  id_limite_credito_cliente Int                @id @default(autoincrement())
+  id_ficha_cliente          Int
+  id_evaluacion_credito     Int
+  monto_limite              Decimal            @db.Decimal(14, 2)
+  fecha_inicio_vigencia     DateTime           @db.Date
+  fecha_fin_vigencia        DateTime?          @db.Date
+  estado_limite             String             @default("vigente") @db.VarChar(30)
+  motivo_modificacion       String?
+  observacion               String?
+  credito_proyecto          credito_proyecto[]
+  evaluacion_credito        evaluacion_credito @relation(fields: [id_evaluacion_credito], references: [id_evaluacion_credito], onUpdate: NoAction, map: "fk_limite_credito_cliente_evaluacion")
+  ficha_cliente             ficha_cliente      @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_limite_credito_cliente_ficha")
+
+  @@index([id_ficha_cliente], map: "idx_limite_credito_ficha")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model liquidacion_remuneracion {
+  id_liquidacion_remuneracion      Int                                @id @default(autoincrement())
+  rut_empleado                     String                             @db.VarChar(15)
+  periodo_liquidacion              String                             @db.VarChar(7)
+  fecha_generacion                 DateTime                           @db.Date
+  fecha_aprobacion                 DateTime?                          @db.Date
+  sueldo_base_periodo              Decimal                            @db.Decimal(14, 2)
+  total_bonos                      Decimal                            @default(0) @db.Decimal(14, 2)
+  total_descuentos                 Decimal                            @default(0) @db.Decimal(14, 2)
+  total_haberes                    Decimal                            @default(0) @db.Decimal(14, 2)
+  total_liquido                    Decimal                            @default(0) @db.Decimal(14, 2)
+  estado_liquidacion               String                             @default("generada") @db.VarChar(30)
+  respaldo_liquidacion             String?
+  observacion                      String?
+  detalle_liquidacion_remuneracion detalle_liquidacion_remuneracion[]
+  empleado                         empleado                           @relation(fields: [rut_empleado], references: [rut_empleado], onUpdate: NoAction, map: "fk_liquidacion_remuneracion_empleado")
+  tarea_remunerable                tarea_remunerable[]
+
+  @@unique([rut_empleado, periodo_liquidacion], map: "uq_liquidacion_remuneracion_periodo")
+  @@index([rut_empleado, periodo_liquidacion], map: "idx_liquidacion_empleado_periodo")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model medio_pago {
+  id_medio_pago          Int              @id @default(autoincrement())
+  nombre_medio_pago      String           @unique @db.VarChar(80)
+  descripcion_medio_pago String?
+  estado_medio_pago      String           @default("activo") @db.VarChar(20)
+  pago_cliente           pago_cliente[]
+  pago_proveedor         pago_proveedor[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model moneda {
+  id_moneda                  Int                          @id @default(autoincrement())
+  codigo_moneda              String                       @unique @db.VarChar(10)
+  nombre_moneda              String                       @db.VarChar(80)
+  simbolo_moneda             String?                      @db.VarChar(10)
+  estado_moneda              String                       @default("activo") @db.VarChar(20)
+  costo_proyecto             costo_proyecto[]
+  cotizacion                 cotizacion[]
+  documento_compra_proveedor documento_compra_proveedor[]
+  documento_tributario       documento_tributario[]
+  historial_precio_material  historial_precio_material[]
+  movimiento_bancario        movimiento_bancario[]
+  movimiento_financiero      movimiento_financiero[]
+  nota_venta                 nota_venta[]
+  pago_cliente               pago_cliente[]
+  pago_proveedor             pago_proveedor[]
+  proveedor                  proveedor[]
+  proyecto_financiero        proyecto_financiero[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model movimiento_bancario {
+  id_movimiento_bancario    Int            @id @default(autoincrement())
+  id_moneda                 Int
+  fecha_movimiento_bancario DateTime       @db.Timestamp(6)
+  monto_bancario            Decimal        @db.Decimal(14, 2)
+  descripcion_bancaria      String?
+  glosa_bancaria            String?
+  tipo_movimiento_bancario  String?        @db.VarChar(50)
+  banco                     String?        @db.VarChar(100)
+  cuenta_bancaria           String?        @db.VarChar(80)
+  numero_operacion          String?        @db.VarChar(100)
+  estado_conciliacion       String         @default("pendiente") @db.VarChar(30)
+  conciliacion              conciliacion[]
+  moneda                    moneda         @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_movimiento_bancario_moneda")
+
+  @@index([fecha_movimiento_bancario], map: "idx_movimiento_bancario_fecha")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model movimiento_financiero {
+  id_movimiento_financiero     Int                            @id @default(autoincrement())
+  id_moneda                    Int
+  fecha_movimiento             DateTime                       @default(now()) @db.Timestamp(6)
+  tipo_movimiento_financiero   String                         @db.VarChar(50)
+  naturaleza_movimiento        String                         @db.VarChar(30)
+  motivo_movimiento            String?
+  monto_movimiento             Decimal                        @db.Decimal(14, 2)
+  estado_movimiento            String                         @default("registrado") @db.VarChar(30)
+  observacion                  String?
+  conciliacion                 conciliacion[]
+  moneda                       moneda                         @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_movimiento_financiero_moneda")
+  origen_movimiento_financiero origen_movimiento_financiero[]
+
+  @@index([fecha_movimiento], map: "idx_movimiento_financiero_fecha")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model nota_venta {
+  /// monto_total conserva el monto original; vigente y saldo se calculan, no se cachean.
+  exento_iva                      Boolean                           @default(false)
+  id_proyecto_contexto            BigInt?
+  proyecto_contexto               proyecto?                         @relation(fields: [id_proyecto_contexto], references: [proyecto_proyecto_id], onDelete: Restrict)
+  guia_despacho                   guia_despacho[]
+  condicion_cobro_nv              condicion_cobro_nv[]
+  reversion_nota_venta            reversion_nota_venta[]
+  documento_tributario_nota_venta documento_tributario_nota_venta[]
+  saldo_favor_cliente             saldo_favor_cliente[]
+  aplicacion_saldo_favor          aplicacion_saldo_favor[]
+
+  id_nota_venta           Int                       @id @default(autoincrement())
+  id_ficha_cliente        Int
+  id_cotizacion           Int?                      @unique
+  id_moneda               Int
+  numero_nota_venta       String                    @unique @db.VarChar(50)
+  fecha_emision           DateTime                  @db.Date
+  monto_neto              Decimal                   @default(0) @db.Decimal(14, 2)
+  monto_impuesto          Decimal                   @default(0) @db.Decimal(14, 2)
+  monto_total             Decimal                   @default(0) @db.Decimal(14, 2)
+  tipo_cambio_usado       Decimal?                  @db.Decimal(14, 4)
+  monto_convertido        Decimal?                  @db.Decimal(14, 2)
+  estado_nota_venta       String                    @default("emitida") @db.VarChar(30)
+  estado_pago             String                    @default("pendiente") @db.VarChar(30)
+  descuento_aplicado      Decimal?                  @default(0) @db.Decimal(14, 2)
+  motivo_descuento        String?
+  fecha_anulacion         DateTime?                 @db.Timestamp(6)
+  motivo_anulacion        String?
+  observacion             String?
+  fecha_vencimiento       DateTime?                 @db.Date
+  asignacion_pago_cliente asignacion_pago_cliente[]
+  documento_tributario    documento_tributario[]
+  hito_cobro              hito_cobro[]
+  cotizacion              cotizacion?               @relation(fields: [id_cotizacion], references: [id_cotizacion], onDelete: Restrict, onUpdate: NoAction, map: "fk_nota_venta_cotizacion")
+  ficha_cliente           ficha_cliente             @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_nota_venta_ficha_cliente")
+  moneda                  moneda                    @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_nota_venta_moneda")
+  proyecto_financiero     proyecto_financiero[]
+
+  @@index([id_ficha_cliente], map: "idx_nota_venta_ficha")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model origen_alerta_financiera {
+  id_origen_alerta_financiera Int               @id @default(autoincrement())
+  id_alerta_financiera        Int
+  entidad_origen              String            @db.VarChar(80)
+  id_registro_origen          Int
+  descripcion_origen          String?
+  alerta_financiera           alerta_financiera @relation(fields: [id_alerta_financiera], references: [id_alerta_financiera], onUpdate: NoAction, map: "fk_origen_alerta_financiera_alerta")
+
+  @@index([id_alerta_financiera], map: "idx_origen_alerta_alerta")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model origen_movimiento_financiero {
+  id_origen_movimiento_financiero Int                   @id @default(autoincrement())
+  id_movimiento_financiero        Int
+  entidad_origen                  String                @db.VarChar(80)
+  id_registro_origen              Int
+  descripcion_origen              String?
+  movimiento_financiero           movimiento_financiero @relation(fields: [id_movimiento_financiero], references: [id_movimiento_financiero], onUpdate: NoAction, map: "fk_origen_movimiento_financiero_movimiento")
+
+  @@index([id_movimiento_financiero], map: "idx_origen_movimiento_financiero_movimiento")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model pago_cliente {
+  referencia_demostracion String?          @unique @db.VarChar(80)
+  id_categoria_pago       Int?
+  cantidad_cuotas         Int?
+  antecedentes_medio      Json?
+  fecha_registro          DateTime         @default(now())
+  estado_conciliacion     String           @default("pendiente") @db.VarChar(20)
+  categoria_pago          categoria_pago?  @relation(fields: [id_categoria_pago], references: [id_categoria_pago], onDelete: Restrict)
+  anulacion_pago          anulacion_pago?
+  reversion_pago          reversion_pago[]
+  conciliacion            conciliacion[]
+
+  id_pago_cliente         Int                      @id @default(autoincrement())
+  id_ficha_cliente        Int
+  id_moneda               Int
+  id_medio_pago           Int
+  fecha_pago              DateTime                 @db.Date
+  monto_pago              Decimal                  @db.Decimal(14, 2)
+  tipo_cambio_usado       Decimal?                 @db.Decimal(14, 4)
+  monto_convertido        Decimal?                 @db.Decimal(14, 2)
+  naturaleza_pago         String                   @default("ingreso_cliente") @db.VarChar(30)
+  estado_verificacion     String                   @default("pendiente") @db.VarChar(30)
+  comprobante_pago        String?
+  observacion             String?
+  asignacion_pago_cliente asignacion_pago_cliente?
+  ficha_cliente           ficha_cliente            @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_pago_cliente_ficha_cliente")
+  medio_pago              medio_pago               @relation(fields: [id_medio_pago], references: [id_medio_pago], onUpdate: NoAction, map: "fk_pago_cliente_medio_pago")
+  moneda                  moneda                   @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_pago_cliente_moneda")
+
+  @@index([id_ficha_cliente], map: "idx_pago_cliente_ficha")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model pago_proveedor {
+  id_pago_proveedor         Int                         @id @default(autoincrement())
+  id_proveedor              Int
+  id_moneda                 Int
+  id_medio_pago             Int
+  fecha_pago                DateTime                    @db.Date
+  monto_pago                Decimal                     @db.Decimal(14, 2)
+  tipo_cambio_usado         Decimal?                    @db.Decimal(14, 4)
+  monto_convertido          Decimal?                    @db.Decimal(14, 2)
+  estado_pago               String                      @default("registrado") @db.VarChar(30)
+  comprobante_pago          String?
+  observacion               String?
+  asignacion_pago_proveedor asignacion_pago_proveedor[]
+  medio_pago                medio_pago                  @relation(fields: [id_medio_pago], references: [id_medio_pago], onUpdate: NoAction, map: "fk_pago_proveedor_medio_pago")
+  moneda                    moneda                      @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_pago_proveedor_moneda")
+  proveedor                 proveedor                   @relation(fields: [id_proveedor], references: [id_proveedor], onUpdate: NoAction, map: "fk_pago_proveedor_proveedor")
+
+  @@index([id_proveedor], map: "idx_pago_proveedor_proveedor")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model pais {
+  id_pais         Int         @id @default(autoincrement())
+  nombre_pais     String      @unique @db.VarChar(100)
+  codigo_iso_pais String?     @db.VarChar(10)
+  estado_pais     String      @default("activo") @db.VarChar(20)
+  proveedor       proveedor[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model prevision_salud {
+  id_prevision_salud     Int        @id @default(autoincrement())
+  nombre_prevision_salud String     @unique @db.VarChar(100)
+  tipo_prevision_salud   String?    @db.VarChar(50)
+  estado_prevision_salud String     @default("activo") @db.VarChar(20)
+  empleado               empleado[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model proveedor {
+  id_proveedor                Int                           @id @default(autoincrement())
+  id_tipo_identificador       Int
+  id_pais                     Int?
+  id_moneda_preferente        Int?
+  identificador_tributario    String                        @db.VarChar(50)
+  nombre_razon_social         String                        @db.VarChar(150)
+  nacionalidad_origen         String?                       @db.VarChar(80)
+  contacto_proveedor          String?                       @db.VarChar(150)
+  correo_proveedor            String?                       @db.VarChar(150)
+  telefono_proveedor          String?                       @db.VarChar(30)
+  direccion_proveedor         String?
+  estado_proveedor            String                        @default("activo") @db.VarChar(30)
+  fecha_registro              DateTime                      @default(dbgenerated("CURRENT_DATE")) @db.Date
+  documento_compra_proveedor  documento_compra_proveedor[]
+  historial_precio_material   historial_precio_material[]
+  pago_proveedor              pago_proveedor[]
+  moneda                      moneda?                       @relation(fields: [id_moneda_preferente], references: [id_moneda], onDelete: Restrict, onUpdate: NoAction, map: "fk_proveedor_moneda_preferente")
+  pais                        pais?                         @relation(fields: [id_pais], references: [id_pais], onDelete: Restrict, onUpdate: NoAction, map: "fk_proveedor_pais")
+  tipo_identificador          tipo_identificador            @relation(fields: [id_tipo_identificador], references: [id_tipo_identificador], onUpdate: NoAction, map: "fk_proveedor_tipo_identificador")
+  alerta_faltante_pedido      alerta_faltante_pedido[]
+  alerta_inventario           alerta_inventario[]
+  factura_compra              factura_compra[]
+  lote                        lote[]
+  material_proveedor          material_proveedor[]
+  proveedor_contacto_correo   proveedor_contacto_correo[]
+  proveedor_contacto_telefono proveedor_contacto_telefono[]
+
+  @@unique([id_tipo_identificador, identificador_tributario], map: "uq_proveedor_identificador")
+  @@index([id_tipo_identificador, identificador_tributario], map: "idx_proveedor_identificador")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model proyecto_financiero {
+  id_proyecto_financiero     Int                 @id @default(autoincrement())
+  id_ficha_cliente           Int
+  id_nota_venta              Int?
+  id_proyecto_terreno        BigInt?
+  id_moneda                  Int
+  codigo_proyecto_financiero String              @unique @db.VarChar(80)
+  fecha_inicio_financiera    DateTime?           @db.Date
+  fecha_cierre_financiera    DateTime?           @db.Date
+  estado_financiero_proyecto String              @default("activo") @db.VarChar(30)
+  monto_venta_estimado       Decimal?            @db.Decimal(14, 2)
+  monto_costo_estimado       Decimal?            @db.Decimal(14, 2)
+  monto_costo_real           Decimal?            @db.Decimal(14, 2)
+  margen_estimado            Decimal?            @db.Decimal(14, 2)
+  margen_real                Decimal?            @db.Decimal(14, 2)
+  observacion_financiera     String?
+  costo_proyecto             costo_proyecto[]
+  credito_proyecto           credito_proyecto[]
+  hito_cobro                 hito_cobro[]
+  proyecto                   proyecto?           @relation(fields: [id_proyecto_terreno], references: [proyecto_proyecto_id], onDelete: Restrict, onUpdate: NoAction, map: "fk_proy_fin_terreno_ext")
+  ficha_cliente              ficha_cliente       @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_proyecto_financiero_ficha_cliente")
+  moneda                     moneda              @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_proyecto_financiero_moneda")
+  nota_venta                 nota_venta?         @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict, onUpdate: NoAction, map: "fk_proyecto_financiero_nota_venta")
+  tarea_remunerable          tarea_remunerable[]
+
+  @@index([id_ficha_cliente], map: "idx_proyecto_financiero_ficha")
+  @@index([id_proyecto_terreno], map: "idx_proyecto_financiero_terreno")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tarea_catalogada {
+  id_tarea_catalogada    Int                      @id @default(autoincrement())
+  nombre_tarea           String                   @unique @db.VarChar(120)
+  descripcion_tarea      String?
+  estado_tarea           String                   @default("activa") @db.VarChar(30)
+  historial_tarifa_tarea historial_tarifa_tarea[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tarea_remunerable {
+  id_tarea_remunerable        Int                       @id @default(autoincrement())
+  rut_empleado                String                    @db.VarChar(15)
+  id_historial_tarifa_tarea   Int
+  id_proyecto_financiero      Int?
+  id_liquidacion_remuneracion Int?
+  id_orden_trabajo            BigInt?
+  fecha_tarea                 DateTime                  @db.Date
+  cantidad_realizada          Decimal                   @db.Decimal(12, 2)
+  estado_validacion           String                    @default("pendiente") @db.VarChar(30)
+  monto_calculado             Decimal                   @default(0) @db.Decimal(14, 2)
+  referencia_unidad_terminada String?                   @db.VarChar(100)
+  observacion                 String?
+  orden_trabajo               orden_trabajo?            @relation(fields: [id_orden_trabajo], references: [orden_trabajo_id_orden], onDelete: Restrict, onUpdate: NoAction, map: "fk_tarea_rem_orden_ext")
+  empleado                    empleado                  @relation(fields: [rut_empleado], references: [rut_empleado], onUpdate: NoAction, map: "fk_tarea_remunerable_empleado")
+  liquidacion_remuneracion    liquidacion_remuneracion? @relation(fields: [id_liquidacion_remuneracion], references: [id_liquidacion_remuneracion], onDelete: Restrict, onUpdate: NoAction, map: "fk_tarea_remunerable_liquidacion")
+  proyecto_financiero         proyecto_financiero?      @relation(fields: [id_proyecto_financiero], references: [id_proyecto_financiero], onDelete: Restrict, onUpdate: NoAction, map: "fk_tarea_remunerable_proyecto")
+  historial_tarifa_tarea      historial_tarifa_tarea    @relation(fields: [id_historial_tarifa_tarea], references: [id_historial_tarifa_tarea], onUpdate: NoAction, map: "fk_tarea_remunerable_tarifa")
+
+  @@index([rut_empleado], map: "idx_tarea_remunerable_empleado")
+  @@index([id_orden_trabajo], map: "idx_tarea_remunerable_orden")
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tipo_cliente_financiero {
+  id_tipo_cliente_financiero          Int                  @id @default(autoincrement())
+  nombre_tipo_cliente_financiero      String               @unique @db.VarChar(80)
+  descripcion_tipo_cliente_financiero String?
+  estado_tipo_cliente_financiero      String               @default("activo") @db.VarChar(20)
+  cliente_financiero                  cliente_financiero[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tipo_documento {
+  id_tipo_documento          Int                          @id @default(autoincrement())
+  nombre_tipo_documento      String                       @unique @db.VarChar(80)
+  descripcion_tipo_documento String?
+  aplica_venta               Boolean                      @default(false)
+  aplica_compra              Boolean                      @default(false)
+  requiere_vencimiento       Boolean                      @default(false)
+  afecta_impuesto            Boolean                      @default(true)
+  estado_tipo_documento      String                       @default("activo") @db.VarChar(20)
+  documento_compra_proveedor documento_compra_proveedor[]
+  documento_tributario       documento_tributario[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tipo_identificador {
+  id_tipo_identificador          Int         @id @default(autoincrement())
+  nombre_tipo_identificador      String      @unique @db.VarChar(80)
+  descripcion_tipo_identificador String?
+  estado_tipo_identificador      String      @default("activo") @db.VarChar(20)
+  proveedor                      proveedor[]
+
+  @@schema("finanzas")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tipo_vinculo_laboral {
+  id_tipo_vinculo_laboral          Int        @id @default(autoincrement())
+  nombre_tipo_vinculo_laboral      String     @unique @db.VarChar(80)
+  descripcion_tipo_vinculo_laboral String?
+  estado_tipo_vinculo_laboral      String     @default("activo") @db.VarChar(20)
+  empleado                         empleado[]
+
+  @@schema("finanzas")
+}
+
+model alerta_faltante_pedido {
+  alerta_faltante_pedido_id_alerta_faltante  BigInt     @id(map: "pk_alerta_faltante_pedido") @default(autoincrement())
+  alerta_faltante_pedido_fecha_generacion    DateTime?  @db.Timestamptz(6)
+  alerta_faltante_pedido_cantidad_disponible Decimal?   @db.Decimal(12, 4)
+  alerta_faltante_pedido_cantidad_requerida  Decimal?   @db.Decimal(12, 4)
+  alerta_faltante_pedido_horas_anticipacion  Int?
+  alerta_faltante_pedido_estado              String?    @db.VarChar(50)
+  material_sku                               String?    @db.VarChar(16)
+  proveedor_id_proveedor                     Int?
+  usuario_id_usuario                         BigInt?
+  proyecto_id_proyecto                       BigInt?
+  material                                   material?  @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_faltante_pedido_material_sku")
+  proveedor                                  proveedor? @relation(fields: [proveedor_id_proveedor], references: [id_proveedor], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_faltante_pedido_proveedor_id_proveedor")
+  proyecto                                   proyecto?  @relation(fields: [proyecto_id_proyecto], references: [proyecto_proyecto_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_faltante_pedido_proyecto_id_proyecto")
+  usuario                                    usuario?   @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_faltante_pedido_usuario_id_usuario")
+
+  @@schema("inventario")
+}
+
+model alerta_inventario {
+  alerta_inventario_id_alerta                  BigInt                         @id(map: "pk_alerta_inventario") @default(autoincrement())
+  alerta_inventario_mensaje                    String?
+  alerta_inventario_fecha_generacion           DateTime?                      @db.Timestamptz(6)
+  alerta_inventario_fecha_est_agotamiento      DateTime?                      @db.Date
+  alerta_inventario_estado                     String?                        @db.VarChar(50)
+  material_sku                                 String?                        @db.VarChar(16)
+  proveedor_id_proveedor                       Int?
+  alerta_inventario_tipo_alerta_id_tipo_alerta BigInt?
+  historial_alerta_id_historial                BigInt?
+  alerta_inventario_tipo_alerta                alerta_inventario_tipo_alerta? @relation(fields: [alerta_inventario_tipo_alerta_id_tipo_alerta], references: [alerta_inventario_tipo_alerta_id_tipo_alerta], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_inventario_alerta_inventario_tipo_alerta__2344ac23")
+  historial_alerta                             historial_alerta?              @relation(fields: [historial_alerta_id_historial], references: [historial_alerta_id_historial], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_inventario_historial_alerta_id_historial")
+  material                                     material?                      @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_inventario_material_sku")
+  proveedor                                    proveedor?                     @relation(fields: [proveedor_id_proveedor], references: [id_proveedor], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_inventario_proveedor_id_proveedor")
+  notificacion                                 notificacion[]
+
+  @@schema("inventario")
+}
+
+model alerta_inventario_nivel_prioridad {
+  alerta_inventario_nivel_prioridad_id_nivel_prioridad BigInt                          @id(map: "pk_alerta_inventario_nivel_prioridad") @default(autoincrement())
+  alerta_inventario_prioridad_nombre                   String?                         @db.VarChar(100)
+  alerta_inventario_tipo_alerta                        alerta_inventario_tipo_alerta[]
+
+  @@schema("inventario")
+}
+
+model alerta_inventario_tipo_alerta {
+  alerta_inventario_tipo_alerta_id_tipo_alerta BigInt                             @id(map: "pk_alerta_inventario_tipo_alerta") @default(autoincrement())
+  alerta_inventario_tipo_alerta_nombre         String?                            @db.VarChar(150)
+  alerta_inventario_nivel_prioridad_id         BigInt?
+  alerta_inventario                            alerta_inventario[]
+  alerta_inventario_nivel_prioridad            alerta_inventario_nivel_prioridad? @relation(fields: [alerta_inventario_nivel_prioridad_id], references: [alerta_inventario_nivel_prioridad_id_nivel_prioridad], onDelete: NoAction, onUpdate: NoAction, map: "fk_alerta_inventario_tipo_alerta_alerta_inventario__b68d21a3")
+
+  @@schema("inventario")
+}
+
+model anaquel {
+  anaquel_id_anaquel  BigInt  @id(map: "pk_anaquel") @default(autoincrement())
+  anaquel_descripcion String?
+  bodega_id_bodega    BigInt?
+  bodega              bodega? @relation(fields: [bodega_id_bodega], references: [bodega_id_bodega], onDelete: NoAction, onUpdate: NoAction, map: "fk_anaquel_bodega_id_bodega")
+
+  @@schema("inventario")
+}
+
+model bodega {
+  bodega_id_bodega      BigInt                  @id(map: "pk_bodega") @default(autoincrement())
+  bodega_nombre_bodega  String?                 @db.VarChar(150)
+  bodega_direccion      String?
+  bodega_estado         String?                 @db.VarChar(50)
+  anaquel               anaquel[]
+  inventario_bodega     inventario_bodega[]
+  movimiento_inventario movimiento_inventario[]
+
+  @@schema("inventario")
+}
+
+model factura_compra {
+  factura_compra_id_factura                 BigInt                      @id(map: "pk_factura_compra") @default(autoincrement())
+  factura_compra_numero_factura             String?                     @db.VarChar(80)
+  factura_compra_monto_neto                 Decimal?                    @db.Decimal(14, 2)
+  factura_compra_tipo_compra                String?                     @db.VarChar(100)
+  factura_compra_fecha_emision              DateTime?                   @db.Date
+  proveedor_id_proveedor                    Int?
+  factura_compra_tipo_cambio_id_tipo_cambio BigInt?
+  factura_compra_tipo_cambio                factura_compra_tipo_cambio? @relation(fields: [factura_compra_tipo_cambio_id_tipo_cambio], references: [factura_compra_tipo_cambio_id_tipo_cambio], onDelete: NoAction, onUpdate: NoAction, map: "fk_factura_compra_factura_compra_tipo_cambio_id_tipo_cambio")
+  proveedor                                 proveedor?                  @relation(fields: [proveedor_id_proveedor], references: [id_proveedor], onDelete: NoAction, onUpdate: NoAction, map: "fk_factura_compra_proveedor_id_proveedor")
+  lote                                      lote[]
+  movimiento_inventario                     movimiento_inventario[]
+
+  @@schema("inventario")
+}
+
+model factura_compra_tipo_cambio {
+  factura_compra_tipo_cambio_id_tipo_cambio BigInt           @id(map: "pk_factura_compra_tipo_cambio") @default(autoincrement())
+  factura_compra_tipo_cambio_moneda         String?          @db.VarChar(10)
+  factura_compra_tipo_cambio_valor          Decimal?         @db.Decimal(14, 4)
+  factura_compra                            factura_compra[]
+
+  @@schema("inventario")
+}
+
+model historial_alerta {
+  historial_alerta_id_historial          BigInt              @id(map: "pk_historial_alerta") @default(autoincrement())
+  historial_alerta_fecha_hora_resolucion DateTime?           @db.Timestamptz(6)
+  alerta_inventario                      alerta_inventario[]
+
+  @@schema("inventario")
+}
+
+model insumo_estandar_proceso {
+  insumo_estandar_proceso_id_insumo_estandar BigInt        @id(map: "pk_insumo_estandar_proceso") @default(autoincrement())
+  insumo_estandar_proceso_cantidad_estandar  Decimal?      @db.Decimal(12, 4)
+  insumo_estandar_proceso_observacion        String?
+  insumo_estandar_proceso_activo             Boolean?
+  material_sku                               String?       @db.VarChar(16)
+  area_trabajo_id_area                       BigInt?
+  area_trabajo                               area_trabajo? @relation(fields: [area_trabajo_id_area], references: [area_trabajo_id_area], onDelete: NoAction, onUpdate: NoAction, map: "fk_insumo_estandar_proceso_area_trabajo_id_area")
+  material                                   material?     @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_insumo_estandar_proceso_material_sku")
+
+  @@schema("inventario")
+}
+
+model inventario_bodega {
+  material_sku                         String   @db.VarChar(16)
+  lote_id_lote                         BigInt
+  bodega_id_bodega                     BigInt
+  inventario_bodega_cantidad_fisica    Decimal? @db.Decimal(12, 4)
+  inventario_bodega_cantidad_reservada Decimal? @db.Decimal(12, 4)
+  bodega                               bodega   @relation(fields: [bodega_id_bodega], references: [bodega_id_bodega], onDelete: NoAction, onUpdate: NoAction, map: "fk_inventario_bodega_bodega_id_bodega")
+  lote                                 lote     @relation(fields: [lote_id_lote], references: [lote_id_lote], onDelete: NoAction, onUpdate: NoAction, map: "fk_inventario_bodega_lote_id_lote")
+  material                             material @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_inventario_bodega_material_sku")
+
+  @@id([material_sku, lote_id_lote, bodega_id_bodega], map: "pk_inventario_bodega")
+  @@schema("inventario")
+}
+
+model lote {
+  lote_id_lote              BigInt                  @id(map: "pk_lote") @default(autoincrement())
+  lote_numero_lote          String?                 @db.VarChar(80)
+  lote_fecha_ingreso        DateTime?               @db.Date
+  lote_fecha_vencimiento    DateTime?               @db.Date
+  lote_fecha_recepcion      DateTime?               @db.Date
+  lote_estado               String?                 @db.VarChar(50)
+  proveedor_id_proveedor    Int?
+  factura_compra_id_factura BigInt?
+  proyecto_id_proyecto      BigInt?
+  inventario_bodega         inventario_bodega[]
+  factura_compra            factura_compra?         @relation(fields: [factura_compra_id_factura], references: [factura_compra_id_factura], onDelete: NoAction, onUpdate: NoAction, map: "fk_lote_factura_compra_id_factura")
+  proveedor                 proveedor?              @relation(fields: [proveedor_id_proveedor], references: [id_proveedor], onDelete: NoAction, onUpdate: NoAction, map: "fk_lote_proveedor_id_proveedor")
+  proyecto                  proyecto?               @relation(fields: [proyecto_id_proyecto], references: [proyecto_proyecto_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_lote_proyecto_id_proyecto")
+  lote_fecha_pedido         lote_fecha_pedido[]
+  movimiento_inventario     movimiento_inventario[]
+
+  @@schema("inventario")
+}
+
+model lote_fecha_pedido {
+  lote_fecha_pedido_id              BigInt    @id(map: "pk_lote_fecha_pedido") @default(autoincrement())
+  lote_fecha_pedido_fecha_pedido    DateTime? @db.Date
+  lote_fecha_pedido_precio_unitario Decimal?  @db.Decimal(14, 2)
+  lote_id_lote                      BigInt?
+  lote                              lote?     @relation(fields: [lote_id_lote], references: [lote_id_lote], onDelete: NoAction, onUpdate: NoAction, map: "fk_lote_fecha_pedido_lote_id_lote")
+
+  @@schema("inventario")
+}
+
+model material {
+  material_sku                                                                                                                      String                                   @id(map: "pk_material") @db.VarChar(16)
+  material_nombre_material                                                                                                          String?                                  @db.VarChar(200)
+  material_descripcion                                                                                                              String?
+  material_material_critico                                                                                                         Boolean?
+  material_presentacion                                                                                                             String?                                  @db.VarChar(150)
+  material_stock_critico                                                                                                            Decimal?                                 @db.Decimal(12, 4)
+  material_sotck_maximo                                                                                                             Decimal?                                 @db.Decimal(12, 4)
+  material_stock_minimo                                                                                                             Decimal?                                 @db.Decimal(12, 4)
+  material_es_rotativo                                                                                                              Boolean?
+  material_estado                                                                                                                   String?                                  @db.VarChar(50)
+  es_material_pintura_custom                                                                                                        Boolean?
+  material_pintura_custom                                                                                                           String?                                  @db.VarChar(100)
+  es_material_pintura_no_custom                                                                                                     Boolean?
+  material_pintura_no_custom                                                                                                        String?                                  @db.VarChar(100)
+  material_categoria_general_id_categoria_general                                                                                   BigInt?
+  material_categoria_funcional_id_categoria_funcional                                                                               BigInt?
+  material_clasificacion_nivel_especifico                                                                                           BigInt?
+  material_unidad_medida_id_medida                                                                                                  BigInt?
+  historial_precio_material                                                                                                         historial_precio_material[]
+  alerta_faltante_pedido                                                                                                            alerta_faltante_pedido[]
+  alerta_inventario                                                                                                                 alerta_inventario[]
+  insumo_estandar_proceso                                                                                                           insumo_estandar_proceso[]
+  inventario_bodega                                                                                                                 inventario_bodega[]
+  material_categoria_funcional                                                                                                      material_categoria_funcional?            @relation(fields: [material_categoria_funcional_id_categoria_funcional], references: [material_categoria_funcional_id_categoria_funcional], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_material_categoria_funcional_id_categor_7cec335a")
+  material_categoria_general                                                                                                        material_categoria_general?              @relation(fields: [material_categoria_general_id_categoria_general], references: [material_categoria_general_id_categoria_general], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_material_categoria_general_id_categoria_general")
+  material_clasificacion_nivel_especifico_material_material_clasificacion_nivel_especificoTomaterial_clasificacion_nivel_especifico material_clasificacion_nivel_especifico? @relation("material_material_clasificacion_nivel_especificoTomaterial_clasificacion_nivel_especifico", fields: [material_clasificacion_nivel_especifico], references: [material_clasificacion_nivel_especifico_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_material_clasificacion_nivel_especifico")
+  material_unidad_medida                                                                                                            material_unidad_medida?                  @relation(fields: [material_unidad_medida_id_medida], references: [material_unidad_medida_id_unidad_medida], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_material_unidad_medida_id_medida")
+  material_codigo_barras                                                                                                            material_codigo_barras[]
+  material_orden_trabajo                                                                                                            material_orden_trabajo[]
+  material_producto_terminado                                                                                                       material_producto_terminado[]
+  material_proveedor                                                                                                                material_proveedor[]
+  movimiento_inventario                                                                                                             movimiento_inventario[]
+  reserva_inventario                                                                                                                reserva_inventario[]
+  detalles_herraje                                                                                                                  detalles_herraje[]
+  prestamo_herramientas                                                                                                             prestamo_herramientas[]
+
+  @@schema("inventario")
+}
+
+model material_categoria_funcional {
+  material_categoria_funcional_id_categoria_funcional BigInt     @id(map: "pk_material_categoria_funcional") @default(autoincrement())
+  material_categoria_funcional_nombre                 String?    @db.VarChar(150)
+  material                                            material[]
+
+  @@schema("inventario")
+}
+
+model material_categoria_general {
+  material_categoria_general_id_categoria_general BigInt     @id(map: "pk_material_categoria_general") @default(autoincrement())
+  material_categoria_general_nombre               String?    @db.VarChar(150)
+  material                                        material[]
+
+  @@schema("inventario")
+}
+
+model material_clasificacion_categoria {
+  material_clasificacion_categoria_id               BigInt                                @id(map: "pk_material_clasificacion_categoria") @default(autoincrement())
+  material_clasificacion_categoria_nombre_categoria String?                               @db.VarChar(150)
+  material_clasificacion_subcategoria               material_clasificacion_subcategoria[]
+
+  @@schema("inventario")
+}
+
+model material_clasificacion_nivel_especifico {
+  material_clasificacion_nivel_especifico_id                                                         BigInt                               @id(map: "pk_material_clasificacion_nivel_especifico") @default(autoincrement())
+  material_clasificacion_nivel_especifico_nombre_nivel_especifico                                    String?                              @db.VarChar(150)
+  material_clasificacion_subcategoria_id                                                             BigInt?
+  material_material_material_clasificacion_nivel_especificoTomaterial_clasificacion_nivel_especifico material[]                           @relation("material_material_clasificacion_nivel_especificoTomaterial_clasificacion_nivel_especifico")
+  material_clasificacion_subcategoria                                                                material_clasificacion_subcategoria? @relation(fields: [material_clasificacion_subcategoria_id], references: [material_clasificacion_subcategoria_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_clasificacion_nivel_especifico_material_295c8a27")
+
+  @@schema("inventario")
+}
+
+model material_clasificacion_subcategoria {
+  material_clasificacion_subcategoria_id                  BigInt                                    @id(map: "pk_material_clasificacion_subcategoria") @default(autoincrement())
+  material_clasificacion_subcategoria_nombre_subcategoria String?                                   @db.VarChar(150)
+  material_clasificacion_subcategoria_es_color_custom     Boolean?
+  material_clasificacion_categoria_id                     BigInt?
+  material_clasificacion_nivel_especifico                 material_clasificacion_nivel_especifico[]
+  material_clasificacion_categoria                        material_clasificacion_categoria?         @relation(fields: [material_clasificacion_categoria_id], references: [material_clasificacion_categoria_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_clasificacion_subcategoria_material_cla_e8cfce14")
+
+  @@schema("inventario")
+}
+
+model material_codigo_barras {
+  material_sku           String   @db.VarChar(16)
+  material_codigo_barras String   @db.VarChar(100)
+  material               material @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_codigo_barras_material_sku")
+
+  @@id([material_sku, material_codigo_barras], map: "pk_material_codigo_barras")
+  @@schema("inventario")
+}
+
+model material_orden_trabajo {
+  material_sku                            String        @db.VarChar(16)
+  orden_trabajo_id_orden                  BigInt
+  material_orden_trabajo_consumo_estimado Decimal?      @db.Decimal(12, 4)
+  material_orden_trabajo_consumo_real     Decimal?      @db.Decimal(12, 4)
+  material                                material      @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_orden_trabajo_material_sku")
+  orden_trabajo                           orden_trabajo @relation(fields: [orden_trabajo_id_orden], references: [orden_trabajo_id_orden], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_orden_trabajo_orden_trabajo_id_orden")
+
+  @@id([material_sku, orden_trabajo_id_orden], map: "pk_material_orden_trabajo")
+  @@schema("inventario")
+}
+
+model material_producto_terminado {
+  material_sku                                  String             @db.VarChar(16)
+  producto_terminado_id_producto                BigInt
+  material_producto_terminado_cantidad_estimada Decimal?           @db.Decimal(12, 4)
+  material_producto_terminado_merma_estimada    Decimal?           @db.Decimal(12, 4)
+  material                                      material           @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_producto_terminado_material_sku")
+  producto_terminado                            producto_terminado @relation(fields: [producto_terminado_id_producto], references: [producto_terminado_id_producto], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_producto_terminado_producto_terminado_i_5cce9a2a")
+
+  @@id([material_sku, producto_terminado_id_producto], map: "pk_material_producto_terminado")
+  @@schema("inventario")
+}
+
+model material_proveedor {
+  material_sku                           String    @db.VarChar(16)
+  proveedor_id_proveedor                 Int
+  material_proveedor_tiempo_reposicion   Int?
+  material_proveedor_precio_referencial  Decimal?  @db.Decimal(14, 2)
+  material_proveedor_proveedor_principal Boolean?
+  material                               material  @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_proveedor_material_sku")
+  proveedor                              proveedor @relation(fields: [proveedor_id_proveedor], references: [id_proveedor], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_proveedor_proveedor_id_proveedor")
+
+  @@id([material_sku, proveedor_id_proveedor], map: "pk_material_proveedor")
+  @@schema("inventario")
+}
+
+model material_unidad_medida {
+  material_unidad_medida_id_unidad_medida BigInt     @id(map: "pk_material_unidad_medida") @default(autoincrement())
+  material_unidad_medida_nombre           String?    @db.VarChar(100)
+  material                                material[]
+
+  @@schema("inventario")
+}
+
+model movimiento_inventario {
+  movimiento_inventario_id_movimiento                          BigInt                                   @id(map: "pk_movimiento_inventario") @default(autoincrement())
+  movimiento_inventario_fecha_hora                             DateTime?                                @db.Timestamptz(6)
+  movimiento_inventario_cantidad                               Decimal?                                 @db.Decimal(12, 4)
+  movimiento_inventario_estado                                 String?                                  @db.VarChar(50)
+  material_sku                                                 String?                                  @db.VarChar(16)
+  bodega_id_bodega                                             BigInt?
+  lote_id_lote                                                 BigInt?
+  proyecto_id_proyecto                                         BigInt?
+  factura_compra_id_factura_compra                             BigInt?
+  usuario_id_usuario                                           BigInt?
+  movimiento_inventario_tipo_movimiento_id_tipo_movimiento     BigInt?
+  movimiento_inventario_motivo_movimiento_id_motivo_movimiento BigInt?
+  bodega                                                       bodega?                                  @relation(fields: [bodega_id_bodega], references: [bodega_id_bodega], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_bodega_id_bodega")
+  factura_compra                                               factura_compra?                          @relation(fields: [factura_compra_id_factura_compra], references: [factura_compra_id_factura], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_factura_compra_id_factura_compra")
+  lote                                                         lote?                                    @relation(fields: [lote_id_lote], references: [lote_id_lote], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_lote_id_lote")
+  material                                                     material?                                @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_material_sku")
+  movimiento_inventario_motivo_movimiento                      movimiento_inventario_motivo_movimiento? @relation(fields: [movimiento_inventario_motivo_movimiento_id_motivo_movimiento], references: [movimiento_inventario_motivo_movimiento_id_motivo_movimiento], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_movimiento_inventario_moti_5114c33e")
+  movimiento_inventario_tipo_movimiento                        movimiento_inventario_tipo_movimiento?   @relation(fields: [movimiento_inventario_tipo_movimiento_id_tipo_movimiento], references: [movimiento_inventario_tipo_movimiento_id_tipo_movimiento], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_movimiento_inventario_tipo_491f04a7")
+  proyecto                                                     proyecto?                                @relation(fields: [proyecto_id_proyecto], references: [proyecto_proyecto_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_proyecto_id_proyecto")
+  usuario                                                      usuario?                                 @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_usuario_id_usuario")
+  reporte_movimiento_inventario                                reporte_movimiento_inventario[]
+
+  @@schema("inventario")
+}
+
+model movimiento_inventario_clasificacion_salida {
+  id_clasificacion_salida                           BigInt                                    @id(map: "pk_movimiento_inventario_clasificacion_salida") @default(autoincrement())
+  movimiento_inventario_clasificacion_salida_nombre String?                                   @db.VarChar(150)
+  movimiento_inventario_motivo_movimiento           movimiento_inventario_motivo_movimiento[]
+
+  @@schema("inventario")
+}
+
+model movimiento_inventario_motivo_movimiento {
+  movimiento_inventario_motivo_movimiento_id_motivo_movimiento BigInt                                      @id(map: "pk_movimiento_inventario_motivo_movimiento") @default(autoincrement())
+  movimiento_inventario_motivo_movimiento_nombre               String?                                     @db.VarChar(150)
+  id_clasificacion_salida                                      BigInt?
+  movimiento_inventario                                        movimiento_inventario[]
+  movimiento_inventario_clasificacion_salida                   movimiento_inventario_clasificacion_salida? @relation(fields: [id_clasificacion_salida], references: [id_clasificacion_salida], onDelete: NoAction, onUpdate: NoAction, map: "fk_movimiento_inventario_motivo_movimiento_movimien_cf1b5d9c")
+
+  @@schema("inventario")
+}
+
+model movimiento_inventario_tipo_movimiento {
+  movimiento_inventario_tipo_movimiento_id_tipo_movimiento BigInt                  @id(map: "pk_movimiento_inventario_tipo_movimiento") @default(autoincrement())
+  movimiento_inventario_tipo_movimiento_nombre             String?                 @db.VarChar(150)
+  movimiento_inventario                                    movimiento_inventario[]
+
+  @@schema("inventario")
+}
+
+model notificacion {
+  notificacion_id_notificacion   BigInt             @id(map: "pk_notificacion") @default(autoincrement())
+  notificacion_tipo_notificacion String?            @db.VarChar(150)
+  notificacion_mensaje           String?
+  notificacion_fecha_generacion  DateTime?          @db.Timestamptz(6)
+  notificacion_estado_lectura    String?            @db.VarChar(50)
+  notificacion_origen            String?            @db.VarChar(150)
+  alerta_inventario_id_alerta    BigInt?
+  usuario_id_usuario             BigInt?
+  alerta_inventario              alerta_inventario? @relation(fields: [alerta_inventario_id_alerta], references: [alerta_inventario_id_alerta], onDelete: NoAction, onUpdate: NoAction, map: "fk_notificacion_alerta_inventario_id_alerta")
+  usuario                        usuario?           @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_notificacion_usuario_id_usuario")
+
+  @@schema("inventario")
+}
+
+model orden_trabajo {
+  orden_trabajo_id_orden                           BigInt                   @id(map: "pk_orden_trabajo") @default(autoincrement())
+  orden_trabajo_fecha_hora                         DateTime?                @db.Timestamptz(6)
+  orden_trabajo_estado                             String?                  @db.VarChar(50)
+  especificaciones_puerta_id_especificacion_puerta BigInt?
+  proyecto_id_proyecto                             BigInt?
+  area_trabajo_id_area                             BigInt?
+  usuario_id_usuario                               BigInt?
+  tarea_remunerable                                tarea_remunerable[]
+  material_orden_trabajo                           material_orden_trabajo[]
+  area_trabajo                                     area_trabajo?            @relation(fields: [area_trabajo_id_area], references: [area_trabajo_id_area], onDelete: NoAction, onUpdate: NoAction, map: "fk_orden_trabajo_area_trabajo_id_area")
+  especificaciones_puerta                          especificaciones_puerta? @relation(fields: [especificaciones_puerta_id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_orden_trabajo_especificaciones_puerta_id_especif_6a769728")
+  proyecto                                         proyecto?                @relation(fields: [proyecto_id_proyecto], references: [proyecto_proyecto_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_orden_trabajo_proyecto_id_proyecto")
+  usuario                                          usuario?                 @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_orden_trabajo_usuario_id_usuario")
+  reserva_inventario                               reserva_inventario[]
+
+  @@schema("inventario")
+}
+
+model preparacion_pedido {
+  preparacion_pedido_id_preparacion BigInt                      @id(map: "pk_preparacion_pedido") @default(autoincrement())
+  preparacion_pedido_observacion    String?
+  reserva_inventario_id_reserva     BigInt?
+  usuario_id_usuario                BigInt?
+  reserva_inventario                reserva_inventario?         @relation(fields: [reserva_inventario_id_reserva], references: [reserva_inventario_id_reserva], onDelete: NoAction, onUpdate: NoAction, map: "fk_preparacion_pedido_reserva_inventario_id_reserva")
+  usuario                           usuario?                    @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_preparacion_pedido_usuario_id_usuario")
+  preparacion_pedido_estado         preparacion_pedido_estado[]
+
+  @@schema("inventario")
+}
+
+model preparacion_pedido_estado {
+  preparacion_pedido_estado_id_estado_preparacion BigInt              @id(map: "pk_preparacion_pedido_estado") @default(autoincrement())
+  pedido_preparacion_estado_nombre_estado         String?             @db.VarChar(100)
+  pedido_preparacion_estado_timestamp_accion      DateTime?           @db.Timestamptz(6)
+  preparacion_pedido_id_preparacion               BigInt?
+  preparacion_pedido                              preparacion_pedido? @relation(fields: [preparacion_pedido_id_preparacion], references: [preparacion_pedido_id_preparacion], onDelete: NoAction, onUpdate: NoAction, map: "fk_preparacion_pedido_estado_preparacion_pedido_id__ee3b6a24")
+
+  @@schema("inventario")
+}
+
+model producto_terminado {
+  producto_terminado_id_producto                  BigInt                        @id(map: "pk_producto_terminado") @default(autoincrement())
+  producto_terminado_tipo_producto                String?                       @db.VarChar(150)
+  producto_terminado_nombre_producto              String?                       @db.VarChar(200)
+  producto_terminado_codigo_producto              String?                       @db.VarChar(80)
+  producto_terminado_requerimientos_certificacion String?
+  producto_terminado_requerimientos_medidas       String?
+  producto_terminado_requerimientos_produccion    String?
+  producto_terminado_requerimientos_instalacion   String?
+  producto_terminado_activo                       Boolean?
+  material_producto_terminado                     material_producto_terminado[]
+
+  @@schema("inventario")
+}
+
+model proveedor_contacto_correo {
+  proveedor_id_proveedor    Int
+  proveedor_contacto_correo String    @db.VarChar(254)
+  proveedor                 proveedor @relation(fields: [proveedor_id_proveedor], references: [id_proveedor], onDelete: NoAction, onUpdate: NoAction, map: "fk_proveedor_contacto_correo_proveedor_id_proveedor")
+
+  @@id([proveedor_id_proveedor, proveedor_contacto_correo], map: "pk_proveedor_contacto_correo")
+  @@schema("inventario")
+}
+
+model proveedor_contacto_telefono {
+  proveedor_id_proveedor      Int
+  proveedor_contacto_telefono String    @db.VarChar(30)
+  proveedor                   proveedor @relation(fields: [proveedor_id_proveedor], references: [id_proveedor], onDelete: NoAction, onUpdate: NoAction, map: "fk_proveedor_contacto_telefono_proveedor_id_proveedor")
+
+  @@id([proveedor_id_proveedor, proveedor_contacto_telefono], map: "pk_proveedor_contacto_telefono")
+  @@schema("inventario")
+}
+
+model reporte {
+  reporte_id_reporte            BigInt                          @id(map: "pk_reporte") @default(autoincrement())
+  reporte_periodo_fin           DateTime?                       @db.Date
+  reporte_fecha_generacion      DateTime?                       @db.Timestamptz(6)
+  reporte_formato_exportacion   String?                         @db.VarChar(50)
+  reporte_estado                String?                         @db.VarChar(50)
+  reporte_tipo_reporte          String?                         @db.VarChar(50)
+  reporte_periodo_inicio        DateTime?                       @db.Date
+  usuario_id_usuario            BigInt?
+  usuario                       usuario?                        @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_reporte_usuario_id_usuario")
+  reporte_movimiento_inventario reporte_movimiento_inventario[]
+
+  @@schema("inventario")
+}
+
+model reporte_movimiento_inventario {
+  movimiento_inventario_id_movimiento BigInt
+  reporte_id_reporte                  BigInt
+  movimiento_inventario               movimiento_inventario @relation(fields: [movimiento_inventario_id_movimiento], references: [movimiento_inventario_id_movimiento], onDelete: NoAction, onUpdate: NoAction, map: "fk_reporte_movimiento_inventario_movimiento_inventa_c5801b43")
+  reporte                             reporte               @relation(fields: [reporte_id_reporte], references: [reporte_id_reporte], onDelete: NoAction, onUpdate: NoAction, map: "fk_reporte_movimiento_inventario_reporte_id_reporte")
+
+  @@id([movimiento_inventario_id_movimiento, reporte_id_reporte], map: "pk_reporte_movimiento_inventario")
+  @@schema("inventario")
+}
+
+model reserva_inventario {
+  reserva_inventario_id_reserva         BigInt               @id(map: "pk_reserva_inventario") @default(autoincrement())
+  reserva_inventario_cantidad_reservada Decimal?             @db.Decimal(12, 4)
+  reserva_inventario_fecha_reserva      DateTime?            @db.Timestamptz(6)
+  reserva_inventario_fecha_liberacion   DateTime?            @db.Timestamptz(6)
+  reserva_inventario_estado_reserva     String?              @db.VarChar(50)
+  material_sku                          String?              @db.VarChar(16)
+  proyecto_id_proyecto                  BigInt?
+  orden_trabajo_id_orden                BigInt?
+  preparacion_pedido                    preparacion_pedido[]
+  material                              material?            @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_reserva_inventario_material_sku")
+  orden_trabajo                         orden_trabajo?       @relation(fields: [orden_trabajo_id_orden], references: [orden_trabajo_id_orden], onDelete: NoAction, onUpdate: NoAction, map: "fk_reserva_inventario_orden_trabajo_id_orden")
+  proyecto                              proyecto?            @relation(fields: [proyecto_id_proyecto], references: [proyecto_proyecto_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reserva_inventario_proyecto_id_proyecto")
+
+  @@schema("inventario")
+}
+
+model adicionales_pagados {
+  adicionales_pagados_id_adicionales       BigInt                   @id(map: "pk_adicionales_pagados") @default(autoincrement())
+  adicionales_pagados_retiro_escombros     Boolean?
+  adicionales_pagados_retiro_puerta_actual Boolean?
+  adicionales_pagados_alarma               Boolean?
+  adicionales_pagados_subida_escalera      String?
+  adicionales_pagados_endolados            Boolean?
+  adicionales_pagados_pilastras_alto       Decimal?                 @db.Decimal(12, 4)
+  adicionales_pagados_pilastras_ancho      Decimal?                 @db.Decimal(12, 4)
+  adicionales_pagados_pilastras_espesor    Decimal?                 @db.Decimal(12, 4)
+  adicionales_pagados_observaciones        String?
+  id_especificaciones_puerta               BigInt?
+  especificaciones_puerta                  especificaciones_puerta? @relation(fields: [id_especificaciones_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_adicionales_pagados_id_especificaciones_puerta")
+
+  @@schema("terreno")
+}
+
+model area_trabajo {
+  area_trabajo_id_area       BigInt                    @id(map: "pk_area_trabajo") @default(autoincrement())
+  area_trabajo_clasificacion String?                   @db.VarChar(150)
+  area_trabajo_activo        Boolean?
+  area_trabajo_nombre_area   String?                   @db.VarChar(150)
+  insumo_estandar_proceso    insumo_estandar_proceso[]
+  orden_trabajo              orden_trabajo[]
+
+  @@schema("terreno")
+}
+
+model checklist_de_materiales {
+  checklist_de_materiales_checklist_de_materials_id BigInt             @id(map: "pk_checklist_de_materiales") @default(autoincrement())
+  checklist_de_materiales_tipo_inicio_tarea         String?
+  checklist_de_materiales_tipo_cierre_tarea         String?
+  checklist_de_materiales_item                      String?
+  checklist_de_materiales_es_marcado                Boolean?
+  checklist_de_materiales_marcado                   String?
+  checklist_de_materiales_es_no_marcado             Boolean?
+  checklist_de_materiales_no_marcado                String?
+  servicio_terreno                                  servicio_terreno[]
+
+  @@schema("terreno")
+}
+
+model cliente {
+  cliente_cliente_rut                                      String              @id(map: "pk_cliente") @db.VarChar(12)
+  cliente_razon_social                                     String?
+  cliente_contacto_principal                               String?
+  cliente_correo                                           String?
+  cliente_telefono                                         String?
+  cliente_es_cliente_b2c                                   Boolean?
+  cliente_cliente_b2c_rut                                  String?             @db.VarChar(12)
+  cliente_cliente_b2c_correo                               String?
+  cliente_cliente_b2c_primer_nombre                        String?
+  cliente_cliente_b2c_segundo_nombre                       String?
+  cliente_cliente_b2c_primer_apellido                      String?
+  cliente_cliente_b2c_segundo_apellido                     String?
+  cliente_cliente_b2c_telefono_contacto                    String?
+  cliente_cliente_b2c_fecha_registro                       DateTime?           @db.Date
+  cliente_cliente_b2c_telefono_contacto_adicional          String?
+  cliente_cliente_b2c_fecha_ultima_edicion                 DateTime?           @db.Date
+  cliente_es_cliente_b2b                                   Boolean?
+  cliente_cliente_b2b_fecha_ultima_edicion                 DateTime?           @db.Date
+  cliente_cliente_b2b_correo_institucional                 String?
+  cliente_cliente_b2b_fecha_registro                       DateTime?           @db.Date
+  cliente_cliente_b2b_telefono_corporativo                 String?
+  cliente_cliente_b2b_razon_social                         String?
+  cliente_cliente_b2b_rut_empresa                          String?             @db.VarChar(12)
+  cliente_cliente_b2b_telefono_corp_adicional              String?
+  cliente_cliente_b2b_representante_legal_primer_nombre    String?
+  cliente_cliente_b2b_representante_legal_segundo_nombre   String?
+  cliente_cliente_b2b_representante_legal_primer_apellido  String?
+  cliente_cliente_b2b_representante_legal_segundo_apellido String?
+  obra                                                     obra[]
+  proyecto                                                 proyecto[]
+
+  @@schema("terreno")
+}
+
+model detalles_herraje {
+  detalles_herraje_detalle_herraje_id BigInt                   @id(map: "pk_detalles_herraje") @default(autoincrement())
+  detalles_herraje_ubicacion          String?
+  detalles_herraje_color              String?
+  detalles_herraje_cantidad           Int?
+  detalles_herraje_observacion        String?
+  material_sku                        String?                  @db.VarChar(16)
+  id_especificacion_puerta            BigInt?
+  especificaciones_puerta             especificaciones_puerta? @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_detalles_herraje_id_especificacion_puerta")
+  material                            material?                @relation(fields: [material_sku], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_detalles_herraje_material_sku")
+
+  @@schema("terreno")
+}
+
+model especificacion_metalmecanica {
+  especificacion_metalmecanica_id_metalmecanica BigInt                   @id(map: "pk_especificacion_metalmecanica") @default(autoincrement())
+  especificacion_metalmecanica_bastidor         String?
+  especificacion_metalmecanica_cerradura        String?
+  especificacion_metalmecanica_manillon         String?
+  especificacion_metalmecanica_pernos_fijos     String?
+  especificacion_metalmecanica_manilla          String?
+  especificacion_metalmecanica_herraje          String?
+  especificacion_metalmecanica_cerrojo          String?
+  especificacion_metalmecanica_ojo              String?
+  especificacion_metalmecanica_otros            String?
+  id_especificacion_puerta                      BigInt?
+  especificaciones_puerta                       especificaciones_puerta? @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_especificacion_metalmecanica_id_especificacion_puerta")
+
+  @@schema("terreno")
+}
+
+model especificacion_proyecto_terreno {
+  id_especificacion_proyecto_terreno                     BigInt                   @id(map: "pk_especificacion_proyecto_terreno") @default(autoincrement())
+  especificacion_proyecto_terreno_estado_operacional     String?
+  especificacion_proyecto_terreno_estado_produccion      String?
+  especificacion_proyecto_terreno_estado_instalacion     String?
+  especificacion_proyecto_terreno_fecha_inicio           DateTime?                @db.Date
+  especificacion_proyecto_terreno_fecha_cierre_operativo DateTime?                @db.Date
+  especificacion_proyecto_terreno_observacion_estado     String?
+  especificacion_proyecto_terreno_conformidad_cliente    String?
+  id_especificacion_puerta                               BigInt?
+  especificaciones_puerta                                especificaciones_puerta? @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_especificacion_proyecto_terreno_id_especificacion_puerta")
+
+  @@schema("terreno")
+}
+
+model especificacion_servicio_terreno {
+  especificacion_servicio_terreno_servicio_terreno_id      BigInt
+  especificacion_servicio_terreno_especificacion_puerta_id BigInt
+  servicio_terreno                                         servicio_terreno        @relation(fields: [especificacion_servicio_terreno_servicio_terreno_id], references: [servicio_terreno_servicio_terreno_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_especificacion_servicio_terreno_especificacion_s_79bfd2c7")
+  especificaciones_puerta                                  especificaciones_puerta @relation(fields: [especificacion_servicio_terreno_especificacion_puerta_id], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_especificacion_servicio_terreno_especificacion_s_ca0b84a5")
+
+  @@id([especificacion_servicio_terreno_servicio_terreno_id, especificacion_servicio_terreno_especificacion_puerta_id], map: "pk_especificacion_servicio_terreno")
+  @@schema("terreno")
+}
+
+model especificacion_terminaciones {
+  especificacion_terminaciones_id_terminacion BigInt                   @id(map: "pk_especificacion_terminaciones") @default(autoincrement())
+  especificacion_terminaciones_herrajes       String?
+  especificacion_terminaciones_pletina        Decimal?                 @db.Decimal(12, 4)
+  especificacion_terminaciones_funda          Decimal?                 @db.Decimal(12, 4)
+  especificacion_terminaciones_medida_final   Decimal?                 @db.Decimal(12, 4)
+  especificacion_terminaciones_manilla        Decimal?                 @db.Decimal(12, 4)
+  especificacion_terminaciones_marco_metalico Decimal?                 @db.Decimal(12, 4)
+  especificacion_terminaciones_bisagras       Decimal?                 @db.Decimal(12, 4)
+  especificacion_terminaciones_molduras       String?
+  especificacion_terminaciones_rebaje         String?
+  especificacion_terminaciones_canterias      String?
+  especificacion_terminaciones_pura           String?
+  especificacion_terminaciones_enchape        String?
+  id_especificacion_puerta                    BigInt?
+  especificaciones_puerta                     especificaciones_puerta? @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_especificacion_terminaciones_id_especificacion_puerta")
+
+  @@schema("terreno")
+}
+
+model especificaciones_puerta {
+  especificacion_puerta_especificacion_puerta_id  BigInt                            @id(map: "pk_especificaciones_puerta") @default(autoincrement())
+  especificacion_puerta_modelo_puerta             String?
+  especificacion_puerta_zona                      String?
+  especificacion_puerta_sentido_apertura          String?
+  especificacion_puerta_materialidad_vano         String?
+  especificacion_puerta_materialidad_marco_actual String?
+  especificacion_puerta_solucion_marco            String?
+  especificacion_puerta_hoja_pasiva               String?
+  especificacion_puerta_hoja_activa               String?
+  especificacion_puerta_diseno_puerta             String?
+  especificacion_puerta_observaciones_de_diseno   String?
+  especificacion_puerta_cubrejuntas               Boolean?
+  especificacion_puerta_bisagras                  String?
+  especificacion_puerta_observaciones             String?
+  id_medidas                                      BigInt?
+  orden_trabajo                                   orden_trabajo[]
+  adicionales_pagados                             adicionales_pagados[]
+  detalles_herraje                                detalles_herraje[]
+  especificacion_metalmecanica                    especificacion_metalmecanica[]
+  especificacion_proyecto_terreno                 especificacion_proyecto_terreno[]
+  especificacion_servicio_terreno                 especificacion_servicio_terreno[]
+  especificacion_terminaciones                    especificacion_terminaciones[]
+  historial_cambio_orden_trabajo                  historial_cambio_orden_trabajo[]
+  medidas_puerta                                  medidas_puerta[]
+  obra                                            obra[]
+  tarea                                           tarea[]
+
+  @@schema("terreno")
+}
+
+model evidencia_terreno {
+  evidencia_terreno_evidencia_terreno_id BigInt                @id(map: "pk_evidencia_terreno") @default(autoincrement())
+  evidencia_terreno_tipo_evidencia       String?
+  evidencia_terreno_fecha_captura        DateTime?             @db.Date
+  evidencia_terreno_imagen_o_vector      Bytes?
+  evidencia_terreno_metadata_dispositivo String?
+  evidencia_terreno_estado_temporal      String?
+  evidencia_terreno_estado_evidencia     String?
+  evidencia_terreno_observacion          String?
+  id_formulario_de_cierre                BigInt?
+  id_servicio_terreno                    BigInt?
+  formulario_de_cierre                   formulario_de_cierre? @relation(fields: [id_formulario_de_cierre], references: [formulario_de_cierre_formulario_de_cierre_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evidencia_terreno_id_formulario_de_cierre")
+  servicio_terreno                       servicio_terreno?     @relation(fields: [id_servicio_terreno], references: [servicio_terreno_servicio_terreno_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evidencia_terreno_id_servicio_terreno")
+
+  @@schema("terreno")
+}
+
+model formulario_de_cierre {
+  formulario_de_cierre_formulario_de_cierre_id         BigInt              @id(map: "pk_formulario_de_cierre") @default(autoincrement())
+  formulario_de_cierre_detalle_de_observaciones        String?
+  formulario_de_cierre_sentido_de_apertura_correcto    Boolean?
+  formulario_de_cierre_pilastras_incluidas_y_ajustadas Boolean?
+  formulario_de_cierre_resultado_finalizado            String?
+  formulario_de_cierre_cilindro_correcto               Boolean?
+  formulario_de_cierre_ausencia_de_rayones_o_danos     Boolean?
+  id_tarea                                             BigInt?
+  evidencia_terreno                                    evidencia_terreno[]
+  tarea                                                tarea?              @relation(fields: [id_tarea], references: [tarea_tarea_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_formulario_de_cierre_id_tarea")
+
+  @@schema("terreno")
+}
+
+model historial_cambio_orden_trabajo {
+  historial_cambio_orden_trabajo_id_cambio       BigInt                   @id(map: "pk_historial_cambio_orden_trabajo") @default(autoincrement())
+  historial_cambio_orden_trabajo_version_nueva   String?
+  historial_cambio_orden_trabajo_version_antigua String?
+  historial_cambio_orden_trabajo_fecha_hora      DateTime?                @db.Timestamptz(6)
+  historial_cambio_orden_trabajo_descripcion     String?
+  id_especificaciones_puerta                     BigInt?
+  especificaciones_puerta                        especificaciones_puerta? @relation(fields: [id_especificaciones_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_historial_cambio_orden_trabajo_id_especificaciones_puerta")
+  medidas_puerta                                 medidas_puerta[]
+
+  @@schema("terreno")
+}
+
+model hoja_doble {
+  hoja_doble_especificacion_puerta_id             BigInt   @id(map: "pk_hoja_doble")
+  hoja_doble_actividad_derecha                    String?
+  hoja_doble_medidas_derecha_vertical_alto        Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_derecha_vertical_ancho       Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_derecha_vertical_espesor     Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_derecha_horizontal_alto      Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_derecha_horizontal_ancho     Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_derecha_horizontal_espesor   Decimal? @db.Decimal(12, 4)
+  hoja_doble_actividad_izquierda                  String?
+  hoja_doble_medidas_izquierda_vertical_alto      Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_izquierda_vertical_ancho     Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_izquierda_vertical_espesor   Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_izquierda_horizontal_alto    Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_izquierda_horizontal_ancho   Decimal? @db.Decimal(12, 4)
+  hoja_doble_medidas_izquierda_horizontal_espesor Decimal? @db.Decimal(12, 4)
+
+  @@schema("terreno")
+}
+
+model hoja_simple {
+  hoja_simple_especificacion_puerta_id   BigInt   @id(map: "pk_hoja_simple")
+  hoja_simple_medidas_vertical_alto      Decimal? @db.Decimal(12, 4)
+  hoja_simple_medidas_vertical_ancho     Decimal? @db.Decimal(12, 4)
+  hoja_simple_medidas_vertical_espesor   Decimal? @db.Decimal(12, 4)
+  hoja_simple_medidas_horizontal_alto    Decimal? @db.Decimal(12, 4)
+  hoja_simple_medidas_horizontal_ancho   Decimal? @db.Decimal(12, 4)
+  hoja_simple_medidas_horizontal_espesor Decimal? @db.Decimal(12, 4)
+
+  @@schema("terreno")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model item_comercial {
+  id_item_comercial  Int                  @id(map: "pk_terreno_item_comercial") @default(autoincrement())
+  nombre_item        String               @db.VarChar(150)
+  descripcion_item   String?
+  tipo_item          String?              @db.VarChar(50)
+  estado_item        String               @default("activo") @db.VarChar(30)
+  detalle_cotizacion detalle_cotizacion[]
+
+  @@schema("terreno")
+}
+
+model medidas_puerta {
+  medidas_puerta_medidas_id                             BigInt                          @id(map: "pk_medidas_puerta") @default(autoincrement())
+  medidas_puerta_medidas_marco_ancho                    Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_marco_alto                     Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_marco_espesor                  Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_vano_vertical_ancho            Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_vano_vertical_alto             Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_vano_vertical_espesor          Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_vano_horizontal_ancho          Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_vano_horizontal_alto           Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_vano_horizontal_espesor        Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_alojamiento_vertical_alto      Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_alojamiento_vertical_ancho     Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_alojamiento_vertical_espesor   Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_alojamiento_horizontal_alto    Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_alojamiento_horizontal_ancho   Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_alojamiento_horizontal_espesor Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_alojamiento_vertical                   Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_de_marco_ancho                 Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_de_marco_alto                  Decimal?                        @db.Decimal(12, 4)
+  medidas_puerta_medidas_de_marco_espesor               Decimal?                        @db.Decimal(12, 4)
+  id_especificacion_puerta                              BigInt?
+  id_cambio                                             BigInt?
+  historial_cambio_orden_trabajo                        historial_cambio_orden_trabajo? @relation(fields: [id_cambio], references: [historial_cambio_orden_trabajo_id_cambio], onDelete: NoAction, onUpdate: NoAction, map: "fk_medidas_puerta_id_cambio")
+  especificaciones_puerta                               especificaciones_puerta?        @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_medidas_puerta_id_especificacion_puerta")
+
+  @@schema("terreno")
+}
+
+model notificacion_tecnico {
+  notificacion_tecnico_id_notificacion_tecnico BigInt            @id(map: "pk_notificacion_tecnico") @default(autoincrement())
+  notificacion_tecnico_fecha_emision           DateTime?         @db.Timestamptz(6)
+  notificacion_tecnico_mensaje                 String?
+  usuario_id_usuario                           BigInt?
+  servicio_terreno_id_servicio_terreno         BigInt?
+  servicio_terreno                             servicio_terreno? @relation(fields: [servicio_terreno_id_servicio_terreno], references: [servicio_terreno_servicio_terreno_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_notificacion_tecnico_servicio_terreno_id_servicio_terreno")
+  usuario                                      usuario?          @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_notificacion_tecnico_usuario_id_usuario")
+
+  @@schema("terreno")
+}
+
+model notificacion_terreno {
+  notificacion_terreno_id_notificacion_terreno BigInt   @id(map: "pk_notificacion_terreno") @default(autoincrement())
+  notificacion_terreno_mensaje                 String?
+  usuario_id_usuario                           BigInt?
+  tarea_id_tarea                               BigInt?
+  tarea                                        tarea?   @relation(fields: [tarea_id_tarea], references: [tarea_tarea_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_notificacion_terreno_tarea_id_tarea")
+  usuario                                      usuario? @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_notificacion_terreno_usuario_id_usuario")
+
+  @@schema("terreno")
+}
+
+model obra {
+  obra_obra_id                 BigInt                   @id(map: "pk_obra") @default(autoincrement())
+  obra_nombre_obra             String?
+  obra_direccion_obra          String?
+  obra_comuna                  String?
+  obra_region                  String?
+  obra_tipo_obra               String?
+  obra_fecha_de_creacion       DateTime?                @db.Date
+  obra_fecha_de_ultima_edicion DateTime?                @db.Date
+  obra_estado                  String?
+  obra_cantidad_puerta         Int?
+  obra_referencia              String?
+  obra_observaciones           String?
+  rut_cliente                  String?                  @db.VarChar(12)
+  id_especificacion_puerta     BigInt?
+  especificaciones_puerta      especificaciones_puerta? @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_obra_id_especificacion_puerta")
+  cliente                      cliente?                 @relation(fields: [rut_cliente], references: [cliente_cliente_rut], onDelete: NoAction, onUpdate: NoAction, map: "fk_obra_rut_cliente")
+
+  @@schema("terreno")
+}
+
+model perfil {
+  codigo_m4 String? @unique
+  activo_m4 Boolean @default(false)
+  admite_particulares Boolean @default(false)
+  perfil_id_perfil     BigInt           @id(map: "pk_perfil") @default(autoincrement())
+  perfil_nombre_perfil String?          @db.VarChar(150)
+  perfil_descripcion   String?
+  perfil_permiso       perfil_permiso[]
+  usuario              usuario[]
+
+  @@schema("terreno")
+}
+
+model perfil_permiso {
+  perfil_id_perfil      BigInt
+  permiso_id_permiso    BigInt
+  perfil_permiso_activo Boolean?
+  perfil                perfil   @relation(fields: [perfil_id_perfil], references: [perfil_id_perfil], onDelete: NoAction, onUpdate: NoAction, map: "fk_perfil_permiso_perfil_id_perfil")
+  permiso               permiso  @relation(fields: [permiso_id_permiso], references: [permiso_id_permiso], onDelete: NoAction, onUpdate: NoAction, map: "fk_perfil_permiso_permiso_id_permiso")
+
+  @@id([perfil_id_perfil, permiso_id_permiso], map: "pk_perfil_permiso")
+  @@schema("terreno")
+}
+
+model permiso {
+  codigo_m4 String? @unique
+  activo_m4 Boolean @default(false)
+  requiere_administrador Boolean @default(false)
+  particulares usuario_permiso_particular[]
+  dependencias permiso_dependencia[] @relation("permiso_dependiente")
+  requerido_por permiso_dependencia[] @relation("permiso_requerido")
+  permiso_id_permiso         BigInt           @id(map: "pk_permiso") @default(autoincrement())
+  permiso_modulo             String?          @db.VarChar(150)
+  permiso_accion             String?          @db.VarChar(150)
+  permiso_descripcion        String?
+  permiso_nombre_del_permiso String?          @db.VarChar(150)
+  perfil_permiso             perfil_permiso[]
+
+  @@schema("terreno")
+}
+
+model prestamo_herramientas {
+  prestamo_herramienta_prestamo_herramienta_id BigInt    @id(map: "pk_prestamo_herramientas") @default(autoincrement())
+  prestamo_herramienta_fecha_entrega           DateTime? @db.Timestamptz(6)
+  prestamo_herramienta_fecha_devolucion        DateTime? @db.Timestamptz(6)
+  prestamo_herramienta_cantidad                Int?
+  prestamo_herramienta_estado_prestamo         String?
+  prestamo_herramienta_observacion             String?
+  rut_empleado                                 String?   @db.VarChar(12)
+  sku_material                                 String?   @db.VarChar(16)
+  empleado                                     empleado? @relation(fields: [rut_empleado], references: [rut_empleado], onDelete: NoAction, onUpdate: NoAction, map: "fk_prestamo_herramientas_rut_empleado")
+  material                                     material? @relation(fields: [sku_material], references: [material_sku], onDelete: NoAction, onUpdate: NoAction, map: "fk_prestamo_herramientas_sku_material")
+
+  @@schema("terreno")
+}
+
+model proyecto {
+  notas_venta_contexto nota_venta[]
+
+  proyecto_proyecto_id        BigInt                   @id(map: "pk_proyecto") @default(autoincrement())
+  proyecto_codigo_proyecto    String?
+  proyecto_nombre_referencia  String?
+  proyecto_fecha_instalacion  DateTime?                @db.Date
+  proyecto_fecha_ingreso      DateTime?                @db.Date
+  proyecto_estado_operacional String?
+  proyecto_estado_produccion  String?
+  rut_cliente                 String?                  @db.VarChar(12)
+  proyecto_financiero         proyecto_financiero[]
+  alerta_faltante_pedido      alerta_faltante_pedido[]
+  lote                        lote[]
+  movimiento_inventario       movimiento_inventario[]
+  orden_trabajo               orden_trabajo[]
+  reserva_inventario          reserva_inventario[]
+  cliente                     cliente?                 @relation(fields: [rut_cliente], references: [cliente_cliente_rut], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyecto_rut_cliente")
+
+  @@schema("terreno")
+}
+
+model receptor {
+  receptor_receptor_id               BigInt  @id(map: "pk_receptor") @default(autoincrement())
+  receptor_primer_nombre_receptor    String?
+  receptor_segundo_nombre_receptor   String?
+  receptor_primer_apellido_receptor  String?
+  receptor_segundo_apellido_receptor String?
+  receptor_rut_receptor              String?
+  id_tarea                           BigInt?
+  tarea                              tarea?  @relation(fields: [id_tarea], references: [tarea_tarea_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_receptor_id_tarea")
+
+  @@schema("terreno")
+}
+
+model servicio_terreno {
+  servicio_terreno_servicio_terreno_id      BigInt                                      @id(map: "pk_servicio_terreno") @default(autoincrement())
+  servicio_terreno_tipo_servicio            String?                                     @db.VarChar(50)
+  servicio_terreno_fecha_real               DateTime?                                   @db.Date
+  servicio_terreno_bloque_horario           DateTime?                                   @db.Time(6)
+  servicio_terreno_prioridad                String?
+  servicio_terreno_fecha_programada         DateTime?                                   @db.Time(6)
+  servicio_terreno_estado                   String?
+  servicio_terreno_observaciones            String?
+  id_usuario                                BigInt?
+  id_checklist_de_materials                 BigInt?
+  especificacion_servicio_terreno           especificacion_servicio_terreno[]
+  evidencia_terreno                         evidencia_terreno[]
+  notificacion_tecnico                      notificacion_tecnico[]
+  checklist_de_materiales                   checklist_de_materiales?                    @relation(fields: [id_checklist_de_materials], references: [checklist_de_materiales_checklist_de_materials_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_servicio_terreno_id_checklist_de_materials")
+  usuario                                   usuario?                                    @relation(fields: [id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_servicio_terreno_id_usuario")
+  servicio_tterreno_herramientas_materiales servicio_tterreno_herramientas_materiales[]
+  tarea                                     tarea[]
+
+  @@schema("terreno")
+}
+
+model servicio_tterreno_herramientas_materiales {
+  id_servicio_terreno_herr_material                            BigInt
+  servicio_terreno_herramientas_materiales_servicio_terreno_id BigInt
+  servicio_terreno                                             servicio_terreno @relation(fields: [servicio_terreno_herramientas_materiales_servicio_terreno_id], references: [servicio_terreno_servicio_terreno_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_servicio_tterreno_herramientas_materiales_servic_58285965")
+
+  @@id([id_servicio_terreno_herr_material, servicio_terreno_herramientas_materiales_servicio_terreno_id], map: "pk_servicio_tterreno_herramientas_materiales")
+  @@schema("terreno")
+}
+
+model tarea {
+  tarea_tarea_id                      BigInt                   @id(map: "pk_tarea") @default(autoincrement())
+  tarea_descripcion                   String?
+  tarea_fecha_de_visita               DateTime?                @db.Date
+  tarea_fecha_de_termino              DateTime?                @db.Date
+  tarea_bloque_horario                DateTime?                @db.Timestamptz(6)
+  tarea_fecha_de_creacion             DateTime?                @db.Date
+  tarea_fecha_de_ultima_actualizacion DateTime?                @db.Date
+  tarea_fecha_de_inicio               DateTime?                @db.Date
+  tarea_fecha_de_inicio_en_terreno    DateTime?                @db.Date
+  tarea_titulo                        String?
+  tarea_horario_limite                DateTime?                @db.Timestamptz(6)
+  tarea_instrucciones_de_oficina      String?
+  tarea_urgencia                      String?
+  tarea_estado_de_tarea               String?
+  id_usuario                          BigInt?
+  id_servicio_terreno                 BigInt?
+  id_especificacion_puerta            BigInt?
+  formulario_de_cierre                formulario_de_cierre[]
+  notificacion_terreno                notificacion_terreno[]
+  receptor                            receptor[]
+  especificaciones_puerta             especificaciones_puerta? @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tarea_id_especificacion_puerta")
+  servicio_terreno                    servicio_terreno?        @relation(fields: [id_servicio_terreno], references: [servicio_terreno_servicio_terreno_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tarea_id_servicio_terreno")
+  usuario                             usuario?                 @relation(fields: [id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_tarea_id_usuario")
+  tarea_tipo                          tarea_tipo[]
+
+  @@schema("terreno")
+}
+
+model tarea_tipo {
+  tarea_tipo_tarea_tipo_id         BigInt    @id(map: "pk_tarea_tipo") @default(autoincrement())
+  tarea_tipo_tiempo_estimado_tarea DateTime? @db.Time(6)
+  tarea_tipo_remuneracion_tarea    Int?
+  id_tarea                         BigInt?
+  tarea                            tarea?    @relation(fields: [id_tarea], references: [tarea_tarea_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tarea_tipo_id_tarea")
+
+  @@schema("terreno")
+}
+
+model tarea_usuario {
+  tarea_usuario_tarea_id   BigInt
+  tarea_usuario_usuario_id BigInt
+
+  @@id([tarea_usuario_tarea_id, tarea_usuario_usuario_id], map: "pk_tarea_usuario")
+  @@schema("terreno")
+}
+
+model usuario {
+  acceso_m4 String? @unique
+  empleado_m4 String? @unique @db.VarChar(15)
+  configuracion_particular Boolean @default(false)
+  administrador_original Boolean @default(false)
+  version_seguridad Int @default(0)
+  empleado_seguridad empleado? @relation("empleado_m4", fields: [empleado_m4], references: [rut_empleado])
+  particulares usuario_permiso_particular[]
+  seguridad estado_seguridad_usuario?
+  sesiones sesion_usuario[]
+  recuperaciones token_recuperacion[]
+  usuario_id_usuario                               BigInt                   @id(map: "pk_usuario") @default(autoincrement())
+  usuario_fecha_de_ultima_edicion                  DateTime?                @db.Timestamptz(6)
+  usuario_rut_usuario                              String?                  @db.VarChar(12)
+  usuario_fecha_de_creacion                        DateTime?                @db.Timestamptz(6)
+  usuario_correo                                   String?                  @db.VarChar(254)
+  usuario_username                                 String?                  @db.VarChar(100)
+  usuario_estado_cuenta                            String?                  @db.VarChar(50)
+  usuario_fecha_ultima_conexion                    DateTime?                @db.Timestamptz(6)
+  usuario_nombre_completo_primer_nombre_usuario    String?                  @db.VarChar(100)
+  usuario_nombre_completo_segundo_nombre_usuario   String?                  @db.VarChar(100)
+  usuario_nombre_completo_primer_apellido_usuario  String?                  @db.VarChar(100)
+  usuario_nombre_completo_segundo_apellido_usuario String?                  @db.VarChar(100)
+  usuario_es_gerencia                              Boolean?
+  gerencia                                         String?
+  usuario_es_tecnico                               Boolean?
+  tecnico                                          String?
+  usuario_es_jop                                   Boolean?
+  jop                                              String?
+  usuario_es_administrador                         Boolean?
+  administrador                                    String?
+  usuario_es_secretaria                            Boolean?
+  secretaria                                       String?
+  perfil_id_perfil                                 BigInt?
+  empleado_rut_empleado                            String?                  @db.VarChar(12)
+  evento_auditoria                                 evento_auditoria[]
+  alerta_faltante_pedido                           alerta_faltante_pedido[]
+  movimiento_inventario                            movimiento_inventario[]
+  notificacion                                     notificacion[]
+  orden_trabajo                                    orden_trabajo[]
+  preparacion_pedido                               preparacion_pedido[]
+  reporte                                          reporte[]
+  notificacion_tecnico                             notificacion_tecnico[]
+  notificacion_terreno                             notificacion_terreno[]
+  servicio_terreno                                 servicio_terreno[]
+  tarea                                            tarea[]
+  empleado                                         empleado?                @relation(fields: [empleado_rut_empleado], references: [rut_empleado], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_empleado_rut_empleado")
+  perfil                                           perfil?                  @relation(fields: [perfil_id_perfil], references: [perfil_id_perfil], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_perfil_id_perfil")
+  usuario_contrasena                               usuario_contrasena[]
+
+  @@schema("terreno")
+}
+
+/// Credencial reutilizada: usuario_contrasena contiene exclusivamente el hash en nuevas credenciales.
+model usuario_contrasena {
+  activa Boolean @default(false)
+  temporal Boolean @default(false)
+  creada DateTime @default(now()) @db.Timestamptz(6)
+  vence DateTime? @db.Timestamptz(6)
+  invalidada DateTime? @db.Timestamptz(6)
+  usuario_id_usuario BigInt
+  usuario_contrasena String
+  usuario            usuario @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_contrasena_usuario_id_usuario")
+
+  @@id([usuario_id_usuario, usuario_contrasena], map: "pk_usuario_contrasena")
+  @@schema("terreno")
+}
+
+view v_ficha_cliente_resumen {
+  id_ficha_cliente                Int?
+  id_cliente_financiero           Int?
+  rut_cliente                     String?   @db.VarChar(15)
+  nombre_razon_social_referencia  String?   @db.VarChar(150)
+  contacto_financiero             String?   @db.VarChar(150)
+  correo_financiero               String?   @db.VarChar(150)
+  telefono_financiero             String?   @db.VarChar(30)
+  nombre_tipo_cliente_financiero  String?   @db.VarChar(80)
+  estado_ficha                    String?   @db.VarChar(20)
+  fecha_creacion                  DateTime? @db.Timestamp(6)
+  fecha_ultima_revision           DateTime? @db.Timestamp(6)
+  observacion_financiera_general  String?
+  cantidad_notas_venta            BigInt?
+  total_notas_venta               Decimal?  @db.Decimal
+  cantidad_documentos_tributarios BigInt?
+  total_documentos_tributarios    Decimal?  @db.Decimal
+  cantidad_pagos_cliente          BigInt?
+  total_pagado_cliente            Decimal?  @db.Decimal
+  cantidad_proyectos_financieros  BigInt?
+  total_costo_real_proyectos      Decimal?  @db.Decimal
+  cantidad_evaluaciones_credito   BigInt?
+  limite_credito_vigente          Decimal?  @db.Decimal(14, 2)
+  estado_limite_credito           String?   @db.VarChar(30)
+  cantidad_creditos_proyecto      BigInt?
+  total_creditos_proyecto         Decimal?  @db.Decimal
+  cantidad_alertas_financieras    BigInt?
+
+  @@schema("finanzas")
+}
+
+view v_ficha_cliente_movimientos {
+  id_ficha_cliente      Int?
+  id_cliente_financiero Int?
+  rut_cliente           String?   @db.VarChar(15)
+  tipo_origen           String?
+  id_origen             Int?
+  fecha_movimiento      DateTime? @db.Timestamp(6)
+  estado                String?   @db.VarChar(30)
+  monto                 Decimal?  @db.Decimal
+  descripcion           String?
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — versiones comerciales, sin módulo de auditoría.
+model cotizacion_version {
+  id_cotizacion_version Int        @id @default(autoincrement())
+  id_cotizacion         Int
+  fecha                 DateTime   @default(now())
+  antecedentes          Json
+  motivo                String
+  cotizacion            cotizacion @relation(fields: [id_cotizacion], references: [id_cotizacion], onDelete: Restrict)
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — antecedente obligatorio de aceptación B2B.
+model orden_compra_b2b {
+  id_orden_compra_b2b Int        @id @default(autoincrement())
+  id_cotizacion       Int        @unique
+  folio               String
+  respaldo            String
+  fecha               DateTime   @db.Date
+  cotizacion          cotizacion @relation(fields: [id_cotizacion], references: [id_cotizacion], onDelete: Restrict)
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — tabla propia hasta cerrar el modelo documental.
+model guia_despacho {
+  id_guia_despacho Int        @id @default(autoincrement())
+  id_nota_venta    Int
+  folio            String     @unique
+  fecha_emision    DateTime   @db.Date
+  estado           String     @default("emitida")
+  antecedentes     Json?
+  nota_venta       nota_venta @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict)
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — referencias comerciales, nunca vencimientos morosos independientes.
+model condicion_cobro_nv {
+  id_condicion_cobro_nv Int        @id @default(autoincrement())
+  id_nota_venta         Int
+  descripcion           String
+  monto_referencia      Decimal?   @db.Decimal(14, 2)
+  porcentaje_referencia Decimal?   @db.Decimal(5, 2)
+  evento_referencia     String?
+  nota_venta            nota_venta @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict)
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — permite reutilización M:N de DTE sin duplicar el documento.
+model documento_tributario_nota_venta {
+  id_documento_tributario Int
+  id_nota_venta           Int
+  documento_tributario    documento_tributario @relation(fields: [id_documento_tributario], references: [id_documento_tributario], onDelete: Restrict)
+  nota_venta              nota_venta           @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict)
+
+  @@id([id_documento_tributario, id_nota_venta])
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — conserva original, monto, motivo, responsable y respaldo.
+model reversion_nota_venta {
+  destino_excedente String? @db.VarChar(30)
+  id_reversion_nota_venta Int                   @id @default(autoincrement())
+  id_nota_venta           Int
+  monto                   Decimal               @db.Decimal(14, 2)
+  fecha                   DateTime              @default(now())
+  motivo                  String
+  responsable             String
+  folio_nota_credito      String                @unique
+  respaldo_pdf            String
+  nota_venta              nota_venta            @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict)
+  saldo_favor_cliente     saldo_favor_cliente[]
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — anulación registral; no representa devolución.
+model anulacion_pago {
+  id_anulacion_pago Int          @id @default(autoincrement())
+  id_pago_cliente   Int          @unique
+  fecha             DateTime     @default(now())
+  motivo            String
+  responsable       String
+  respaldo          String
+  pago_cliente      pago_cliente @relation(fields: [id_pago_cliente], references: [id_pago_cliente], onDelete: Restrict)
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — devolución total/parcial, sin sobrescribir el pago original.
+model reversion_pago {
+  id_reversion_pago Int          @id @default(autoincrement())
+  id_pago_cliente   Int
+  monto             Decimal      @db.Decimal(14, 2)
+  fecha             DateTime     @default(now())
+  motivo            String
+  responsable       String
+  respaldo          String
+  pago_cliente      pago_cliente @relation(fields: [id_pago_cliente], references: [id_pago_cliente], onDelete: Restrict)
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — se registra sólo por elección explícita, no automáticamente.
+model saldo_favor_cliente {
+  id_saldo_favor_cliente  Int                      @id @default(autoincrement())
+  id_cliente_financiero   Int
+  id_nota_venta           Int
+  id_reversion_nota_venta Int
+  monto_original          Decimal                  @db.Decimal(14, 2)
+  monto_disponible        Decimal                  @db.Decimal(14, 2)
+  fecha                   DateTime                 @default(now())
+  cliente_financiero      cliente_financiero       @relation(fields: [id_cliente_financiero], references: [id_cliente_financiero], onDelete: Restrict)
+  nota_venta              nota_venta               @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict)
+  reversion_nota_venta    reversion_nota_venta     @relation(fields: [id_reversion_nota_venta], references: [id_reversion_nota_venta], onDelete: Restrict)
+  aplicacion_saldo_favor  aplicacion_saldo_favor[]
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — movimiento y remanente; documentación tributaria pendiente.
+model aplicacion_saldo_favor {
+  id_aplicacion_saldo_favor Int                 @id @default(autoincrement())
+  id_saldo_favor_cliente    Int
+  id_nota_venta             Int
+  monto                     Decimal             @db.Decimal(14, 2)
+  fecha                     DateTime            @default(now())
+  responsable               String
+  saldo_favor_cliente       saldo_favor_cliente @relation(fields: [id_saldo_favor_cliente], references: [id_saldo_favor_cliente], onDelete: Restrict)
+  nota_venta                nota_venta          @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict)
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — sugerencia editable, no determina el saldo.
+model categoria_pago {
+  id_categoria_pago Int            @id @default(autoincrement())
+  nombre            String         @unique
+  activo            Boolean        @default(true)
+  pago_cliente      pago_cliente[]
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — catálogo de cuotas habilitadas, mínimo una.
+model config_cuotas_tarjeta {
+  cantidad Int     @id
+  activo   Boolean @default(true)
+
+  @@schema("finanzas")
+}
+
+/// PROVISIONAL I2 — sin umbral arbitrario sembrado ni calendario hábil inventado.
+model config_umbral_por_vencer {
+  id_configuracion Int      @id @default(autoincrement())
+  dias_habiles     Int
+  fecha            DateTime @default(now())
+
+  @@schema("finanzas")
+}
+
+/// Relación provisional, distinta de la configuración base reutilizada en perfil.
+model usuario_permiso_particular {
+ id_usuario BigInt
+ id_permiso BigInt
+ usuario usuario @relation(fields: [id_usuario], references: [usuario_id_usuario])
+ permiso permiso @relation(fields: [id_permiso], references: [permiso_id_permiso])
+ @@id([id_usuario,id_permiso])
+ @@schema("terreno")
+}
+model permiso_dependencia {
+ id_permiso BigInt
+ id_requerido BigInt
+ permiso permiso @relation("permiso_dependiente", fields: [id_permiso], references: [permiso_id_permiso])
+ requerido permiso @relation("permiso_requerido", fields: [id_requerido], references: [permiso_id_permiso])
+ @@id([id_permiso,id_requerido])
+ @@schema("terreno")
+}
+/// Estado técnico provisional: bloqueo independiente de Activo/Inactivo.
+model estado_seguridad_usuario {
+ id_usuario BigInt @id
+ intentos Int @default(0)
+ bloqueos Int @default(0)
+ bloqueo_hasta DateTime? @db.Timestamptz(6)
+ bloqueo_persistente Boolean @default(false)
+ actualizado DateTime @default(now()) @db.Timestamptz(6)
+ responsable String?
+ usuario usuario @relation(fields: [id_usuario], references: [usuario_id_usuario])
+ @@schema("terreno")
+}
+/// Se guarda hash del secreto de sesión; el índice parcial de migración asegura sesión única.
+model sesion_usuario {
+ id String @id @default(uuid())
+ id_usuario BigInt
+ secreto_hash String @unique
+ inicio DateTime @default(now()) @db.Timestamptz(6)
+ vence DateTime @db.Timestamptz(6)
+ invalidada DateTime? @db.Timestamptz(6)
+ motivo String?
+ direccion String?
+ agente String?
+ version_seguridad Int
+ usuario usuario @relation(fields: [id_usuario], references: [usuario_id_usuario])
+ @@index([id_usuario])
+ @@schema("terreno")
+}
+/// Token opaco de un solo uso. Nunca se guarda el secreto recuperable.
+model token_recuperacion {
+ id String @id @default(uuid())
+ id_usuario BigInt
+ secreto_hash String @unique
+ creado DateTime @default(now()) @db.Timestamptz(6)
+ vence DateTime @db.Timestamptz(6)
+ utilizado DateTime? @db.Timestamptz(6)
+ usuario usuario @relation(fields: [id_usuario], references: [usuario_id_usuario])
+ @@index([id_usuario])
+ @@schema("terreno")
+}
