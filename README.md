@@ -8,7 +8,7 @@ Repositorio oficial del Módulo de Finanzas del ERP para Puertas Blindadas.
 - Vicente Andrés Hernández Olea
 - Daniella Rosa Catalina Lecanda Garnham 
 - Angella Javiera Sánchez Lopéz
-- Valentín García Farías
+- Valentín Ignacio García Farías
 
 ## Estructura del Proyecto
 
