@@ -12,10 +12,10 @@ Repositorio oficial del Módulo de Finanzas del ERP para Puertas Blindadas.
 
 ## Estructura del Proyecto
 
-El proyecto está dividido en dos partes principales dentro de la carpeta `/CODIGO`:
+El proyecto está dividido en dos partes principales :
 
-- **/CODIGO/Controladores**: API REST construida con Node.js, Express, TypeScript y Prisma ORM. Gestiona la lógica de negocio, integración con base de datos PostgreSQL (Raspberry Pi) y el módulo de transacciones financieras.
-- **/CODIGO/Vistas**: Aplicación web interactiva construida con React, TypeScript, Vite y Tailwind CSS. Incluye el sistema de diseño y las interfaces para gestión de cotizaciones, notas de venta, clientes y dashboard principal.
+- **/Controladores**: API REST construida con Node.js, Express, TypeScript y Prisma ORM. Gestiona la lógica de negocio, integración con base de datos PostgreSQL (Raspberry Pi) y el módulo de transacciones financieras.
+- **/Vistas**: Aplicación web interactiva construida con React, TypeScript, Vite y Tailwind CSS. Incluye el sistema de diseño y las interfaces para gestión de cotizaciones, notas de venta, clientes y dashboard principal.
 
 ## Tecnologías Utilizadas
 
@@ -29,8 +29,8 @@ Para levantar el entorno de desarrollo local, es necesario instalar las dependen
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/Midas2704/Grupo18-SistemaFinanciero-PuertasBlindadas.git
-cd Grupo18-SistemaFinanciero-PuertasBlindadas
+git clone https://github.com/Midas2704/Grupo18-PuertasBlindadas.git
+cd Grupo18-PuertasBlindadas
 ```
 
 ### 2. Levantar la Capa de Persistencia (Base de Datos)
@@ -38,7 +38,7 @@ Para inicializar la base de datos PostgreSQL, se debe ejecutar el script SQL ubi
 
 ### 3. Configurar y Ejecutar la capa de controladores
 ```bash
-cd CODIGO/Controladores
+cd Controladores
 npm install
 
 # Configurar variables de entorno requeridas en el archivo .env
@@ -52,7 +52,7 @@ El backend estará disponible por defecto en `http://localhost:3000`.
 ### 4. Configurar y Ejecutar la capa de vistas
 Abre una nueva pestaña en tu terminal y ejecuta:
 ```bash
-cd CODIGO/Vistas
+cd Vistas
 npm install
 
 # Levantar el servidor de desarrollo de Vite
@@ -62,12 +62,12 @@ La aplicación web estará disponible por defecto en `http://localhost:5173`.
 
 ## Capa de Persistencia y Scripts (Prisma)
 
-El proyecto utiliza Prisma ORM. Algunos de los comandos y scripts útiles disponibles en `/CODIGO/Controladores`:
+El proyecto utiliza Prisma ORM. Algunos de los comandos y scripts útiles disponibles en `Controladores`:
 - `npx prisma db pull`: Sincroniza el esquema de Prisma desde la base de datos externa.
 - `npx prisma generate`: Genera el cliente de Prisma actualizado.
 - `npx prisma studio`: Abre la interfaz visual de la base de datos en el navegador.
 
-Adicionalmente, los scripts para la carga inicial de datos (seeding) masivos o de limpieza se encuentran ubicados en `CODIGO/Controladores/scripts` (ej. `massive_seed_v2.js`) y `CODIGO/Controladores/prisma/seed.ts`.
+Adicionalmente, los scripts para la carga inicial de datos (seeding) masivos o de limpieza se encuentran ubicados en `Controladores/scripts` (ej. `massive_seed_v2.js`) y `Controladores/prisma/seed.ts`.
 
 ## Documentación Adicional
 
