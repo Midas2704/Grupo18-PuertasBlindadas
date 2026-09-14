@@ -1,0 +1,208 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="AL5sr5iDC4Lv8fQQoc-N">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;fontSize=14;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Usuario Autorizado&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Gerencia o Secretaria&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="31.69" x="179.99" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-2" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;fontFamily=Times New Roman;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="10" width="790" x="-199.16" y="880.02" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#36393d;fontFamily=Times New Roman;fontSize=14;" value="&lt;u&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;v_NotaVenta&lt;/font&gt;&lt;/u&gt;" vertex="1">
+          <mxGeometry height="40" width="194.5" x="386.3399999999999" y="449.9999999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-4" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;fontFamily=Times New Roman;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="10" width="790" x="88.61" y="879.99" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fa6800;fontColor=#000000;strokeColor=#C73500;fontFamily=Times New Roman;fontSize=14;" value="&lt;u&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;c_Finanzas&lt;/font&gt;&lt;/u&gt;" vertex="1">
+          <mxGeometry height="40" width="205" x="840" y="449.9999999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-6" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontFamily=Times New Roman;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="790" width="10" x="937.5" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-7" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontFamily=Times New Roman;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="790" width="10" x="1221.5" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fa6800;fontColor=#000000;strokeColor=#C73500;fontFamily=Times New Roman;fontSize=14;" value="&lt;u&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;c_Cotizacion&lt;/font&gt;&lt;/u&gt;" vertex="1">
+          <mxGeometry height="40" width="205" x="1124" y="449.9999999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-9" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontFamily=Times New Roman;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="790" width="10" x="1513.5" y="491" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFCC99;fontColor=#000000;strokeColor=#C73500;fontFamily=Times New Roman;fontSize=14;" value="&lt;u&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;c_PrismaORM&lt;/font&gt;&lt;/u&gt;" vertex="1">
+          <mxGeometry height="40" width="205" x="1416" y="450.9999999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;nota_venta&lt;/font&gt;" vertex="1">
+          <mxGeometry height="40" width="165" x="1713" y="450.9999999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-12" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontFamily=Times New Roman;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="790" width="10" x="1790.5" y="491" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-13" edge="1" parent="1" source="EBMhVOGiNJ5ebDLemFRt-2" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.059;exitY=-0.036;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.06;entryY=0.925;entryDx=0;entryDy=0;entryPerimeter=0;fontFamily=Times New Roman;fontSize=14;" target="EBMhVOGiNJ5ebDLemFRt-4" value="registraCondicionesCobroYFechaFinal()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="345.84000000000026" y="551.24" as="sourcePoint" />
+            <mxPoint x="627.06" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-14" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;edgeStyle=orthogonalEdgeStyle;fontFamily=Times New Roman;fontSize=14;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="980" y="600.01" />
+              <mxPoint x="980" y="630.01" />
+            </Array>
+            <mxPoint x="950" y="599.98" as="sourcePoint" />
+            <mxPoint x="947.5" y="629.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-15" connectable="0" parent="EBMhVOGiNJ5ebDLemFRt-14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Times New Roman;fontSize=14;" value="validarAutorizacionUsuario()" vertex="1">
+          <mxGeometry relative="1" x="0.0607" y="-1" as="geometry">
+            <mxPoint x="97" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;condicion_cobro_nv&lt;/font&gt;" vertex="1">
+          <mxGeometry height="40" width="165" x="1991" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-17" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontFamily=Times New Roman;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="790" width="10" x="2068.5" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-18" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" target="EBMhVOGiNJ5ebDLemFRt-6" value="enviarSolicitudCondicionesCobro()">
+          <mxGeometry relative="1" x="0.0011" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="490" y="580" as="sourcePoint" />
+            <mxPoint x="1072.74" y="580.0000000000002" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-19" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;fontSize=14;" value="&lt;div&gt;&lt;b&gt;Condición de cobro incompleta o inválida&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="194.5" x="240" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-20" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fontFamily=Times New Roman;fontSize=14;" value="Exc1" vertex="1">
+          <mxGeometry height="100" width="2030" x="110" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-25" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="condicionCobroRegistrada">
+          <mxGeometry relative="1" x="-0.5115" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="2068.5" y="1000.98" as="sourcePoint" />
+            <mxPoint x="1526" y="1000.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-45" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="delegarSolicitudCondicionesCobro()">
+          <mxGeometry relative="1" x="0.0011" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="947.5" y="659.98" as="sourcePoint" />
+            <mxPoint x="1226" y="659.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-47" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;edgeStyle=orthogonalEdgeStyle;fontFamily=Times New Roman;fontSize=14;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1264" y="851.01" />
+              <mxPoint x="1264" y="881.01" />
+            </Array>
+            <mxPoint x="1234" y="850.98" as="sourcePoint" />
+            <mxPoint x="1231.5" y="880.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-48" connectable="0" parent="EBMhVOGiNJ5ebDLemFRt-47" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Times New Roman;fontSize=14;" value="registrarCondicionesY&lt;div&gt;MantenerUnicaFechaFinal()&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.0607" y="-1" as="geometry">
+            <mxPoint x="93" y="-4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-49" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;edgeStyle=orthogonalEdgeStyle;fontFamily=Times New Roman;fontSize=14;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1264" y="680.01" />
+              <mxPoint x="1264" y="710.01" />
+            </Array>
+            <mxPoint x="1234" y="679.98" as="sourcePoint" />
+            <mxPoint x="1231.5" y="709.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-50" connectable="0" parent="EBMhVOGiNJ5ebDLemFRt-49" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Times New Roman;fontSize=14;" value="validarInformacionCompleta&lt;div&gt;YCoherente()&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.0607" y="-1" as="geometry">
+            <mxPoint x="93" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-51" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="registrarCondicionCobro()">
+          <mxGeometry relative="1" x="0.0011" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1235" y="920.98" as="sourcePoint" />
+            <mxPoint x="1513.5" y="920.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-52" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="insertarOActualizarCondicionCobro()">
+          <mxGeometry relative="1" x="0.4739" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1528" y="950.5500000000001" as="sourcePoint" />
+            <mxPoint x="2068.5" y="950.5500000000002" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-53" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="confirmacionPersistencia">
+          <mxGeometry relative="1" x="0.0545" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1516" y="1030.98" as="sourcePoint" />
+            <mxPoint x="1231.5" y="1030.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-54" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="actualizarFechaFinalNotaVenta()">
+          <mxGeometry relative="1" x="0.0011" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1235" y="1080.98" as="sourcePoint" />
+            <mxPoint x="1513.5" y="1080.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-55" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="actualizarFechaFinalVencimiento()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1530.5" y="1100.98" as="sourcePoint" />
+            <mxPoint x="1790.5" y="1100.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-56" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="notaVentaActualizada">
+          <mxGeometry relative="1" x="-0.0694" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1790" y="1138.98" as="sourcePoint" />
+            <mxPoint x="1523.5" y="1138.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-57" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="confirmacionPersistencia">
+          <mxGeometry relative="1" x="0.0526" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1511.5" y="1160.98" as="sourcePoint" />
+            <mxPoint x="1236" y="1160.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-58" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="resultadoCondicionesCobro">
+          <mxGeometry relative="1" x="0.0526" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1223" y="1180.98" as="sourcePoint" />
+            <mxPoint x="947.5" y="1180.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-59" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;entryX=0.911;entryY=0.754;entryDx=0;entryDy=0;entryPerimeter=0;fontFamily=Times New Roman;fontSize=14;" value="mostrarCondicionesCobro()">
+          <mxGeometry relative="1" x="0.0543" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="940" y="1198.9" as="sourcePoint" />
+            <mxPoint x="481.07000000000016" y="1198.9" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-62" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontFamily=Times New Roman;fontSize=14;" value="condicionCobroInvalida">
+          <mxGeometry relative="1" x="0.0526" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1221.5" y="779.98" as="sourcePoint" />
+            <mxPoint x="946" y="779.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBMhVOGiNJ5ebDLemFRt-63" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;entryX=0.379;entryY=-0.139;entryDx=0;entryDy=0;entryPerimeter=0;fontFamily=Times New Roman;fontSize=14;" target="EBMhVOGiNJ5ebDLemFRt-4" value="mostrarMensaje(&quot;Condición de cobro incompleta o inválida,&amp;nbsp;&lt;div&gt;no se registra la configuración hasta que sea corregida&quot;)&lt;/div&gt;">
+          <mxGeometry relative="1" y="2" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="940" y="796.98" as="sourcePoint" />
+            <mxPoint x="570.5" y="798" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

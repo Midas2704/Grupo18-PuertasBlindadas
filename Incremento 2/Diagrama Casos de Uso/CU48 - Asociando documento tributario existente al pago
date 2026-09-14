@@ -1,0 +1,208 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Usuario/s" id="N74ZDRGVvXKo12sCRmuD">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-1" parent="1" style="swimlane;startSize=0;" value="" vertex="1">
+          <mxGeometry height="400" width="560" x="120" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-2" parent="OQBaHfxt3VLmX8SPbVPb-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="220" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-3" parent="OQBaHfxt3VLmX8SPbVPb-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Asociando documento&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;tributario existente al pago&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="185" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-4" parent="OQBaHfxt3VLmX8SPbVPb-1" style="shape=datastore;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="260" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-5" parent="OQBaHfxt3VLmX8SPbVPb-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="237.5" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-6" edge="1" parent="OQBaHfxt3VLmX8SPbVPb-1" source="OQBaHfxt3VLmX8SPbVPb-7" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="OQBaHfxt3VLmX8SPbVPb-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="310" />
+            </Array>
+            <mxPoint x="131" y="153" as="sourcePoint" />
+            <mxPoint x="-105" y="403.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-7" parent="OQBaHfxt3VLmX8SPbVPb-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Asociando pago a Nota de Venta&amp;nbsp;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="330" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-8" parent="OQBaHfxt3VLmX8SPbVPb-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="115" y="117" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-9" edge="1" parent="OQBaHfxt3VLmX8SPbVPb-1" source="OQBaHfxt3VLmX8SPbVPb-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=1;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="OQBaHfxt3VLmX8SPbVPb-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="370" y="133" as="sourcePoint" />
+            <mxPoint x="240" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-12" parent="OQBaHfxt3VLmX8SPbVPb-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Registrando documento&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;tributario asociado a Nota de Venta&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="230" x="20" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-13" parent="OQBaHfxt3VLmX8SPbVPb-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="70" x="395" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-14" edge="1" parent="OQBaHfxt3VLmX8SPbVPb-1" source="OQBaHfxt3VLmX8SPbVPb-12" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=0;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="OQBaHfxt3VLmX8SPbVPb-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="370" y="213" as="sourcePoint" />
+            <mxPoint x="240" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-15" edge="1" parent="OQBaHfxt3VLmX8SPbVPb-1" source="OQBaHfxt3VLmX8SPbVPb-12" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="OQBaHfxt3VLmX8SPbVPb-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="135" y="310" />
+            </Array>
+            <mxPoint x="510" y="150" as="sourcePoint" />
+            <mxPoint x="590" y="188" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-10" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; font-family: Arial, sans-serif; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Gerencia&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="OQBaHfxt3VLmX8SPbVPb-11" edge="1" parent="1" source="OQBaHfxt3VLmX8SPbVPb-10" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" target="OQBaHfxt3VLmX8SPbVPb-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="200" y="320" as="sourcePoint" />
+            <mxPoint x="250" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-1" parent="1" style="swimlane;startSize=0;" value="" vertex="1">
+          <mxGeometry height="400" width="560" x="120" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-2" parent="AiEqSOin4MVNWRXr3Y8X-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="220" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-3" parent="AiEqSOin4MVNWRXr3Y8X-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Asociando documento&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;tributario existente al pago&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="185" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-4" parent="AiEqSOin4MVNWRXr3Y8X-1" style="shape=datastore;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="260" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-5" parent="AiEqSOin4MVNWRXr3Y8X-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="237.5" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-6" edge="1" parent="AiEqSOin4MVNWRXr3Y8X-1" source="AiEqSOin4MVNWRXr3Y8X-7" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="AiEqSOin4MVNWRXr3Y8X-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="310" />
+            </Array>
+            <mxPoint x="131" y="153" as="sourcePoint" />
+            <mxPoint x="-105" y="403.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-7" parent="AiEqSOin4MVNWRXr3Y8X-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Asociando pago a Nota de Venta&amp;nbsp;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="330" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-8" parent="AiEqSOin4MVNWRXr3Y8X-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="115" y="117" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-9" edge="1" parent="AiEqSOin4MVNWRXr3Y8X-1" source="AiEqSOin4MVNWRXr3Y8X-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=1;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="AiEqSOin4MVNWRXr3Y8X-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="370" y="133" as="sourcePoint" />
+            <mxPoint x="240" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-10" parent="AiEqSOin4MVNWRXr3Y8X-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Registrando documento&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;tributario asociado a Nota de Venta&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="230" x="20" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-11" parent="AiEqSOin4MVNWRXr3Y8X-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="70" x="395" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-12" edge="1" parent="AiEqSOin4MVNWRXr3Y8X-1" source="AiEqSOin4MVNWRXr3Y8X-10" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=0;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="AiEqSOin4MVNWRXr3Y8X-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="370" y="213" as="sourcePoint" />
+            <mxPoint x="240" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-13" edge="1" parent="AiEqSOin4MVNWRXr3Y8X-1" source="AiEqSOin4MVNWRXr3Y8X-10" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="AiEqSOin4MVNWRXr3Y8X-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="135" y="310" />
+            </Array>
+            <mxPoint x="510" y="150" as="sourcePoint" />
+            <mxPoint x="590" y="188" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-14" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; font-family: Arial, sans-serif; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Secretaria&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="60" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="AiEqSOin4MVNWRXr3Y8X-15" edge="1" parent="1" source="AiEqSOin4MVNWRXr3Y8X-14" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" target="AiEqSOin4MVNWRXr3Y8X-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="210" y="730" as="sourcePoint" />
+            <mxPoint x="260" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-1" parent="1" style="swimlane;startSize=0;" value="" vertex="1">
+          <mxGeometry height="400" width="560" x="120" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-2" parent="lugwAwjdJZsC70pmJx3j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="220" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-3" parent="lugwAwjdJZsC70pmJx3j-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Asociando documento&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;tributario existente al pago&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="185" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-4" parent="lugwAwjdJZsC70pmJx3j-1" style="shape=datastore;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="260" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-5" parent="lugwAwjdJZsC70pmJx3j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="237.5" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-6" edge="1" parent="lugwAwjdJZsC70pmJx3j-1" source="lugwAwjdJZsC70pmJx3j-7" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="lugwAwjdJZsC70pmJx3j-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="310" />
+            </Array>
+            <mxPoint x="131" y="153" as="sourcePoint" />
+            <mxPoint x="-105" y="403.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-7" parent="lugwAwjdJZsC70pmJx3j-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Asociando pago a Nota de Venta&amp;nbsp;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="330" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-8" parent="lugwAwjdJZsC70pmJx3j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="115" y="117" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-9" edge="1" parent="lugwAwjdJZsC70pmJx3j-1" source="lugwAwjdJZsC70pmJx3j-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=1;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="lugwAwjdJZsC70pmJx3j-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="370" y="133" as="sourcePoint" />
+            <mxPoint x="240" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-10" parent="lugwAwjdJZsC70pmJx3j-1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Registrando documento&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;tributario asociado a Nota de Venta&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="230" x="20" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-11" parent="lugwAwjdJZsC70pmJx3j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="70" x="395" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-12" edge="1" parent="lugwAwjdJZsC70pmJx3j-1" source="lugwAwjdJZsC70pmJx3j-10" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=0;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="lugwAwjdJZsC70pmJx3j-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="370" y="213" as="sourcePoint" />
+            <mxPoint x="240" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-13" edge="1" parent="lugwAwjdJZsC70pmJx3j-1" source="lugwAwjdJZsC70pmJx3j-10" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="lugwAwjdJZsC70pmJx3j-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="135" y="310" />
+            </Array>
+            <mxPoint x="510" y="150" as="sourcePoint" />
+            <mxPoint x="590" y="188" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-14" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; font-family: Arial, sans-serif; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Contador&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="60" y="950" as="geometry" />
+        </mxCell>
+        <mxCell id="lugwAwjdJZsC70pmJx3j-15" edge="1" parent="1" source="lugwAwjdJZsC70pmJx3j-14" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" target="lugwAwjdJZsC70pmJx3j-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="210" y="1140" as="sourcePoint" />
+            <mxPoint x="260" y="1090" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
