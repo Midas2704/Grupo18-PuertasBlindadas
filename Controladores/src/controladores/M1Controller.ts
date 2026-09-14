@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../db';
 import { ErrorAplicacion } from '../utilidades/ErrorAplicacion';
-import { calcularNota, efectoPago, incluirCotizacion, incluirNota, incluirPago, resumirNotas, clasificarPorVencer } from '../utilidades/finanzas';
+import { calcularNota, consolidarNotasClp, efectoPago, incluirCotizacion, incluirNota, incluirPago, resumirNotas, clasificarPorVencer, sincronizarEstadoPago } from '../utilidades/finanzas';
 import { FiltrosClientes, identificador } from '../validaciones/solicitudes';
 import { normalizarRut, validarYNormalizarRut, variantesRut } from '../utilidades/rut';
 
@@ -72,6 +72,7 @@ export class M1Controller {
     const resultado = clientes.filter(cliente => !busqueda || cliente.nombre_razon_social_referencia.toLocaleLowerCase('es-CL').includes(busqueda)
       || !!cliente.rut_cliente?.replace(/\./g, '').toLowerCase().includes(rutBuscado)).map(cliente => {
       const saldosPorMoneda = resumirNotas(cliente.ficha_cliente?.nota_venta || []);
+      const consolidadoClp = consolidarNotasClp(cliente.ficha_cliente?.nota_venta || []);
       const esMoroso = saldosPorMoneda.some(saldo => saldo.obligacionesMorosas > 0);
       const tieneDeuda = saldosPorMoneda.some(saldo => saldo.saldoPendiente > 0);
       return {
@@ -83,8 +84,8 @@ export class M1Controller {
         tipoCliente: cliente.tipo_cliente_financiero.nombre_tipo_cliente_financiero,
         estado: cliente.estado_financiero, nivelFormalizacion: cliente.nivel_formalizacion,
         incompleto: cliente.nivel_formalizacion === 'provisional',
-        saldoDeudor: saldosPorMoneda.find(saldo => saldo.moneda === 'CLP')?.saldoPendiente || 0,
-        saldosPorMoneda, tieneDeuda, esMoroso, isMoroso: esMoroso,
+        saldoDeudor: consolidadoClp.saldoPendiente,
+        saldosPorMoneda, consolidadoClp, tieneDeuda, esMoroso, isMoroso: esMoroso,
         situacionFinanciera: esMoroso ? 'Moroso' : tieneDeuda ? 'Deuda vigente' : 'Al día',
       };
     }).filter(cliente => (!filtros.deuda || cliente.tieneDeuda) && (!filtros.morosos || cliente.esMoroso));
@@ -113,8 +114,9 @@ export class M1Controller {
       }) : [];
       const umbral = await transaccion.config_umbral_por_vencer.findFirst({ orderBy: { fecha: 'desc' } });
       const notas = ficha?.nota_venta || [];
+      const estadosPago = new Map(await Promise.all(notas.map(async nota => [nota.id_nota_venta, await sincronizarEstadoPago(transaccion, nota)] as const)));
       const saldosPorMoneda = resumirNotas(notas);
-      const pesos = saldosPorMoneda.find(saldo => saldo.moneda === 'CLP');
+      const consolidadoClp = consolidarNotasClp(notas);
       const esMoroso = saldosPorMoneda.some(saldo => saldo.obligacionesMorosas > 0);
       const tieneDeuda = saldosPorMoneda.some(saldo => saldo.saldoPendiente > 0);
       const pagos = (ficha?.pago_cliente || []).map(pago => ({ ...pago, montoEfectivo: efectoPago(pago).toNumber() }));
@@ -127,17 +129,17 @@ export class M1Controller {
           telefono_financiero: cliente.telefono_financiero, correo_financiero: cliente.correo_financiero,
           contacto_financiero: cliente.contacto_financiero, estado_ficha: cliente.estado_financiero,
           nivelFormalizacion: cliente.nivel_formalizacion, incompleto: cliente.nivel_formalizacion === 'provisional',
-          saldoDeudor: pesos?.saldoPendiente || 0, esMoroso, isMoroso: esMoroso,
+          saldoDeudor: consolidadoClp.saldoPendiente, esMoroso, isMoroso: esMoroso,
           situacionFinanciera: esMoroso ? 'Moroso' : tieneDeuda ? 'Deuda vigente' : 'Al día',
-          saldosPorMoneda,
+          saldosPorMoneda, consolidadoClp,
         },
         resumen_dashboard: {
-          total_ventas: pesos?.montoComercialVigente || 0, total_pagado: pesos?.pagosEfectivos || 0,
-          total_deuda: pesos?.deudaVigente || 0, saldo_pendiente: pesos?.saldoPendiente || 0,
-          obligaciones_morosas: pesos?.obligacionesMorosas || 0, saldosPorMoneda,
+          total_ventas: consolidadoClp.montoComercialVigente, total_pagado: consolidadoClp.pagosEfectivos,
+          total_deuda: consolidadoClp.deudaVigente, saldo_pendiente: consolidadoClp.saldoPendiente,
+          obligaciones_morosas: consolidadoClp.obligacionesMorosas, saldosPorMoneda, consolidadoClp,
           proyectos_activos: proyectos.filter(proyecto => proyecto.proyecto_estado_operacional === 'activo').length,
           proyectos_terminados: proyectos.filter(proyecto => proyecto.proyecto_estado_operacional === 'terminado').length,
-          cotizaciones: cotizaciones.filter(c => !consulta.estado || c.estado_cotizacion === consulta.estado).sort((a,b) => String(a.fecha_emision).localeCompare(String(b.fecha_emision)) * (consulta.direccion === 'desc' ? -1 : 1)), notas_venta: notas.map(nota => ({ ...nota, ...calcularNota(nota), clasificacionVencimiento: clasificarPorVencer(nota.fecha_vencimiento, umbral?.dias_habiles ?? 5),
+          cotizaciones: cotizaciones.filter(c => !consulta.estado || c.estado_cotizacion === consulta.estado).sort((a,b) => String(a.fecha_emision).localeCompare(String(b.fecha_emision)) * (consulta.direccion === 'desc' ? -1 : 1)), notas_venta: notas.map(nota => ({ ...nota, ...estadosPago.get(nota.id_nota_venta), clasificacionVencimiento: clasificarPorVencer(nota.fecha_vencimiento, umbral?.dias_habiles ?? 5),
             ficha_cliente: { cliente_financiero: { rut_cliente: cliente.rut_cliente, nombre_razon_social_referencia: cliente.nombre_razon_social_referencia } },
           })).filter(n => !consulta.estado || n.estado_nota_venta === consulta.estado).sort((a,b) => String(a.fecha_emision).localeCompare(String(b.fecha_emision)) * (consulta.direccion === 'desc' ? -1 : 1)), pagos, proyectos,
           saldosFavor: await transaccion.saldo_favor_cliente.findMany({ where: { id_cliente_financiero: cliente.id_cliente_financiero, monto_disponible: { gt: 0 } }, include: { nota_venta: true } }),

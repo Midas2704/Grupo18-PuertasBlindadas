@@ -401,8 +401,9 @@ const BandejaAprobacionGerencia: React.FC = () => {
                       <td className="py-2 px-6">{nv.ficha_cliente?.cliente_financiero?.nombre_razon_social_referencia || nv.ficha_cliente?.cliente_financiero?.rut_cliente}</td>
                       <td className="py-2 px-6">
                         <span className={`px-2 py-0.5 rounded text-xs font-bold ${nv.estado_nota_venta === 'anulada' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-                          {nv.estado_nota_venta.toUpperCase()}
+                          {String(nv.estadoNotaVentaVisible || nv.estado_nota_venta).replaceAll('_',' ').toUpperCase()}
                         </span>
+                        {!['anulada','revertida_total'].includes(nv.estado_nota_venta) && <span className={`ml-2 px-2 py-0.5 rounded text-xs font-bold ${nv.estadoPago === 'pagada' ? 'bg-green-100 text-green-700' : nv.estadoPago === 'parcial' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}`}>PAGO {String(nv.estadoPago || nv.estado_pago).toUpperCase()}</span>}
                       </td>
                       <td className="py-2 px-6">${Number(nv.monto_total).toLocaleString('es-CL')}</td>
                     </tr>

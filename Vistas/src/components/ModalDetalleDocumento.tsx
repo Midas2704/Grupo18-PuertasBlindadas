@@ -58,8 +58,9 @@ const ModalDetalleDocumento: React.FC<ModalDetalleDocumentoProps> = ({ activeMod
               <span className={`font-semibold uppercase text-xs px-2 py-0.5 rounded ${
                 (activeModal.data.estado_cotizacion === 'aprobada' || activeModal.data.estado_nota_venta === 'confirmada') ? 'bg-green-100 text-green-700' :
                 (activeModal.data.estado_cotizacion === 'rechazada' || activeModal.data.estado_nota_venta === 'anulada') ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
-              }`}>{activeModal.tipo === 'cotizacion' ? activeModal.data.estado_cotizacion : activeModal.data.estado_nota_venta}</span>
+              }`}>{activeModal.tipo === 'cotizacion' ? activeModal.data.estado_cotizacion : String(activeModal.data.estadoNotaVentaVisible || activeModal.data.estado_nota_venta).replaceAll('_',' ')}</span>
             </div>
+            {activeModal.tipo === 'nota_venta' && <div><span className="text-gray-500 block text-xs">Estado de pago</span><span className={`font-semibold uppercase text-xs px-2 py-0.5 rounded ${activeModal.data.estadoPago === 'pagada' ? 'bg-green-100 text-green-700' : activeModal.data.estadoPago === 'parcial' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}`}>{['anulada','revertida_total'].includes(activeModal.data.estado_nota_venta) ? 'Sin obligación' : activeModal.data.estadoPago || activeModal.data.estado_pago}</span></div>}
             <div><span className="text-gray-500 block text-xs">Tipo Producto</span><span className="font-medium">{activeModal.data.detalle_cotizacion?.[0]?.item_comercial?.nombre_item || '—'}</span></div>
             {activeModal.data.observacion && activeModal.data.observacion !== 'PENDIENTE_APROBACION' && (
               <div className="col-span-3"><span className="text-gray-500 block text-xs">Observación</span><span>{activeModal.data.observacion}</span></div>

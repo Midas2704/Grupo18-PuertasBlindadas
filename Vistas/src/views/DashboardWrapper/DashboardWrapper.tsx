@@ -22,9 +22,9 @@ const DashboardWrapper: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 font-sans overflow-hidden">
+    <div className="flex min-h-screen w-full flex-col bg-slate-50 font-sans lg:h-screen lg:flex-row lg:overflow-hidden">
       {/* Sidebar: navegación persistente, sin sorpresas */}
-      <aside className="w-72 bg-[#111111] text-gray-300 flex flex-col flex-shrink-0">
+      <aside className="flex w-full flex-shrink-0 flex-col bg-[#111111] text-gray-300 lg:w-72">
         <div className="h-20 flex items-center px-6 border-b border-gray-800">
           <div className="flex items-center gap-3 text-white">
             <div className="p-2 bg-primary-600 rounded-lg">
@@ -34,14 +34,14 @@ const DashboardWrapper: React.FC = () => {
           </div>
         </div>
 
-        <nav className="flex-1 py-6 px-4 space-y-2">
+        <nav className="flex flex-1 gap-2 overflow-x-auto px-4 py-3 lg:block lg:space-y-2 lg:overflow-visible lg:py-6">
           {menuItems.filter(item=>!permisosRuta[item.path] || sesion?.permisos.includes(permisosRuta[item.path]!)).map((item) => {
             const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+                className={`flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all ${
                   isActive 
                     ? 'bg-primary-600/10 text-primary-500' 
                     : 'hover:bg-gray-800/50 hover:text-white'
@@ -54,7 +54,7 @@ const DashboardWrapper: React.FC = () => {
           })}
         </nav>
 
-        <div className="p-6 border-t border-gray-800 text-sm text-gray-500">
+        <div className="hidden border-t border-gray-800 p-6 text-sm text-gray-500 lg:block">
           <p className="text-white mb-1">{sesion?.nombre}</p>
           <button className="text-primary-500 mb-4" onClick={async()=>{await operar('/seguridad/salir',{});await actualizar();}}>Cerrar mi sesión</button><br/>
           Módulo Finanzas <br />
@@ -64,7 +64,7 @@ const DashboardWrapper: React.FC = () => {
       </aside>
 
       {/* El contenido cambia, la carcasa queda quieta */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="min-w-0 flex-1 lg:overflow-y-auto">
         <Outlet />
       </main>
     </div>

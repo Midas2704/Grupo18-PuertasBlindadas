@@ -1,24 +1,30 @@
 import { solicitarFinanzas } from '../../api/finanzas';
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Calculator, User, DollarSign, Percent, Shield, ChevronDown } from 'lucide-react';
+import { formatearMoneda } from '../../utilidades/moneda';
 
 interface Cliente {
   id_ficha_cliente: number;
   rut: string;
   razonSocial: string;
 }
+interface ClienteApi extends Cliente { nivelFormalizacion: string }
 interface LineaComercial { tipo: string; descripcion: string; cantidad: number; valor: number; idItemComercial?: number; idProyecto?: number }
+interface Proyecto { proyecto_proyecto_id:string;proyecto_nombre_referencia?:string;proyecto_codigo_proyecto?:string;proyecto_estado_operacional?:string }
+interface FichaCliente { resumen_dashboard?: { proyectos?: Proyecto[] } }
 
 const NotaDeVentaDirecta: React.FC = () => {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [items, setItems] = useState<{id_item_comercial:number;nombre_item:string}[]>([]);
-  const [proyectos, setProyectos] = useState<{proyecto_proyecto_id:string;proyecto_nombre_referencia?:string;proyecto_codigo_proyecto?:string;proyecto_estado_operacional?:string}[]>([]);
+  const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   
   const [idClienteInput, setIdClienteInput] = useState('');
   const [dropdownClienteOpen, setDropdownClienteOpen] = useState(false);
 
   const [montoBase, setMontoBase] = useState<number>(0);
   const [moneda, setMoneda] = useState('CLP');
+  const [tipoCambio, setTipoCambio] = useState('');
+  const [tipoCambioOrigen, setTipoCambioOrigen] = useState<'Banco Central'|'manual'|''>('');
 
   const [exentoIva, setExentoIva] = useState(false);
   const [aplicarDescuento, setAplicarDescuento] = useState(false);
@@ -34,7 +40,7 @@ const NotaDeVentaDirecta: React.FC = () => {
   useEffect(() => {
     solicitarFinanzas('/clients')
       .then(res => res.json())
-      .then(data => setClientes(data.filter((cliente: any) => cliente.rut && cliente.nivelFormalizacion === 'formal')))
+      .then((data: ClienteApi[]) => setClientes(data.filter(cliente => cliente.rut && cliente.nivelFormalizacion === 'formal')))
       .catch(e => console.error('Error fetching clientes', e));
     solicitarFinanzas('/billing/products').then(res => res.json()).then(setItems).catch(e => console.error('Error fetching items', e));
 
@@ -46,6 +52,17 @@ const NotaDeVentaDirecta: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (moneda !== 'USD') return;
+    solicitarFinanzas('/billing/exchange-rate/USD').then(async respuesta => {
+      const datos = await respuesta.json(); if (!respuesta.ok) throw new Error(datos.error);
+      setTipoCambio(String(datos.valor)); setTipoCambioOrigen('Banco Central');
+    }).catch(() => {
+      setTipoCambio(''); setTipoCambioOrigen('manual');
+      setMensaje({ text: 'Banco Central no está disponible. Ingresa y confirma el tipo de cambio USD/CLP.', type: 'error' });
+    });
+  }, [moneda]);
 
   const netoComercial = montoBase;
   // el total se arma por partes para que sea fácil seguirlo en clase
@@ -78,6 +95,7 @@ const NotaDeVentaDirecta: React.FC = () => {
     const lineas = detalle.filter(linea => linea.descripcion.trim());
     if (!lineas.length || lineas.some(linea => linea.cantidad <= 0 || linea.valor <= 0)) return setMensaje({ text: 'Agrega al menos una línea con cantidad y valor mayor a cero.', type: 'error' });
     if (Math.abs(lineas.reduce((suma, linea) => suma + linea.cantidad * linea.valor, 0) - montoBase) > 0.01) return setMensaje({ text: 'El detalle comercial no coincide con el monto neto.', type: 'error' });
+    if (moneda === 'USD' && (!(Number(tipoCambio) > 0) || (tipoCambioOrigen !== 'Banco Central' && tipoCambioOrigen !== 'manual'))) return setMensaje({ text: 'Confirma un tipo de cambio USD/CLP válido.', type: 'error' });
     if (!window.confirm(`¿Confirmas registrar la Nota de Venta por ${moneda} ${totalFinal.toLocaleString('es-CL')}?`)) return;
 
     setLoading(true);
@@ -91,7 +109,9 @@ const NotaDeVentaDirecta: React.FC = () => {
           tipo: descuentoTipo,
           valor: descuentoValor
         } : null,
-        detalle: lineas.length ? lineas : undefined
+        detalle: lineas.length ? lineas : undefined,
+        tipoCambio: moneda === 'USD' ? Number(tipoCambio) : undefined,
+        tipoCambioManual: moneda === 'USD' && tipoCambioOrigen === 'manual'
       };
 
       const res = await solicitarFinanzas('/billing/nota-venta', {
@@ -107,9 +127,12 @@ const NotaDeVentaDirecta: React.FC = () => {
       setMontoBase(0);
       setAplicarDescuento(false);
       setIdClienteInput('');
+      setMoneda('CLP');
+      setTipoCambio('');
+      setTipoCambioOrigen('');
       setDetalle([{ tipo: 'producto', descripcion: '', cantidad: 1, valor: 0 }]);
-    } catch (error: any) {
-      setMensaje({ text: error.message, type: 'error' });
+    } catch (error: unknown) {
+      setMensaje({ text: error instanceof Error ? error.message : 'No se pudo emitir la Nota de Venta.', type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -172,7 +195,7 @@ const NotaDeVentaDirecta: React.FC = () => {
                         onClick={() => {
                           setIdClienteInput(`${c.id_ficha_cliente} - ${c.rut} - ${c.razonSocial}`);
                           setDropdownClienteOpen(false);
-                          solicitarFinanzas(`/clients/${encodeURIComponent(c.rut)}/ficha`).then(res=>res.json()).then(ficha=>setProyectos((ficha.resumen_dashboard?.proyectos || []).filter((proyecto:any)=>proyecto.proyecto_estado_operacional==='activo'))).catch(()=>setProyectos([]));
+                          solicitarFinanzas(`/clients/${encodeURIComponent(c.rut)}/ficha`).then(res=>res.json()).then((ficha:FichaCliente)=>setProyectos((ficha.resumen_dashboard?.proyectos || []).filter(proyecto=>proyecto.proyecto_estado_operacional==='activo'))).catch(()=>setProyectos([]));
                         }}
                       >
                         <span className="font-semibold text-gray-900">{c.razonSocial}</span>
@@ -225,14 +248,17 @@ const NotaDeVentaDirecta: React.FC = () => {
                   <select 
                     className="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
                     value={moneda}
-                    onChange={e => setMoneda(e.target.value)}
+                    onChange={e => { setMoneda(e.target.value); setTipoCambio(''); setTipoCambioOrigen(''); }}
                   >
                     <option value="CLP">CLP</option>
                     <option value="USD">USD</option>
                   </select>
                 </div>
-                <div className="text-sm text-gray-500 flex items-center">La venta conserva su moneda. El tipo de cambio se registra al pagar.</div>
+                <div className="text-sm text-gray-500 flex items-center">La venta conserva su moneda y su conversión histórica al momento de emitir.</div>
               </div>
+              {moneda === 'USD' && <label className="block text-sm font-medium text-gray-700">Tipo de cambio USD/CLP ({tipoCambioOrigen || 'consultando'})
+                <input required type="number" min="0.0001" step="0.0001" readOnly={tipoCambioOrigen === 'Banco Central'} value={tipoCambio} onChange={e=>setTipoCambio(e.target.value)} className="mt-1 w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg read-only:bg-gray-100" />
+              </label>}
             </div>
 
             <div className="flex items-center gap-3 mb-6">
@@ -270,7 +296,7 @@ const NotaDeVentaDirecta: React.FC = () => {
                     <select 
                       className="w-full p-2.5 bg-white border border-orange-200 rounded-lg outline-none text-gray-700"
                       value={descuentoTipo}
-                      onChange={e => setDescuentoTipo(e.target.value as any)}
+                      onChange={e => setDescuentoTipo(e.target.value as 'fijo' | 'porcentaje')}
                     >
                       <option value="porcentaje">Porcentaje (%)</option>
                       <option value="fijo">Monto Fijo ({moneda})</option>
@@ -306,30 +332,30 @@ const NotaDeVentaDirecta: React.FC = () => {
             <div className="space-y-3 relative z-10 text-sm">
               <div className="flex justify-between items-center text-gray-300">
                 <span>Subtotal Base ({moneda}):</span>
-                <span>${netoComercial.toLocaleString('es-CL', { maximumFractionDigits: 0 })}</span>
+                <span>{formatearMoneda(netoComercial, moneda)}</span>
               </div>
               
               {aplicarDescuento && (
                 <div className="flex justify-between items-center text-orange-400">
                   <span>Descuento Aplicado:</span>
-                  <span>-${montoDescuentoComercial.toLocaleString('es-CL', { maximumFractionDigits: 0 })}</span>
+                  <span>-{formatearMoneda(montoDescuentoComercial, moneda)}</span>
                 </div>
               )}
 
               <div className="flex justify-between items-center text-gray-300 pt-2 border-t border-gray-700">
                 <span>Base Imponible:</span>
-                <span>${baseImponible.toLocaleString('es-CL', { maximumFractionDigits: 0 })}</span>
+                <span>{formatearMoneda(baseImponible, moneda)}</span>
               </div>
 
               <div className="flex justify-between items-center text-gray-300">
                 <span>IVA (19%):</span>
-                <span>${iva.toLocaleString('es-CL', { maximumFractionDigits: 0 })} {exentoIva && '(Exento)'}</span>
+                <span>{formatearMoneda(iva, moneda)} {exentoIva && '(Exento)'}</span>
               </div>
               
               <div className="pt-4 mt-2 border-t border-gray-700">
                 <div className="text-gray-400 mb-1 uppercase tracking-wider font-semibold text-xs">Total a Pagar</div>
                 <div className="text-4xl font-bold text-white tracking-tight">
-                  ${totalFinal.toLocaleString('es-CL', { maximumFractionDigits: 0 })}
+                  {formatearMoneda(totalFinal, moneda)}
                 </div>
               </div>
             </div>

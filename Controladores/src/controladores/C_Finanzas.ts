@@ -109,6 +109,7 @@ export class C_Finanzas {
       case 'guardarCotizacion': return this.m2.guardarCotizacion(cuerpo);
       case 'editarCotizacion': return this.m2.editarCotizacion(identificador(parametros.id), cuerpo);
       case 'crearVentaDirecta': return this.m2.crearVentaDirecta(cuerpo);
+      case 'aprobarVenta': return this.m2.confirmarNotaVenta(identificador(parametros.id));
       case 'anularVenta': return this.m2.anularVenta(identificador(parametros.id), cuerpo);
       case 'registrarDocumento': return this.m2.registrarDocumento(cuerpo);
       case 'descartarBorrador': return this.m2.descartarBorrador(identificador(parametros.id));

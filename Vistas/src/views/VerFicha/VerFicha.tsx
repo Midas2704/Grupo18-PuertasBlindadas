@@ -322,13 +322,9 @@ const VerFicha: React.FC = () => {
                       {new Date(nv.fecha_emision).toLocaleDateString('es-CL', { timeZone: 'UTC' })}
                     </td>
                     <td className="py-3 px-6 text-sm">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize
-                        ${nv.estado_nota_venta === 'PAGADA' ? 'bg-green-100 text-green-700' :
-                          nv.estado_nota_venta === 'PARCIAL' ? 'bg-yellow-100 text-yellow-700' :
-                          nv.estado_nota_venta === 'anulada' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
-                        {nv.estado_nota_venta}
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${nv.estadoNotaVentaVisible === 'pagada' ? 'bg-green-100 text-green-700' : nv.estadoNotaVentaVisible === 'parcialmente_pagada' ? 'bg-yellow-100 text-yellow-700' : nv.estado_nota_venta === 'anulada' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
+                        {String(nv.estadoNotaVentaVisible || nv.estado_nota_venta).replaceAll('_',' ')}
                       </span>
-                      <span className="block mt-1 text-xs text-gray-500">Pago: {['anulada', 'revertida_total'].includes(nv.estado_nota_venta) ? 'Sin obligación vigente' : nv.estadoPago}</span>
                     </td>
                     <td className="py-3 px-6 text-sm text-right font-medium text-gray-900">
                       {nv.moneda?.codigo_moneda} {Number(nv.monto_total).toLocaleString('es-CL')}

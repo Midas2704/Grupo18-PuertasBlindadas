@@ -3,7 +3,7 @@ import { prepararPago } from '../utilidades/pago';
 import { identificador, texto } from '../validaciones/solicitudes';
 import { prisma } from '../db';
 import { ErrorAplicacion } from '../utilidades/ErrorAplicacion';
-import { calcularNota, incluirNota, incluirPago, efectoPago, fechaNegocio } from '../utilidades/finanzas';
+import { calcularNota, incluirNota, incluirPago, efectoPago, fechaNegocio, sincronizarEstadoPago } from '../utilidades/finanzas';
 import { BancoCentral, C_BancoCentral } from '../utilidades/C_BancoCentral';
 
 const textoPdf = (valor: unknown) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7E]/g,'?').replace(/([\\()])/g,'\\$1');
@@ -29,18 +29,19 @@ export class M3Controller {
         const externo = await this.bancoCentral.obtenerTipoCambio('USD');
         datosEntrada = { ...datosEntrada, tipoCambio: externo, tipoCambioOrigen: 'C_BancoCentral' };
       } catch (error) {
-        if (!entrada.tipoCambio) throw error;
+        if (!entrada.tipoCambio || entrada.tipoCambioManual !== true) throw error;
         datosEntrada = { ...datosEntrada, tipoCambioOrigen: 'manual-fallback' };
       }
     }
     return prisma.$transaction(async tx=>{
       const nota=await tx.nota_venta.findUnique({where:{id_nota_venta:idNota},include:{...incluirNota,ficha_cliente:{include:{cliente_financiero:true}}}});
       if(!nota || nota.ficha_cliente.cliente_financiero.estado_financiero!=='activo')throw new ErrorAplicacion(409,'Selecciona una NV de un cliente activo');
-      const documento=await tx.documento_tributario.findUnique({where:{id_documento_tributario:identificador(entrada.idDocumento)}});
-      if(!documento || documento.id_ficha_cliente!==nota.id_ficha_cliente)throw new ErrorAplicacion(400,'El documento tributario debe existir y pertenecer al mismo cliente');
+      const idDocumento=entrada.idDocumento?identificador(entrada.idDocumento):null;
+      const documento=idDocumento?await tx.documento_tributario.findUnique({where:{id_documento_tributario:idDocumento}}):null;
+      if(idDocumento&&(!documento || documento.id_ficha_cliente!==nota.id_ficha_cliente))throw new ErrorAplicacion(400,'El documento tributario debe existir y pertenecer al mismo cliente');
+      if(idDocumento&&!await tx.documento_tributario_nota_venta.findUnique({where:{id_documento_tributario_id_nota_venta:{id_documento_tributario:idDocumento,id_nota_venta:idNota}}}))throw new ErrorAplicacion(400,'El documento tributario no está relacionado con la Nota de Venta');
       const catalogo={medios:await tx.medio_pago.findMany({where:{estado_medio_pago:'activo'}}),categorias:await tx.categoria_pago.findMany({where:{activo:true}}),cuotas:await tx.config_cuotas_tarjeta.findMany({where:{activo:true}})};
-      const pago=await tx.pago_cliente.create({data:prepararPago(nota,datosEntrada,catalogo,documento.id_documento_tributario,responsable)});
-      await tx.documento_tributario_nota_venta.upsert({where:{id_documento_tributario_id_nota_venta:{id_documento_tributario:documento.id_documento_tributario,id_nota_venta:idNota}},update:{},create:{id_documento_tributario:documento.id_documento_tributario,id_nota_venta:idNota}});
+      const pago=await tx.pago_cliente.create({data:prepararPago(nota,datosEntrada,catalogo,idDocumento,responsable)});
       const calculo=await this.recalcularSaldo(tx,idNota);
       return {mensaje:'Pago registrado',idPago:pago.id_pago_cliente,...calculo};
     },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable});
@@ -48,10 +49,8 @@ export class M3Controller {
 
   async recalcularSaldo(tx:Prisma.TransactionClient,idNota:number) {
     const nota=await tx.nota_venta.findUniqueOrThrow({where:{id_nota_venta:idNota},include:incluirNota});
-    const calculo=calcularNota(nota);
     // CU50: actualizamos el estado del pago; el comercial se queda como está.
-    await tx.nota_venta.update({where:{id_nota_venta:idNota},data:{estado_pago:calculo.estadoPago}});
-    return calculo;
+    return sincronizarEstadoPago(tx,nota);
   }
   async procesarExcedente(tx:Prisma.TransactionClient,idNota:number,idReversion:number,entrada:Record<string,unknown>) {
     const calculo=await this.recalcularSaldo(tx,idNota);
@@ -88,15 +87,18 @@ export class M3Controller {
       prisma.categoria_pago.findMany({ where: { activo: true } }),
       prisma.config_cuotas_tarjeta.findMany({ where: { activo: true }, orderBy: { cantidad: 'asc' } }),
     ]);
-    const documentos=idFicha?await prisma.documento_tributario.findMany({where:{id_ficha_cliente:idFicha},select:{id_documento_tributario:true,folio_documento:true,tipo_documento:{select:{nombre_tipo_documento:true}}}}):[];
+    const documentos=idFicha?await prisma.documento_tributario.findMany({where:{id_ficha_cliente:idFicha},select:{id_documento_tributario:true,folio_documento:true,tipo_documento:{select:{nombre_tipo_documento:true}},documento_tributario_nota_venta:{select:{id_nota_venta:true}}}}):[];
     return { medios, categorias, cuotas, documentos };
   }
   async consultarTipoCambio(moneda: string) { return { moneda: moneda.toUpperCase(), valor: await this.bancoCentral.obtenerTipoCambio(moneda) }; }
   async contextoPago(idFicha: number) {
     const catalogos = await this.consultarCatalogos(idFicha);
-    const notas = await prisma.nota_venta.findMany({ where: { id_ficha_cliente: idFicha, estado_nota_venta: { notIn: ['anulada','revertida_total','cerrada'] } }, include: incluirNota, orderBy: { fecha_emision: 'desc' } });
-    const pagos = await prisma.pago_cliente.findMany({ where: { id_ficha_cliente: idFicha }, include: incluirPago, orderBy: { fecha_pago: 'desc' } });
-    return { ...catalogos, notas: notas.map(n => ({ ...n, ...calcularNota(n) })).filter(n => n.saldoPendiente > 0), pagos: pagos.map(p => ({ ...p, montoEfectivo: efectoPago(p).toNumber() })) };
+    return prisma.$transaction(async tx => {
+      const notas = await tx.nota_venta.findMany({ where: { id_ficha_cliente: idFicha, estado_nota_venta: { notIn: ['anulada','revertida_total','cerrada'] } }, include: incluirNota, orderBy: { fecha_emision: 'desc' } });
+      const pagos = await tx.pago_cliente.findMany({ where: { id_ficha_cliente: idFicha }, include: incluirPago, orderBy: { fecha_pago: 'desc' } });
+      const notasConEstado = await Promise.all(notas.map(async nota => ({ ...nota, ...await sincronizarEstadoPago(tx,nota) })));
+      return { ...catalogos, notas: notasConEstado.filter(nota => nota.saldoPendiente > 0), pagos: pagos.map(pago => ({ ...pago, montoEfectivo: efectoPago(pago).toNumber() })) };
+    }, { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead });
   }
 
   async anularPago(idPago: number, entrada: Record<string, unknown>, responsable: string) {

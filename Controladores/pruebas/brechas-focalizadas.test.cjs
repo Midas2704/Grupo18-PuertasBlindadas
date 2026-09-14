@@ -23,8 +23,8 @@ test('CU56: la mora comienza al día siguiente de la fecha final', () => {
 test('CU45: un medio no efectivo necesita antecedente y crédito necesita cuotas', () => {
   const nota = notaBase(null);
   const catalogo = { medios: [{ id_medio_pago: 1, nombre_medio_pago: 'Transferencia' }], categorias: [{ id_categoria_pago: 1, nombre: 'Anticipo' }], cuotas: [] };
-  assert.throws(() => prepararPago(nota, { monto: 10, idMedio: 1, respaldo: 'ok' }, catalogo, 1, 'test'), /antecedente/);
-  assert.equal(prepararPago(nota, { monto: 10, idMedio: 1, respaldo: 'ok', antecedentesMedio: 'TRX-1' }, catalogo, 1, 'test').antecedentes_medio, 'TRX-1');
+  assert.throws(() => prepararPago(nota, { monto: 10, idMedio: 1, idCategoria: 1, respaldo: 'ok' }, catalogo, 1, 'test'), /antecedente/);
+  assert.equal(prepararPago(nota, { monto: 10, idMedio: 1, idCategoria: 1, respaldo: 'ok', antecedentesMedio: 'TRX-1' }, catalogo, 1, 'test').antecedentes_medio, 'TRX-1');
 });
 
 test('CU13: el cliente B2C provisional exige teléfono antes de persistir', async () => {

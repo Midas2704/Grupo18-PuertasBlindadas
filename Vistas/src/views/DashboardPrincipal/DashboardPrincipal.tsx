@@ -1,11 +1,14 @@
 import { solicitarFinanzas } from '../../api/finanzas';
 import React, { useState, useEffect } from 'react';
 import { DollarSign, Users, FileSignature, TrendingUp, AlertCircle, ShieldCheck } from 'lucide-react';
+import { formatearMoneda } from '../../utilidades/moneda';
 
 interface DashboardStats {
   clientesActivos: number;
   ingresosTotales: number;
   cotizacionesPendientes: number;
+  saldosPorMoneda: { moneda:string; montoComercialVigente:number; saldoPendiente:number }[];
+  consolidadoClp: { cantidadSinConversion:number; operacionesSinConversion:{idNota:number;numeroNota:string;moneda:string}[] };
 }
 
 const DashboardPrincipal: React.FC = () => {
@@ -60,7 +63,7 @@ const DashboardPrincipal: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-500">Ventas vigentes (CLP)</p>
               <h3 className="text-3xl font-bold text-gray-900 mt-2">
-                ${stats.ingresosTotales.toLocaleString('es-CL', { maximumFractionDigits: 0 })}
+                {formatearMoneda(stats.ingresosTotales, 'CLP')}
               </h3>
             </div>
             <div className="p-3 bg-green-50 rounded-xl">
@@ -109,6 +112,21 @@ const DashboardPrincipal: React.FC = () => {
           </div>
         </div>
 
+      </div>
+
+      {stats.consolidadoClp.cantidadSinConversion > 0 && <div role="status" className="mb-6 rounded-xl border border-orange-200 bg-orange-50 p-4 text-orange-900">
+        {stats.consolidadoClp.cantidadSinConversion} operación(es) en moneda extranjera no fueron incluidas en el consolidado CLP porque no tienen conversión histórica.
+      </div>}
+
+      <div className="mb-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-900">Desglose por moneda original</h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {stats.saldosPorMoneda.map(saldo=><div key={saldo.moneda} className="rounded-xl bg-gray-50 p-4">
+            <div className="font-semibold">{saldo.moneda}</div>
+            <div className="text-sm text-gray-600">Ventas: {formatearMoneda(saldo.montoComercialVigente,saldo.moneda)}</div>
+            <div className="text-sm text-gray-600">Saldo: {formatearMoneda(saldo.saldoPendiente,saldo.moneda)}</div>
+          </div>)}
+        </div>
       </div>
 
       <div className="bg-gradient-to-br from-primary-900 to-gray-900 rounded-2xl shadow-lg p-10 text-white relative overflow-hidden">

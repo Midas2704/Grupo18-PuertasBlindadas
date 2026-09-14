@@ -90,3 +90,58 @@ export function resumirNotas(notas: NotaFinanciera[]) {
     excedente: resumen.excedente.toNumber(),
   }));
 }
+
+/** Consolida en CLP usando exclusivamente la conversión histórica guardada en cada NV. */
+export function consolidarNotasClp(notas: NotaFinanciera[]) {
+  const totales = {
+    montoComercialVigente: cero(), pagosEfectivos: cero(), saldoPendiente: cero(),
+    deudaVigente: cero(), obligacionesMorosas: cero(), excedente: cero(),
+  };
+  const operacionesSinConversion: { idNota: number; numeroNota: string; moneda: string }[] = [];
+  for (const nota of notas) {
+    const codigo = nota.moneda.codigo_moneda.toUpperCase();
+    let factor: Prisma.Decimal | null = codigo === 'CLP' ? new Prisma.Decimal(1) : null;
+    if (!factor && nota.tipo_cambio_usado?.gt(0)) factor = nota.tipo_cambio_usado;
+    if (!factor && nota.monto_convertido?.gt(0) && nota.monto_total.gt(0)) factor = nota.monto_convertido.div(nota.monto_total);
+    if (!factor) {
+      operacionesSinConversion.push({ idNota: nota.id_nota_venta, numeroNota: nota.numero_nota_venta, moneda: codigo });
+      continue;
+    }
+    const calculo = calcularNota(nota);
+    totales.montoComercialVigente = totales.montoComercialVigente.plus(new Prisma.Decimal(calculo.montoComercialVigente).mul(factor));
+    totales.pagosEfectivos = totales.pagosEfectivos.plus(new Prisma.Decimal(calculo.pagosEfectivos).mul(factor));
+    totales.saldoPendiente = totales.saldoPendiente.plus(new Prisma.Decimal(calculo.saldoPendiente).mul(factor));
+    totales.deudaVigente = totales.deudaVigente.plus(new Prisma.Decimal(calculo.esMorosa ? 0 : calculo.saldoPendiente).mul(factor));
+    totales.obligacionesMorosas = totales.obligacionesMorosas.plus(new Prisma.Decimal(calculo.esMorosa ? calculo.saldoPendiente : 0).mul(factor));
+    totales.excedente = totales.excedente.plus(new Prisma.Decimal(calculo.excedente).mul(factor));
+  }
+  return {
+    moneda: 'CLP',
+    montoComercialVigente: totales.montoComercialVigente.toDecimalPlaces(2).toNumber(),
+    pagosEfectivos: totales.pagosEfectivos.toDecimalPlaces(2).toNumber(),
+    saldoPendiente: totales.saldoPendiente.toDecimalPlaces(2).toNumber(),
+    deudaVigente: totales.deudaVigente.toDecimalPlaces(2).toNumber(),
+    obligacionesMorosas: totales.obligacionesMorosas.toDecimalPlaces(2).toNumber(),
+    excedente: totales.excedente.toDecimalPlaces(2).toNumber(),
+    operacionesSinConversion,
+    cantidadSinConversion: operacionesSinConversion.length,
+  };
+}
+
+export function estadoVisibleNota(nota: NotaFinanciera, estadoPago = calcularNota(nota).estadoPago) {
+  if (['anulada', 'revertida', 'revertida_total', 'provisional'].includes(nota.estado_nota_venta.toLowerCase())) return nota.estado_nota_venta;
+  if (estadoPago === 'parcial') return 'parcialmente_pagada';
+  if (estadoPago === 'pagada') return 'pagada';
+  return nota.estado_nota_venta;
+}
+
+/** Mantiene la columna de consulta estado_pago alineada con los movimientos vigentes. */
+export async function sincronizarEstadoPago(tx: Prisma.TransactionClient, nota: NotaFinanciera) {
+  const calculo = calcularNota(nota);
+  const conservaEstado = ['anulada', 'revertida', 'revertida_total', 'provisional'].includes(nota.estado_nota_venta.toLowerCase());
+  const estadoPago = conservaEstado ? nota.estado_pago : calculo.estadoPago;
+  if (!conservaEstado && nota.estado_pago !== estadoPago) {
+    await tx.nota_venta.update({ where: { id_nota_venta: nota.id_nota_venta }, data: { estado_pago: estadoPago } });
+  }
+  return { ...calculo, estado_pago: estadoPago, estadoNotaVentaVisible: estadoVisibleNota(nota, estadoPago) };
+}
