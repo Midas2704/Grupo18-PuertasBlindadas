@@ -1,0 +1,161 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="YE7eFTY8LOIMZyE3adQ1">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="JAziMQkE-pK6lW4xs01W-1" parent="1" style="swimlane;startSize=0;" value="" vertex="1">
+          <mxGeometry height="710" width="480" x="370" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-2" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="130" x="143.5" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-3" parent="JAziMQkE-pK6lW4xs01W-1" style="ellipse;whiteSpace=wrap;html=1;" value="Configurando rebaja comercial en venta" vertex="1">
+          <mxGeometry height="60" width="170" x="116.11" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-4" parent="JAziMQkE-pK6lW4xs01W-1" style="ellipse;whiteSpace=wrap;html=1;" value="Seleccionando&amp;nbsp;&lt;div&gt;opción&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;Aplicar Descuento&quot;&amp;nbsp;&lt;/span&gt;&lt;div&gt;en&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Nota de Venta&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="186" x="109.11" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-5" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-4" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="JAziMQkE-pK6lW4xs01W-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="265.61" y="55" as="sourcePoint" />
+            <mxPoint x="95.11" y="85" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-6" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-4" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="JAziMQkE-pK6lW4xs01W-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="50.61" y="195" as="sourcePoint" />
+            <mxPoint x="84.61" y="135" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-7" parent="JAziMQkE-pK6lW4xs01W-1" style="ellipse;whiteSpace=wrap;html=1;" value="Calculando proporción sobre &quot;Total Bruto&quot;" vertex="1">
+          <mxGeometry height="70" width="160" x="34.86" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-8" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-7" style="endArrow=open;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=none;startFill=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endFill=0;" target="JAziMQkE-pK6lW4xs01W-14" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="296.61" y="45" as="sourcePoint" />
+            <mxPoint x="195.61" y="45" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-9" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="218.1100604652098" y="95.00345874741151" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-10" parent="JAziMQkE-pK6lW4xs01W-1" style="shape=datastore;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="54" x="398.11" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-11" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Base de&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Datos&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;div&gt;Compartida&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="110" x="370" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-12" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-14" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" target="JAziMQkE-pK6lW4xs01W-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="186.11" y="385" as="sourcePoint" />
+            <mxPoint x="251.11" y="414" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-13" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-4" style="endArrow=open;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=none;startFill=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="JAziMQkE-pK6lW4xs01W-22" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="95.61" y="375" as="sourcePoint" />
+            <mxPoint x="95.61" y="345" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-14" parent="JAziMQkE-pK6lW4xs01W-1" style="ellipse;whiteSpace=wrap;html=1;" value="Seleccionando &quot;Porcentaje&quot;&lt;div&gt;&amp;nbsp;e ingresando valor&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="197.11" x="104" y="337" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-15" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="JAziMQkE-pK6lW4xs01W-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-16" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="227.11" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-17" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="44.86" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-18" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-19" style="endArrow=open;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=none;startFill=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endFill=0;" target="JAziMQkE-pK6lW4xs01W-7" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="231.11" y="515" as="sourcePoint" />
+            <mxPoint x="61.11" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-19" parent="JAziMQkE-pK6lW4xs01W-1" style="ellipse;whiteSpace=wrap;html=1;" value="Restando valor y&amp;nbsp;&lt;div&gt;almacenando&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;en&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;Nuevo Saldo Líquido&quot;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="173.94" x="27.89" y="614" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-20" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="JAziMQkE-pK6lW4xs01W-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-21" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-19" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.85;entryY=0.95;entryDx=0;entryDy=0;entryPerimeter=0;" target="JAziMQkE-pK6lW4xs01W-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="444" y="645" />
+            </Array>
+            <mxPoint x="352.11" y="295" as="sourcePoint" />
+            <mxPoint x="421.11" y="295" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-22" parent="JAziMQkE-pK6lW4xs01W-1" style="ellipse;whiteSpace=wrap;html=1;" value="Desplegando&amp;nbsp;&lt;div&gt;Selector&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;Monto Fijo&quot; o&amp;nbsp;&lt;/span&gt;&lt;div&gt;&amp;nbsp;&quot;Porcentaje&quot;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="193.5" x="105.86" y="235" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-23" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-14" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="JAziMQkE-pK6lW4xs01W-22" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="208.11" y="145" as="sourcePoint" />
+            <mxPoint x="208.11" y="105" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-24" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="226.11" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-25" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="58.11" y="411.5" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-26" parent="JAziMQkE-pK6lW4xs01W-1" style="ellipse;whiteSpace=wrap;html=1;" value="Seleccionando &quot;Guardar Descuento&quot;" vertex="1">
+          <mxGeometry height="60" width="135.75" x="234.25" y="441.5" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-27" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-26" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=1;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="JAziMQkE-pK6lW4xs01W-14" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="244.86" y="375" as="sourcePoint" />
+            <mxPoint x="194.86" y="305" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-28" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="295.11" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-29" parent="JAziMQkE-pK6lW4xs01W-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="330" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-30" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="JAziMQkE-pK6lW4xs01W-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-31" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-32" style="endArrow=open;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=none;startFill=0;endFill=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="JAziMQkE-pK6lW4xs01W-26" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="288.86" y="635" as="sourcePoint" />
+            <mxPoint x="287.86" y="585" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-32" parent="JAziMQkE-pK6lW4xs01W-1" style="ellipse;whiteSpace=wrap;html=1;" value="Validando Seguridad" vertex="1">
+          <mxGeometry height="60" width="130" x="237.13" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-33" edge="1" parent="JAziMQkE-pK6lW4xs01W-1" source="JAziMQkE-pK6lW4xs01W-32" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="JAziMQkE-pK6lW4xs01W-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="425" y="575" />
+            </Array>
+            <mxPoint x="440" y="747" as="sourcePoint" />
+            <mxPoint x="682" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-34" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Gerencia o Secretaria" vertex="1">
+          <mxGeometry height="60" width="30" x="280" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="JAziMQkE-pK6lW4xs01W-35" edge="1" parent="1" source="JAziMQkE-pK6lW4xs01W-34" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="JAziMQkE-pK6lW4xs01W-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="330" as="sourcePoint" />
+            <mxPoint x="333" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

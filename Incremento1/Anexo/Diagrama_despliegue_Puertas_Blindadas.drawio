@@ -1,0 +1,295 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Diagrama de despliegue" id="6X836FAN4LgUDXrI_y6U">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3xeFfSdvASba5G_G9Aon-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="685" width="470" x="1230" y="694" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;fillColor=#fa6800;fontColor=#000000;strokeColor=#C73500;" value="&lt;span&gt;&lt;b&gt;SERVIDOR DE APLICACIONES&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="42" width="470" x="1230" y="694" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-3" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="- CPU: 4 a 8 vCPUs (Intel Xeon / AMD EPYC)&lt;br&gt;  - RAM: 8GB a 16GB DDR4&lt;br&gt;  - Disco: SSD NVMe 200GB mínimo (para logs y reportes)&lt;br&gt;- OS: Ubuntu 22.04 LTS / Windows Server 2022&lt;br&gt;  - Runtime: Node.js 20.x LTS&lt;br&gt;  - Framework: Express.js 4.x / NestJS&lt;br&gt;- Ancho de banda: 100 Mbps dedicados&lt;br&gt;  - Latencia interna: &amp;lt; 10ms&lt;br&gt;  - IP fija privada para conexión a BD&lt;br&gt;  - Firewall con reglas por puerto&lt;br&gt;  - RBAC (Role-Based Access Control)&lt;br&gt;  - Certificados SSL/TLS para APIs" vertex="1">
+          <mxGeometry height="269" width="470" x="1230" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="470" x="1230" y="736" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="470" x="1230" y="1039" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=9;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ RuntimeNodeJS(): void&lt;br&gt;+ APIRESTExpress(): void&lt;br&gt;+ AutenticarUsuarioJWT(): void&lt;br&gt;+ EncriptarPasswordBcrypt(): void&lt;br&gt;+ GestionarClientes(): void&lt;br&gt;+ GestionarCotizacionesYNotasVenta(): void&lt;br&gt;+ RegistrarPagosClientes(): void&lt;br&gt;+ GestionarProveedoresYCompras(): void&lt;br&gt;+ RegistrarGastosCajaChica(): void&lt;br&gt;+ CalcularCostosProyecto(): void&lt;br&gt;+ GestionarRemuneraciones(): void&lt;br&gt;+ ConciliarMovimientos(): void&lt;br&gt;+ GenerarReportesFinancieros(): void&lt;br&gt;+ GenerarDocumentosPDFExcel(): void&lt;br&gt;+ EnviarAlertas(): void&lt;br&gt;+ RegistrarAuditoria(): void&lt;br&gt;+ IntegrarInventarioTerreno(): void&lt;br&gt;+ ConsultarIndicadoresUF(): void" vertex="1">
+          <mxGeometry height="306" width="470" x="1230" y="1073" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-8" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=1;exitY=0.45;entryX=-0.001;entryY=0.566;entryDx=0;entryDy=0;entryPerimeter=0;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-50" value="&lt;span&gt;HTTPS/TLS&lt;/span&gt;&lt;br&gt;carga de las vistas">
+          <mxGeometry relative="1" x="0.0003" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-9" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=1;exitY=0.45;entryX=0;entryY=0.38;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-1" value="&lt;span&gt;HTTPS / REST / JSON&lt;/span&gt;&lt;br&gt;consultas API">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-10" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=1;exitY=0.28;entryX=0;entryY=0.42;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-38" value="&lt;span&gt;HTTPS / JSON&lt;/span&gt;&lt;br&gt;UF y dólar">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-11" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=1;exitY=0.66;entryX=0;entryY=0.38;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-31" value="&lt;span&gt;PostgreSQL TLS&lt;/span&gt;&lt;br&gt;TCP 5432">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-12" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=0.55;exitY=0;entryX=0.115;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-1" value="&lt;span&gt;API interna segura&lt;/span&gt;&lt;br&gt;cruce de datos">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1284.5" y="1424" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-13" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=0.78;exitY=1;entryX=0.50;entryY=0;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-24" value="&lt;span&gt;logs / reportes&lt;/span&gt;&lt;br&gt;archivos temporales">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-14" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=1;exitY=0.55;entryX=0;entryY=0.88;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-31" value="&lt;span&gt;recuperación y auditoría&lt;/span&gt;&lt;br&gt;PITR + trazabilidad">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-15" connectable="0" parent="1" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="540" width="480" x="670" y="1519" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-16" parent="3xeFfSdvASba5G_G9Aon-15" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="490" width="480" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-17" parent="3xeFfSdvASba5G_G9Aon-15" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;" value="&lt;span&gt;&lt;b&gt;BASES DE DATOS DE OTROS MODULOS&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="42" width="480" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-18" parent="3xeFfSdvASba5G_G9Aon-15" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="" vertex="1">
+          <mxGeometry height="34" width="480" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-19" parent="3xeFfSdvASba5G_G9Aon-15" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="- CPU: 2 a 4 vCPUs&lt;br&gt;  - RAM: 4GB a 8GB&lt;br&gt;  - Disco: 100GB SSD&lt;br&gt;  - API REST (Java Spring Boot / Node.js / .NET Core)&lt;br&gt;  - Base de datos: PostgreSQL&lt;br&gt;  - Autenticación: OAuth2 / JWT&lt;br&gt;  - VPN o red privada con el servidor de aplicaciones&lt;br&gt;  - API Gateway común para centralizar autenticación&lt;br&gt;  - Timeout de conexión: 30s&lt;br&gt;SEGURIDAD:&lt;br&gt;  - Certificados TLS 1.2+ en APIs&lt;br&gt;  - Rate limiting por IP" vertex="1">
+          <mxGeometry height="254" width="480" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-20" parent="3xeFfSdvASba5G_G9Aon-15" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="480" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-21" parent="3xeFfSdvASba5G_G9Aon-15" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="480" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-22" parent="3xeFfSdvASba5G_G9Aon-15" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ ModuloInventario(): void&lt;br&gt;+ EntregarProductosStockInsumos(): void&lt;br&gt;+ EntregarCostosAsociados(): void&lt;br&gt;+ ModuloTerrenoOperaciones(): void&lt;br&gt;+ EntregarInstalacionAvanceTareas(): void&lt;br&gt;+ SincronizarDatosCompartidos(): void" vertex="1">
+          <mxGeometry height="130" width="480" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-23" connectable="0" parent="1" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="550" width="380" x="1380" y="1659" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-24" parent="3xeFfSdvASba5G_G9Aon-23" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="550" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-25" parent="3xeFfSdvASba5G_G9Aon-23" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;" value="&lt;span&gt;&lt;i&gt;&lt;b&gt;RESPALDO, MONITOREO Y RECUPERACIÓN&lt;/b&gt;&lt;/i&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="45.29411764705882" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-26" parent="3xeFfSdvASba5G_G9Aon-23" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="- CPU: 2 vCPUs&lt;br&gt;  - RAM: 4GB&lt;br&gt;  - Disco: 500GB HDD/SSD (respaldo histórico)&lt;br&gt;  - Almacenamiento externo: S3 / Azure Blob&lt;br&gt;  - Sistema de logs: ELK Stack (Elasticsearch, Logstash, Kibana) o Loki&lt;br&gt;  - Métricas: Prometheus + Grafana&lt;br&gt;  - Scripts: Bash / Python / Node.js&lt;br&gt;  - Backup incremental: cada 6 horas&lt;br&gt;  - Backup completo: diario a las 02:00 AM&lt;br&gt;  - Retención: 30 días para backups diarios, 12 meses para mensuales&lt;br&gt;  - RPO: 15 minutos&lt;br&gt;  - RTO: 4 horas" vertex="1">
+          <mxGeometry height="288.04" width="380" y="81.96" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-27" parent="3xeFfSdvASba5G_G9Aon-23" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="36.666666666666664" width="380" y="45.29411764705882" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-28" parent="3xeFfSdvASba5G_G9Aon-23" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="36.666666666666664" width="380" y="369.995294117647" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-29" parent="3xeFfSdvASba5G_G9Aon-23" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ RegistrarLogsTecnicos(): void&lt;br&gt;+ MonitorearErrores(): void&lt;br&gt;+ GuardarReportesTemporales(): void&lt;br&gt;+ GuardarRespaldosDocumentales(): void&lt;br&gt;+ RecuperarInformacion(): void&lt;div&gt;+ EjecutarScriptBackup(): void&lt;/div&gt;&lt;div&gt;+ MonitorearLogsAuditoria(): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="161.76470588235293" width="380" y="406.6619607843137" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-30" connectable="0" parent="1" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="560" width="400" x="2010" y="1289" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-31" parent="3xeFfSdvASba5G_G9Aon-30" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="510" width="400" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-32" parent="3xeFfSdvASba5G_G9Aon-30" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;" value="&lt;span&gt;&lt;i&gt;&lt;b&gt;BASE DE DATOS CLOUD&lt;/b&gt;&lt;/i&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="42" width="400" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-33" parent="3xeFfSdvASba5G_G9Aon-30" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="- Proveedor: Neon.tech (PostgreSQL serverless)&lt;br&gt;  - Escalado automático: hasta 10 vCPU en ráfagas&lt;br&gt;  - Almacenamiento: mínimo 1GB, escalado automático&lt;br&gt;  - PostgreSQL 18.x con extensiones: pgcrypto, pg_stat_statements&lt;br&gt;  - Replicación: Multi-zona de disponibilidad&lt;br&gt;  - Puerto 5432 con whitelist de IPs del servidor de aplicaciones&lt;br&gt;  - TLS 1.3 obligatorio para todas las conexiones&lt;br&gt;  - Pool de conexiones máximo: 50 concurrentes&lt;br&gt;  - Encriptación en reposo (AES-256)&lt;br&gt;  - Backup automático con PITR (Point-In-Time Recovery)&lt;br&gt;  - Retención de respaldos: 30 días" vertex="1">
+          <mxGeometry height="254" width="400" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-34" parent="3xeFfSdvASba5G_G9Aon-30" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="400" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-35" parent="3xeFfSdvASba5G_G9Aon-30" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="400" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-36" parent="3xeFfSdvASba5G_G9Aon-30" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ PostgreSQL18(): void&lt;br&gt;+ SchemaFinanzasPB(): void&lt;br&gt;+ AlmacenarDatosFinancieros(): void&lt;br&gt;+ EjecutarTriggersAuditoria(): void&lt;br&gt;+ EjecutarVistasResumen(): void&lt;br&gt;+ ValidarPKFKChecks(): void&lt;br&gt;+ MantenerIndices(): void&lt;br&gt;+ RespaldarDatosPITR(): void" vertex="1">
+          <mxGeometry height="150" width="400" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-37" connectable="0" parent="1" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="480" width="380" x="2030" y="679" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-38" parent="3xeFfSdvASba5G_G9Aon-37" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="460" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-39" parent="3xeFfSdvASba5G_G9Aon-37" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;" value="&lt;span&gt;&lt;i&gt;&lt;b&gt;APIs DE TERCEROS&lt;/b&gt;&lt;/i&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="42" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-40" parent="3xeFfSdvASba5G_G9Aon-37" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="FUENTES DE DATOS:&lt;br&gt;  - mindicador.cl (UF, Dólar, UTM, IVP, IPC)&lt;br&gt;  - Banco Central de Chile (API opcional)&lt;br&gt;  - Salida a internet desde servidor de aplicaciones&lt;br&gt;  - Puerto 443 habilitado (HTTPS)&lt;br&gt;  - Timeout: 10 segundos&lt;br&gt;  - REST / JSON sobre HTTPS&lt;br&gt;  - No requiere autenticación para APIs públicas&lt;br&gt;  - 3 reintentos con backoff exponencial (1s, 2s, 4s)&lt;br&gt;  - Cache local de 2 horas en servidor de aplicaciones&lt;br&gt;  - Fallback: valores del día anterior si API no responde" vertex="1">
+          <mxGeometry height="244" width="380" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-41" parent="3xeFfSdvASba5G_G9Aon-37" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="380" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-42" parent="3xeFfSdvASba5G_G9Aon-37" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="380" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-43" parent="3xeFfSdvASba5G_G9Aon-37" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ APIIndicadorCL(): void&lt;br&gt;+ ConsultarUFDiaria(): void&lt;br&gt;+ ConsultarDolarDiario(): void&lt;br&gt;+ RecibirJSONIndicadores(): void" vertex="1">
+          <mxGeometry height="110" width="380" y="354" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-44" connectable="0" parent="1" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="520" width="390" x="640" y="795" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-45" parent="3xeFfSdvASba5G_G9Aon-44" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="480" width="390" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-46" parent="3xeFfSdvASba5G_G9Aon-44" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;" value="&lt;span&gt;&lt;b&gt;SERVIDOR WEB&amp;nbsp;&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="42" width="390" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-47" edge="1" parent="3xeFfSdvASba5G_G9Aon-44" source="3xeFfSdvASba5G_G9Aon-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-50" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-48" edge="1" parent="3xeFfSdvASba5G_G9Aon-44" source="3xeFfSdvASba5G_G9Aon-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-50" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-49" parent="3xeFfSdvASba5G_G9Aon-44" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="390" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-50" parent="3xeFfSdvASba5G_G9Aon-44" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="- CPU: 2 vCPUs&lt;br&gt;  - RAM: 4GB&lt;br&gt;  - Disco: 20GB SSD (build estático de React)&lt;br&gt;  - OS: Ubuntu 22.04 LTS&lt;br&gt;  - Servidor web: Nginx 1.24+ / Apache 2.4+&lt;br&gt;  - Build: React 18 + Vite 5 + TailwindCSS 3&lt;br&gt;  - Puerto 80 redirige a 443 (HTTPS)&lt;br&gt;  - Certificado SSL/TLS (Let&#39;s Encrypt o similar)&lt;br&gt;  - CDN opcional para assets estáticos&lt;br&gt;  - Compresión Gzip/Brotli habilitada&lt;br&gt;  - Cache: max-age=1 año para assets con hash" vertex="1">
+          <mxGeometry height="204" width="390" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-51" parent="3xeFfSdvASba5G_G9Aon-44" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="34" width="390" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-52" parent="3xeFfSdvASba5G_G9Aon-44" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ HostingFrontend(): void&lt;br&gt;+ ServirBuildReact(): void&lt;br&gt;+ EntregarHTMLCSSJS(): void&lt;br&gt;+ CargarTypeScriptVite(): void&lt;br&gt;+ AplicarTailwindCSS(): void&lt;br&gt;+ ForzarHTTPS(): void" vertex="1">
+          <mxGeometry height="170" width="390" y="314" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-53" connectable="0" parent="1" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="570" width="380" x="70" y="729" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-54" parent="3xeFfSdvASba5G_G9Aon-53" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="570" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-55" connectable="0" parent="3xeFfSdvASba5G_G9Aon-53" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="516.2264150943396" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-56" parent="3xeFfSdvASba5G_G9Aon-55" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Requerimiento&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="38.028679245283016" width="380" y="45.16981132075472" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-57" parent="3xeFfSdvASba5G_G9Aon-53" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;" value="&lt;span&gt;&lt;b&gt;PC USUARIO&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="45.16981132075472" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-58" parent="3xeFfSdvASba5G_G9Aon-53" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="36.56603773584906" width="380" y="45.16981132075472" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-59" parent="3xeFfSdvASba5G_G9Aon-53" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="- CPU: 2+ cores (Intel i3/AMD Ryzen 3 o superior)&lt;br&gt;  - RAM: 8GB (4GB mínimo absoluto)&lt;br&gt;  - Disco: 10GB libres&lt;br&gt;  - Resolución de pantalla: 1366x768 mínimo&lt;br&gt;  - OS: Windows 10/11&lt;br&gt;  - Navegador: Chrome 120+, Firefox 115+, Edge 120+&lt;br&gt;  - Conexión a internet: 10 Mbps bajada / 2 Mbps subida&lt;br&gt;  - Latencia máxima: 200 ms hacia el servidor web&lt;br&gt;  - Puertos: 80 y 443 abiertos para salida&lt;br&gt;  - Almacenamiento local de JWT (sessionStorage o localStorage)&lt;br&gt;  - Tener habilitado JavaScript y cookies" vertex="1">
+          <mxGeometry height="308.26" width="380" y="81.74" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-60" parent="3xeFfSdvASba5G_G9Aon-53" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="37.64150943396226" width="380" y="376.4150943396226" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-61" parent="3xeFfSdvASba5G_G9Aon-53" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ NavegadorWeb(): void&lt;br&gt;+ AplicacionFrontendReact(): void&lt;br&gt;+ GestionarSesionJWT(): void&lt;br&gt;+ VisualizarDashboardFinanciero(): void&lt;br&gt;+ ConsultarFichaCliente(): void&lt;br&gt;+ RegistrarPagosYCotizaciones(): void" vertex="1">
+          <mxGeometry height="155.9433962264151" width="380" y="414.0566037735849" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-62" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.345;entryY=-0.109;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;strokeWidth=1;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-17">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="1389" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-63" connectable="0" parent="1" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="570" width="380" x="70" y="1329" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-64" parent="3xeFfSdvASba5G_G9Aon-63" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="570" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-65" connectable="0" parent="3xeFfSdvASba5G_G9Aon-63" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="516.2264150943396" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-66" parent="3xeFfSdvASba5G_G9Aon-65" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Requerimiento&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="38.028679245283016" width="380" y="45.16981132075472" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-67" parent="3xeFfSdvASba5G_G9Aon-63" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;" value="&lt;span&gt;&lt;b&gt;PC USUARIO&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="45.16981132075472" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-68" parent="3xeFfSdvASba5G_G9Aon-63" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="36.56603773584906" width="380" y="45.16981132075472" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-69" parent="3xeFfSdvASba5G_G9Aon-63" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="- CPU: 2+ cores (Intel i3/AMD Ryzen 3 o superior)&lt;br&gt;  - RAM: 8GB (4GB mínimo absoluto)&lt;br&gt;  - Disco: 10GB libres&lt;br&gt;  - Resolución de pantalla: 1366x768 mínimo&lt;br&gt;  - OS: macOS 11+&lt;br&gt;  - Navegador: Chrome 120+, Firefox 115+, Safari 16+&lt;br&gt;  - Conexión a internet: 10 Mbps bajada / 2 Mbps subida&lt;br&gt;  - Latencia máxima: 200 ms hacia el servidor web&lt;br&gt;  - Puertos: 80 y 443 abiertos para salida&lt;br&gt;  - Almacenamiento local de JWT (sessionStorage o localStorage)&lt;br&gt;  - Tener habilitado JavaScript y cookies" vertex="1">
+          <mxGeometry height="308.26" width="380" y="81.74" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-70" parent="3xeFfSdvASba5G_G9Aon-63" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="37.64150943396226" width="380" y="376.4150943396226" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-71" parent="3xeFfSdvASba5G_G9Aon-63" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ NavegadorWeb(): void&lt;br&gt;+ AplicacionFrontendReact(): void&lt;br&gt;+ GestionarSesionJWT(): void&lt;br&gt;+ VisualizarDashboardFinanciero(): void&lt;br&gt;+ ConsultarFichaCliente(): void&lt;br&gt;+ RegistrarPagosYCotizaciones(): void" vertex="1">
+          <mxGeometry height="155.9433962264151" width="380" y="414.0566037735849" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-72" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=1;exitY=0.45;entryX=-0.001;entryY=0.389;entryDx=0;entryDy=0;entryPerimeter=0;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-50" value="&lt;span&gt;HTTPS/TLS&lt;/span&gt;&lt;br&gt;carga de las vistas">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="411" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-73" connectable="0" parent="1" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="570" width="380" x="70" y="129" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-74" parent="3xeFfSdvASba5G_G9Aon-73" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="570" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-75" connectable="0" parent="3xeFfSdvASba5G_G9Aon-73" style="group;strokeWidth=1;fontStyle=0" value="" vertex="1">
+          <mxGeometry height="516.2264150943396" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-76" parent="3xeFfSdvASba5G_G9Aon-75" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Requerimiento&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="38.028679245283016" width="380" y="45.16981132075472" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-77" parent="3xeFfSdvASba5G_G9Aon-73" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=15;align=center;verticalAlign=middle;" value="&lt;span&gt;&lt;b&gt;PC USUARIO&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="45.16981132075472" width="380" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-78" parent="3xeFfSdvASba5G_G9Aon-73" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Hardware y Software&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="36.56603773584906" width="380" y="45.16981132075472" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-79" parent="3xeFfSdvASba5G_G9Aon-73" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="- CPU: 2+ cores (Intel i3/AMD Ryzen 3 o superior)&lt;br&gt;  - RAM: 8GB (4GB mínimo absoluto)&lt;br&gt;  - Disco: 10GB libres&lt;br&gt;  - Resolución de pantalla: 1366x768 mínimo&lt;br&gt;  - OS:Linux (Ubuntu 20.04+)&lt;br&gt;  - Navegador: Chrome 120+, Firefox 115+&lt;br&gt;  - Conexión a internet: 10 Mbps bajada / 2 Mbps subida&lt;br&gt;  - Latencia máxima: 200 ms hacia el servidor web&lt;br&gt;  - Puertos: 80 y 443 abiertos para salida&lt;br&gt;  - Almacenamiento local de JWT (sessionStorage o localStorage)&lt;br&gt;  - Tener habilitado JavaScript y cookies" vertex="1">
+          <mxGeometry height="308.26" width="380" y="81.74" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-80" parent="3xeFfSdvASba5G_G9Aon-73" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontStyle=2;fontSize=12;align=left;verticalAlign=middle;spacingLeft=10;" value="&amp;lt;&amp;lt;Servicios&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="37.64150943396226" width="380" y="376.4150943396226" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-81" parent="3xeFfSdvASba5G_G9Aon-73" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=10;align=left;verticalAlign=top;spacing=8;fontStyle=0" value="+ NavegadorWeb(): void&lt;br&gt;+ AplicacionFrontendReact(): void&lt;br&gt;+ GestionarSesionJWT(): void&lt;br&gt;+ VisualizarDashboardFinanciero(): void&lt;br&gt;+ ConsultarFichaCliente(): void&lt;br&gt;+ RegistrarPagosYCotizaciones(): void" vertex="1">
+          <mxGeometry height="155.9433962264151" width="380" y="414.0566037735849" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-82" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.75;entryDx=0;entryDy=0;exitDx=0;exitDy=0;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-50" value="&lt;span&gt;HTTPS/TLS&lt;/span&gt;&lt;br&gt;carga de las vistas">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="1549" as="sourcePoint" />
+            <mxPoint x="550" y="1039" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-91" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-102" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-7" value="&lt;span&gt;Integra&lt;/span&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="2040" />
+              <mxPoint x="1220" y="2040" />
+              <mxPoint x="1220" y="1490" />
+              <mxPoint x="1348" y="1490" />
+            </Array>
+            <mxPoint x="760" y="2070.0000000000005" as="sourcePoint" />
+            <mxPoint x="1290" y="1650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-101" edge="1" parent="1" source="3xeFfSdvASba5G_G9Aon-103" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeWidth=1;fontSize=11;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontStyle=0" target="3xeFfSdvASba5G_G9Aon-7" value="&lt;span&gt;Integra&lt;/span&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1330" y="1600" />
+              <mxPoint x="1465" y="1600" />
+            </Array>
+            <mxPoint x="1330.0000000000005" y="2290" as="sourcePoint" />
+            <mxPoint x="1440" y="1600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-102" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#676767;fontStyle=0" value="&lt;span style=&quot;font-size: 15px; font-style: italic;&quot;&gt;&lt;font style=&quot;color: rgb(245, 245, 245);&quot;&gt;&lt;b&gt;INTEGRACIONES DE GRUPO INVENTARIO&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="140" width="470" x="520" y="2080" as="geometry" />
+        </mxCell>
+        <mxCell id="3xeFfSdvASba5G_G9Aon-103" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#676767;fontStyle=0" value="&lt;span style=&quot;font-size: 15px; font-style: italic;&quot;&gt;&lt;font style=&quot;color: rgb(245, 245, 245);&quot;&gt;&lt;b&gt;INTEGRACIONES DE GRUPO TERRENO&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="140" width="470" x="1100" y="2290" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

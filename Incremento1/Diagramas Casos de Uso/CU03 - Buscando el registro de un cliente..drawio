@@ -1,0 +1,92 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="91qqk9hEOSVJIbYzzS_b">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-1" parent="1" style="swimlane;startSize=0;" value="" vertex="1">
+          <mxGeometry height="470" width="370" x="340" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-2" parent="-rLF2KgBorPrzgppyZ2j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="121" x="124.5" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-3" parent="-rLF2KgBorPrzgppyZ2j-1" style="ellipse;whiteSpace=wrap;html=1;" value="Buscando el registro&amp;nbsp;&lt;div&gt;de un cliente&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="140" x="59" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-4" parent="-rLF2KgBorPrzgppyZ2j-1" style="ellipse;whiteSpace=wrap;html=1;" value="Ingresando caracteres alfanuméricos" vertex="1">
+          <mxGeometry height="60" width="151" x="53" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-5" edge="1" parent="-rLF2KgBorPrzgppyZ2j-1" source="-rLF2KgBorPrzgppyZ2j-4" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="-rLF2KgBorPrzgppyZ2j-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="310" y="70" as="sourcePoint" />
+            <mxPoint x="155" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-6" edge="1" parent="-rLF2KgBorPrzgppyZ2j-1" source="-rLF2KgBorPrzgppyZ2j-4" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="-rLF2KgBorPrzgppyZ2j-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="95" y="210" as="sourcePoint" />
+            <mxPoint x="129" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-7" parent="-rLF2KgBorPrzgppyZ2j-1" style="ellipse;whiteSpace=wrap;html=1;" value="Comparando RUT y razón social de clientes listados" vertex="1">
+          <mxGeometry height="70" width="163.5" x="47.25" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-8" edge="1" parent="-rLF2KgBorPrzgppyZ2j-1" source="-rLF2KgBorPrzgppyZ2j-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="-rLF2KgBorPrzgppyZ2j-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="341" y="60" as="sourcePoint" />
+            <mxPoint x="240" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-9" parent="-rLF2KgBorPrzgppyZ2j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="139.0000604652098" y="110.00345874741151" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-10" parent="-rLF2KgBorPrzgppyZ2j-1" style="shape=datastore;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="265" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-11" parent="-rLF2KgBorPrzgppyZ2j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="30" width="111" x="239.5" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-12" edge="1" parent="-rLF2KgBorPrzgppyZ2j-1" source="-rLF2KgBorPrzgppyZ2j-7" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="-rLF2KgBorPrzgppyZ2j-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="255" y="400" as="sourcePoint" />
+            <mxPoint x="210" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-13" parent="-rLF2KgBorPrzgppyZ2j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="139" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-14" edge="1" parent="-rLF2KgBorPrzgppyZ2j-1" source="-rLF2KgBorPrzgppyZ2j-15" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="-rLF2KgBorPrzgppyZ2j-7" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="140" y="390" as="sourcePoint" />
+            <mxPoint x="140" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-15" parent="-rLF2KgBorPrzgppyZ2j-1" style="ellipse;whiteSpace=wrap;html=1;" value="Mostrando registro coincidente&amp;nbsp;&lt;div&gt;parcial o total&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="169" x="45.5" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-16" parent="-rLF2KgBorPrzgppyZ2j-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="142.75" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-17" edge="1" parent="-rLF2KgBorPrzgppyZ2j-1" source="-rLF2KgBorPrzgppyZ2j-15" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;" target="-rLF2KgBorPrzgppyZ2j-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="230" y="430" />
+              <mxPoint x="230" y="327" />
+            </Array>
+            <mxPoint x="230" y="310" as="sourcePoint" />
+            <mxPoint x="284" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-18" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Gerencia o Secretaria" vertex="1">
+          <mxGeometry height="60" width="30" x="250" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="-rLF2KgBorPrzgppyZ2j-19" edge="1" parent="1" source="-rLF2KgBorPrzgppyZ2j-18" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" target="-rLF2KgBorPrzgppyZ2j-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="280" y="198.5" as="sourcePoint" />
+            <mxPoint x="414" y="198.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

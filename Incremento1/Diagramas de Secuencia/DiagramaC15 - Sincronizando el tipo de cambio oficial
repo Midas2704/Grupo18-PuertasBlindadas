@@ -1,0 +1,244 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="D7NUtNDBQH8a01r3Uhmc">
+    <mxGraphModel grid="0" page="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-2" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="412.76" x="41.61999999999989" y="328.8700000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-4" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="408.86" x="-664" y="332.25" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-5" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="388.31" x="-870" y="338.8699999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;" value="&lt;u&gt;v_NuevaVentaDirecta&lt;/u&gt;" vertex="1">
+          <mxGeometry height="37" width="148.43" x="-533.78" y="97.84999999999991" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-9" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="406.59" x="-180" y="328.99" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FA6800;strokeColor=#C73500;" value="&lt;u&gt;c_NotaVenta&lt;/u&gt;" vertex="1">
+          <mxGeometry height="37" width="136" x="-44.700000000000045" y="96.22000000000003" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-14" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="60" width="30" x="-690.85" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-15" parent="1" style="text;whiteSpace=wrap;" value="cargarCambioMonedaTransaccion()" vertex="1">
+          <mxGeometry height="20" width="222.09" x="-201.24" y="206" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-16" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="412.76" x="-420.0000000000002" y="332.25" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FA6800;strokeColor=#C73500;" value="&lt;u&gt;c_Finanzas&lt;/u&gt;" vertex="1">
+          <mxGeometry height="37" width="136" x="-281.62" y="97.84999999999991" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-19" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-5" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.132;entryY=1.052;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.095;exitY=0.01;exitDx=0;exitDy=0;exitPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-675.1550000000002" y="183.0217999999998" as="sourcePoint" />
+            <mxPoint x="-470.85000000000014" y="184.5554600000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-20" parent="1" style="text;whiteSpace=wrap;" value="seleccionDivisaExtranjera()" vertex="1">
+          <mxGeometry height="20" width="156.12" x="-662" y="163.01999999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-21" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-4" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.342;entryY=0.969;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.209;exitY=0.025;exitDx=0;exitDy=0;exitPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-451.53999999999996" y="219.8324" as="sourcePoint" />
+            <mxPoint x="-218.3100000000004" y="220.03392000000008" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" value="&lt;u&gt;c_BancoCentral&lt;/u&gt;" vertex="1">
+          <mxGeometry height="37" width="136" x="179" y="96.22000000000003" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-40" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-16" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.838;entryY=0.848;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.237;exitY=-0.072;exitDx=0;exitDy=0;exitPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-209.26999999999964" y="230.80975999999964" as="sourcePoint" />
+            <mxPoint x="19.814999999999486" y="230.41742000000022" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-41" parent="1" style="text;whiteSpace=wrap;" value="solicitarCambioMonedaTransaccion()" vertex="1">
+          <mxGeometry height="20" width="222.09" x="-447.33000000000004" y="193" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-42" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.275;entryY=1.027;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.826;exitY=0.065;exitDx=0;exitDy=0;exitPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="30" y="240" as="sourcePoint" />
+            <mxPoint x="240.17999999999972" y="241.05084000000033" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-43" parent="1" style="text;whiteSpace=wrap;" value="solicitarTasaDeCambio()" vertex="1">
+          <mxGeometry height="20" width="154.41" x="57.379999999999995" y="214" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-44" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;dashed=1;exitX=0.953;exitY=0.991;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.961;entryY=0.193;entryDx=0;entryDy=0;entryPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="243.08999999999958" y="328.8502800000001" as="sourcePoint" />
+            <mxPoint x="26.364999999999668" y="329.42799000000014" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-45" parent="1" style="text;whiteSpace=wrap;" value="CambioMoneda" vertex="1">
+          <mxGeometry height="20" width="105.62" x="85.29999999999995" y="304" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-46" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;dashed=1;exitX=0.953;exitY=0.991;exitDx=0;exitDy=0;exitPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="18.24000000000001" y="368" as="sourcePoint" />
+            <mxPoint x="-208.76" y="368" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-47" parent="1" style="text;whiteSpace=wrap;" value="CambioMoneda" vertex="1">
+          <mxGeometry height="20" width="105.62" x="-142" y="342" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-48" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-16" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;dashed=1;exitX=0.621;exitY=1.074;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.624;entryY=0.049;entryDx=0;entryDy=0;entryPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-224.91000000000008" y="388" as="sourcePoint" />
+            <mxPoint x="-451.9100000000001" y="388" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-49" parent="1" style="text;whiteSpace=wrap;" value="actualizacionEtiquetasVisuales()" vertex="1">
+          <mxGeometry height="20" width="201.77" x="-435.1700000000001" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-51" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="412.76" x="259.15" y="328.9899999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-50" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCCCCC;" value="base_datos_banco_central" vertex="1">
+          <mxGeometry height="37" width="200" x="369.15" y="97.85000000000014" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-52" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-2" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.308;entryY=0.862;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.306;exitY=0.003;exitDx=0;exitDy=0;exitPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-51" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="229.14999999999998" y="240" as="sourcePoint" />
+            <mxPoint x="439.3299999999998" y="241.05084000000033" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-53" parent="1" style="text;whiteSpace=wrap;" value="obtenerTasaDeCambio()" vertex="1">
+          <mxGeometry height="20" width="154.41" x="272.76" y="226" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-55" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-51" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;dashed=1;exitX=0.408;exitY=1.144;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.404;entryY=-0.091;entryDx=0;entryDy=0;entryPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="435.8749999999999" y="330" as="sourcePoint" />
+            <mxPoint x="219.14999999999998" y="330.57771" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-56" parent="1" style="text;whiteSpace=wrap;" value="tasaDeCambio" vertex="1">
+          <mxGeometry height="20" width="80" x="309.9699999999999" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-57" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="412.76" x="110.76999999999987" y="920.5000000000002" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-58" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="408.86" x="-664" y="922.25" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-59" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="388.31" x="-870" y="928.8699999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-60" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;" value="&lt;u&gt;v_NuevaVentaDirecta&lt;/u&gt;" vertex="1">
+          <mxGeometry height="37" width="148.43" x="-533.78" y="687.8499999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-61" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="406.59" x="-110.85000000000002" y="920.6200000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-62" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FA6800;strokeColor=#C73500;" value="&lt;u&gt;c_NotaVenta&lt;/u&gt;" vertex="1">
+          <mxGeometry height="37" width="136" x="24.449999999999932" y="687.8500000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-63" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="60" width="30" x="-690.85" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-64" parent="1" style="text;whiteSpace=wrap;" value="cargarCambioMonedaTransaccion()" vertex="1">
+          <mxGeometry height="20" width="222.09" x="-132.09000000000003" y="797.6300000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-65" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="412.76" x="-350.85000000000025" y="923.8800000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-66" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FA6800;strokeColor=#C73500;" value="&lt;u&gt;c_Finanzas&lt;/u&gt;" vertex="1">
+          <mxGeometry height="37" width="136" x="-212.47000000000003" y="689.48" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-67" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-59" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.138;entryY=1.078;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.097;exitY=0.11;exitDx=0;exitDy=0;exitPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-58" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-675.1550000000002" y="778.4617999999998" as="sourcePoint" />
+            <mxPoint x="-470.85000000000014" y="779.9954600000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-68" parent="1" style="text;whiteSpace=wrap;" value="seleccionDivisaExtranjera()" vertex="1">
+          <mxGeometry height="20" width="156.12" x="-662" y="753.02" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-69" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.212;entryY=0.85;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.34;exitY=-0.303;exitDx=0;exitDy=0;exitPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-65" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-451.53999999999996" y="809.8324" as="sourcePoint" />
+            <mxPoint x="-218.3100000000004" y="810.0339200000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-70" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;" value="&lt;u&gt;c_BancoCentral&lt;/u&gt;" vertex="1">
+          <mxGeometry height="37" width="136" x="248.14999999999998" y="687.8500000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-71" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.838;entryY=0.848;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.826;exitY=0.065;exitDx=0;exitDy=0;exitPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-140.11999999999966" y="822.4397599999998" as="sourcePoint" />
+            <mxPoint x="88.96499999999946" y="822.0474200000003" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-72" parent="1" style="text;whiteSpace=wrap;" value="solicitarCambioMonedaTransaccion()" vertex="1">
+          <mxGeometry height="20" width="222.09" x="-411.64000000000004" y="785.6300000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-73" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.278;entryY=0.996;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.826;exitY=0.065;exitDx=0;exitDy=0;exitPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-57" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="99.14999999999998" y="831.6300000000001" as="sourcePoint" />
+            <mxPoint x="309.3299999999998" y="832.6808400000004" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-74" parent="1" style="text;whiteSpace=wrap;" value="solicitarTasaDeCambio()" vertex="1">
+          <mxGeometry height="20" width="154.41" x="126.52999999999997" y="805.6300000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-75" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;dashed=1;exitX=0.953;exitY=0.991;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.961;entryY=0.193;entryDx=0;entryDy=0;entryPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="312.23999999999967" y="920.4802800000002" as="sourcePoint" />
+            <mxPoint x="95.51499999999965" y="921.0579900000002" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-77" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;dashed=1;exitX=0.953;exitY=0.991;exitDx=0;exitDy=0;exitPerimeter=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="87.38999999999999" y="959.6300000000001" as="sourcePoint" />
+            <mxPoint x="-139.61" y="959.6300000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-79" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-65" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;dashed=1;exitX=0.621;exitY=1.009;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.624;entryY=0.124;entryDx=0;entryDy=0;entryPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-58" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-145" y="978" as="sourcePoint" />
+            <mxPoint x="-451.9100000000001" y="978" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-80" parent="1" style="text;whiteSpace=wrap;fontFamily=Helvetica;" value="mostrarMensaje(&quot;No se pudo conectar con el Banco Central. Ingrese el tipo de cambio manualmente&quot;)" vertex="1">
+          <mxGeometry height="50" width="264.32" x="-432.75" y="918.8800000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-81" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;" value="" vertex="1">
+          <mxGeometry height="10" width="412.76" x="328.30000000000007" y="920.6199999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-82" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCCCCC;" value="base_datos_banco_central" vertex="1">
+          <mxGeometry height="37" width="200" x="438.30000000000007" y="689.4800000000002" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-83" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-57" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;entryX=0.308;entryY=0.862;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.306;exitY=0.003;exitDx=0;exitDy=0;exitPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-81" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="298.30000000000007" y="831.6300000000001" as="sourcePoint" />
+            <mxPoint x="508.4799999999999" y="832.6808400000004" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-84" parent="1" style="text;whiteSpace=wrap;" value="obtenerTasaDeCambio()" vertex="1">
+          <mxGeometry height="20" width="154.41" x="341.90999999999997" y="817.6300000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-85" edge="1" parent="1" source="t50THZMAvxQ4YV7Lknbo-81" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;dashed=1;exitX=0.408;exitY=1.144;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.404;entryY=-0.091;entryDx=0;entryDy=0;entryPerimeter=0;" target="t50THZMAvxQ4YV7Lknbo-57" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="505.025" y="921.6300000000001" as="sourcePoint" />
+            <mxPoint x="288.30000000000007" y="922.2077100000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-86" parent="1" style="text;whiteSpace=wrap;" value="errorTiempoEspera" vertex="1">
+          <mxGeometry height="20" width="110.82" x="363.71000000000015" y="861.6300000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-87" parent="1" style="text;whiteSpace=wrap;" value="errorTiempoEspera" vertex="1">
+          <mxGeometry height="20" width="110.82" x="145.29999999999995" y="892.6300000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="t50THZMAvxQ4YV7Lknbo-88" parent="1" style="text;whiteSpace=wrap;" value="errorTiempoEspera" vertex="1">
+          <mxGeometry height="20" width="110.82" x="-79.91000000000008" y="933.8800000000001" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
