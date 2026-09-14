@@ -7,7 +7,8 @@ Repositorio oficial del Módulo de Finanzas del ERP para Puertas Blindadas.
 - Gianella Belén Catalán Canales  
 - Vicente Andrés Hernández Olea
 - Daniella Rosa Catalina Lecanda Garnham 
-- Angella Javiera Sánchez Lopéz 
+- Angella Javiera Sánchez Lopéz
+- Valentín García Farías
 
 ## Estructura del Proyecto
 
