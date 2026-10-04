@@ -1,0 +1,2 @@
+import { ContenidoIndicadores, EncabezadoM7, PdfDashboard, Periodo, usarConsultaM7 } from './componentes';
+export default function LiquidezM7(){const q=usarConsultaM7('/dashboard-m7/liquidez');return <div className="min-h-full bg-gray-100"><EncabezadoM7 titulo="Liquidez y Flujo" descripcion="Disponibilidad, movimientos y compromisos fechados" regreso={q.global}/><Periodo anio={q.anio} mes={q.mes} cambiar={q.cambiar} cargando={q.cargando} recargar={q.recargar}/><PdfDashboard origen="liquidez" anio={q.anio} mes={q.mes}/><ContenidoIndicadores {...q}/></div>}
