@@ -2,6 +2,8 @@
 
 Repositorio del **Módulo de Finanzas del ERP de Puertas Blindadas**, desarrollado por el Grupo 18 a través de tres incrementos de software.
 
+Enlace Drive para los videos: https://drive.google.com/drive/folders/1nIOSszndorqv3yAJyGFA_PyQMp66Nx0A?usp=drive_link
+
 ## Integrantes
 
 - Sebastián Benjamín Bravo Núñez
