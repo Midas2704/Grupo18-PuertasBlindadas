@@ -17,9 +17,9 @@ El proyecto cuenta actualmente con **tres incrementos de desarrollo**.
 
 | Incremento | Módulos principales | Alcance general |
 | --- | --- | --- |
-| **Incremento 1** | M1, M2 y M3 | Clientes, cotizaciones/notas de venta y pagos |
-| **Incremento 2** | M4, M5 y M6 | Seguridad y permisos, proveedores/egresos y remuneraciones |
-| **Incremento 3** | M7, M8 y M9 | Dashboard gerencial, crédito y auditoría |
+| **Incremento 1** | M1 y M2 | Clientes, cotizaciones |
+| **Incremento 2** | M3, M4 y M5 | Usuario, Seguridad, Ingresos y egresos, provedores |
+| **Incremento 3** | M6, M7, M8 y M9 | Dashboard, crédito, remuneraciones y auditoría |
 
 La versión actual incorpora el desarrollo funcional alcanzado durante los tres incrementos, junto con pruebas automatizadas, migraciones, exportaciones documentales y documentación técnica del proyecto.
 
