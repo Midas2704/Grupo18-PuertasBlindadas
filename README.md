@@ -42,6 +42,10 @@ La versión actual incorpora el desarrollo funcional alcanzado durante los tres 
 - ventas directas;
 - flujo comercial asociado a las operaciones de venta.
 
+---
+
+## Incremento 2
+
 ### M3 — Pagos
 - registro de pagos;
 - pagos parciales;
@@ -49,10 +53,6 @@ La versión actual incorpora el desarrollo funcional alcanzado durante los tres 
 - reversas;
 - operaciones multimoneda;
 - comprobantes de pago en PDF.
-
----
-
-## Incremento 2
 
 ### M4 — Seguridad y Permisos
 - autenticación;
@@ -71,6 +71,10 @@ La versión actual incorpora el desarrollo funcional alcanzado durante los tres 
 - ajustes, compensaciones y reclasificaciones;
 - caja chica y categorías de egreso.
 
+---
+
+## Incremento 3
+
 ### M6 — Remuneraciones
 - catálogo y ficha de empleados;
 - relaciones laborales;
@@ -83,10 +87,6 @@ La versión actual incorpora el desarrollo funcional alcanzado durante los tres 
 - anticipos;
 - documentos y liquidaciones de remuneraciones;
 - integración con información proveniente de terreno cuando corresponde.
-
----
-
-## Incremento 3
 
 ### M7 — Dashboard Gerencial
 - panel general financiero;
