@@ -1,0 +1,18 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const {M9Controller}=require('../dist/controladores/M9Controller');
+const {RepositorioAuditoriaM9Memoria}=require('../dist/m9/RepositorioAuditoriaM9');
+const {RepositorioPoliticasMemoriaM9,MotorPoliticasM9}=require('../dist/m9/politicas');
+const {ReceptorPostM9}=require('../dist/m9/contratosPostM9');
+const contexto=id=>({owner:'OWNER-FUTURO',identidadLogica:`post-${id}`,ocurridoEn:'2037-01-01T00:00:00Z',zonaHoraria:'UTC',referenciaOwner:`R-${id}`});
+
+test('M9 CUT434-CUT445 conserva evidencia owner sin decidir workflows POST-M9',async t=>{
+ const repo=new RepositorioAuditoriaM9Memoria(),politicas=new MotorPoliticasM9(new RepositorioPoliticasMemoriaM9()),m9=new M9Controller({repositorio:repo,politicas}),receptor=new ReceptorPostM9(m9);
+ await t.test('derechos se reciben con acuse/fechas suministradas y M9 no calcula plazo',async()=>{await receptor.recibirDerecho({...contexto('derecho'),tipo:'ACUSE',fechaAcuse:'2037-01-02T00:00:00Z',estado:'RECIBIDO'});const e=await repo.porIdentidad('post-derecho');assert.equal(e.operacion,'DERECHO_ACUSE');assert.equal(e.nuevo.fechaAcuse,'2037-01-02T00:00:00Z');assert.equal(Object.hasOwn(e.nuevo,'plazoRef'),false);});
+ await t.test('resolución exige decisión y fundamento del owner, M9 no decide',async()=>{await assert.rejects(receptor.recibirDerecho({...contexto('sin-decision'),tipo:'RESOLUCION'}),e=>e.codigo==='M9_DEPENDENCIA_OWNER');await receptor.recibirDerecho({...contexto('resuelto'),tipo:'RESOLUCION',decision:'DENEGADO',fundamentoRef:'REF-OWNER'});const e=await repo.porIdentidad('post-resuelto');assert.equal(e.nuevo.decision,'DENEGADO');assert.equal(e.nuevo.fundamentoRef,'REF-OWNER');});
+ await t.test('propagación y bloqueo conservan sólo evidencia suministrada',async()=>{await receptor.recibirDerecho({...contexto('propaga'),tipo:'PROPAGACION',receptores:['OWNER-A']});await receptor.recibirDerecho({...contexto('bloqueo'),tipo:'BLOQUEO_INICIO',fechaInicio:'2037-01-03T00:00:00Z'});assert.deepEqual((await repo.porIdentidad('post-propaga')).nuevo.receptores,['OWNER-A']);assert.equal((await repo.porIdentidad('post-bloqueo')).nuevo.fechaInicio,'2037-01-03T00:00:00Z');});
+ await t.test('incidente debe venir clasificado y campos ausentes no se inventan',async()=>{await assert.rejects(receptor.recibirIncidente({...contexto('no-clasificado'),clasificadoPorOwner:false}),e=>e.codigo==='M9_DEPENDENCIA_OWNER');await receptor.recibirIncidente({...contexto('incidente'),clasificadoPorOwner:true,naturaleza:'OWNER-NATURE',medidas:['OWNER-MEASURE']});const e=await repo.porIdentidad('post-incidente');assert.equal(e.nuevo.naturaleza,'OWNER-NATURE');assert.equal(Object.hasOwn(e.nuevo,'volumenAproximado'),false);assert.equal(Object.hasOwn(e.nuevo,'comunicacionRef'),false);});
+ await t.test('CUT433/CUT445 finalidad base y política sólo existen si owner las entrega',()=>{assert.deepEqual(receptor.estadoContextoFinalidad({}),{estado:'DEPENDENCIA_OWNER',finalidadRef:null,baseRef:null,politicaRef:null});assert.deepEqual(receptor.estadoContextoFinalidad({finalidadRef:'FIN-OWNER',baseRef:'BASE-OWNER',politicaRef:'POL-OWNER'}),{estado:'INFORMADO_POR_OWNER',finalidadRef:'FIN-OWNER',baseRef:'BASE-OWNER',politicaRef:'POL-OWNER'});});
+ await t.test('contratos rechazan secretos antes de conservar evidencia',async()=>{await assert.rejects(receptor.recibirIncidente({...contexto('secreto'),clasificadoPorOwner:true,medidas:[{token:'x'}]}),e=>e.codigo==='M9_DATO_PROHIBIDO');assert.equal(await repo.porIdentidad('post-secreto'),null);});
+ assert.equal(typeof receptor.aprobarDerecho,'undefined');assert.equal(typeof receptor.detectarIncidente,'undefined');assert.equal(typeof receptor.calcularPlazoLegal,'undefined');
+});

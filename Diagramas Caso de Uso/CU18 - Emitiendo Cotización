@@ -1,0 +1,72 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Usuario/s" id="N74ZDRGVvXKo12sCRmuD">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="O6slQsuMeRYlCJbvLzDO-9" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="280" width="280" x="160" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="O6slQsuMeRYlCJbvLzDO-10" parent="O6slQsuMeRYlCJbvLzDO-9" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="115" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="O6slQsuMeRYlCJbvLzDO-11" parent="O6slQsuMeRYlCJbvLzDO-9" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="96.5" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="O6slQsuMeRYlCJbvLzDO-12" parent="O6slQsuMeRYlCJbvLzDO-9" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="80" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="O6slQsuMeRYlCJbvLzDO-13" parent="O6slQsuMeRYlCJbvLzDO-9" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Emitiendo Cotización&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="150" x="70" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="O6slQsuMeRYlCJbvLzDO-14" edge="1" parent="O6slQsuMeRYlCJbvLzDO-9" source="O6slQsuMeRYlCJbvLzDO-13" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="O6slQsuMeRYlCJbvLzDO-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="161" y="150" as="sourcePoint" />
+            <mxPoint x="-75" y="400.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="O6slQsuMeRYlCJbvLzDO-15" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Gerencia &lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="104" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="O6slQsuMeRYlCJbvLzDO-16" edge="1" parent="1" source="O6slQsuMeRYlCJbvLzDO-15" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" target="O6slQsuMeRYlCJbvLzDO-13" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="240" y="360" as="sourcePoint" />
+            <mxPoint x="290" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rI3oMQ9B0VR0W8pK9QRK-1" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="260" width="280" x="160" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="rI3oMQ9B0VR0W8pK9QRK-2" parent="rI3oMQ9B0VR0W8pK9QRK-1" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="105" y="147.5" as="geometry" />
+        </mxCell>
+        <mxCell id="rI3oMQ9B0VR0W8pK9QRK-3" parent="rI3oMQ9B0VR0W8pK9QRK-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="86.5" y="202.5" as="geometry" />
+        </mxCell>
+        <mxCell id="rI3oMQ9B0VR0W8pK9QRK-4" parent="rI3oMQ9B0VR0W8pK9QRK-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="70" y="7.5" as="geometry" />
+        </mxCell>
+        <mxCell id="rI3oMQ9B0VR0W8pK9QRK-5" parent="rI3oMQ9B0VR0W8pK9QRK-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Emitiendo Cotización&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="150" x="60" y="67.5" as="geometry" />
+        </mxCell>
+        <mxCell id="rI3oMQ9B0VR0W8pK9QRK-6" edge="1" parent="rI3oMQ9B0VR0W8pK9QRK-1" source="rI3oMQ9B0VR0W8pK9QRK-5" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="rI3oMQ9B0VR0W8pK9QRK-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="151" y="147.5" as="sourcePoint" />
+            <mxPoint x="-85" y="398" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rI3oMQ9B0VR0W8pK9QRK-7" parent="rI3oMQ9B0VR0W8pK9QRK-1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Secretaria&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="-66" y="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="rI3oMQ9B0VR0W8pK9QRK-8" edge="1" parent="rI3oMQ9B0VR0W8pK9QRK-1" source="rI3oMQ9B0VR0W8pK9QRK-7" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" target="rI3oMQ9B0VR0W8pK9QRK-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="70" y="237.5" as="sourcePoint" />
+            <mxPoint x="120" y="187.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
