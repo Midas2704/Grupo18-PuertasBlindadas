@@ -1,93 +1,436 @@
-# Modulo Financiero - Puertas Blindadas (Grupo 18)
+Módulo Financiero — Puertas Blindadas (Grupo 18)
 
-Repositorio oficial del Módulo de Finanzas del ERP para Puertas Blindadas.
-link drive: https://drive.google.com/drive/folders/1Fej-Gh58OtDO581vU8HsiwOi--VJjRpV?usp=drive_link
-# Integrantes:
-- Sebastián Benjamín Bravo Núñez
-- Gianella Belén Catalán Canales  
-- Vicente Andrés Hernández Olea
-- Daniella Rosa Catalina Lecanda Garnham 
-- Angella Javiera Sánchez Lopéz
-- Valentín Ignacio García Farías
+Repositorio del Módulo de Finanzas del ERP de Puertas Blindadas, desarrollado por el Grupo 18 a través de tres incrementos de software.
 
-## Estructura del Proyecto
+Integrantes
 
-El proyecto está dividido en dos partes principales :
+Sebastián Benjamín Bravo Núñez
 
-- **/Controladores**: API REST construida con Node.js, Express, TypeScript y Prisma ORM. Gestiona la lógica de negocio, integración con base de datos PostgreSQL (Raspberry Pi) y el módulo de transacciones financieras.
-- **/Vistas**: Aplicación web interactiva construida con React, TypeScript, Vite y Tailwind CSS. Incluye el sistema de diseño y las interfaces para gestión de cotizaciones, notas de venta, clientes y dashboard principal.
+Gianella Belén Catalán Canales
 
-## Tecnologías Utilizadas
+Vicente Andrés Hernández Olea
 
-- **Capa de Vistas**: React 19, Vite, Tailwind CSS, React Router DOM, Lucide React.
-- **Capa de Controladores**: Node.js, Express, TypeScript, Prisma (ORM), PostgreSQL.
-- **Capa de Persistencia**: PostgreSQL (Desplegada en entorno local/Raspberry Pi).
+Daniella Rosa Catalina Lecanda Garnham
 
-## Guía de Instalación y Ejecución
+Angella Javiera Sánchez López
 
-Para levantar el entorno de desarrollo local, es necesario instalar las dependencias y correr ambos servicios (API y Vistas) en paralelo.
+Valentín Ignacio García Farías
 
-### 1. Clonar el repositorio
-```bash
+Estado del proyecto
+
+El proyecto cuenta actualmente con tres incrementos de desarrollo.
+
+Incremento
+
+Módulos principales
+
+Alcance general
+
+Incremento 1
+
+M1, M2 y M3
+
+Clientes, cotizaciones/notas de venta y pagos
+
+Incremento 2
+
+M4, M5 y M6
+
+Seguridad y permisos, proveedores/egresos y remuneraciones
+
+Incremento 3
+
+M7, M8 y M9
+
+Dashboard gerencial, crédito y auditoría
+
+La versión actual incorpora el desarrollo funcional alcanzado durante los tres incrementos, junto con pruebas automatizadas, migraciones, exportaciones documentales y documentación técnica del proyecto.
+
+Incremento 1
+
+M1 — Clientes
+
+registro y administración de clientes;
+
+actualización, activación y desactivación;
+
+búsqueda y filtrado;
+
+catálogo de clientes;
+
+ficha financiera y antecedentes asociados.
+
+M2 — Cotizaciones y Notas de Venta
+
+creación y administración de cotizaciones;
+
+armado de cotizaciones;
+
+generación y gestión de notas de venta;
+
+manejo de cantidades, montos y monedas;
+
+ventas directas;
+
+flujo comercial asociado a las operaciones de venta.
+
+M3 — Pagos
+
+registro de pagos;
+
+pagos parciales;
+
+seguimiento de saldos;
+
+reversas;
+
+operaciones multimoneda;
+
+comprobantes de pago en PDF.
+
+Incremento 2
+
+M4 — Seguridad y Permisos
+
+autenticación;
+
+sesiones;
+
+autorización;
+
+control de permisos;
+
+protección de funcionalidades y endpoints según perfil.
+
+M5 — Proveedores, Egresos y Cuentas por Pagar
+
+catálogo y ficha de proveedores;
+
+órdenes de compra y servicios;
+
+documentos y obligaciones;
+
+cuentas por pagar;
+
+pagos a proveedores;
+
+envíos e importaciones;
+
+ajustes, compensaciones y reclasificaciones;
+
+caja chica y categorías de egreso.
+
+M6 — Remuneraciones
+
+catálogo y ficha de empleados;
+
+relaciones laborales;
+
+esquemas remuneracionales;
+
+haberes y deducciones;
+
+parámetros y configuraciones;
+
+periodos de remuneración;
+
+cálculo y registro de pagos;
+
+honorarios;
+
+anticipos;
+
+documentos y liquidaciones de remuneraciones;
+
+integración con información proveniente de terreno cuando corresponde.
+
+Incremento 3
+
+M7 — Dashboard Gerencial
+
+panel general financiero;
+
+indicadores y resúmenes;
+
+ventas;
+
+cuentas por cobrar;
+
+cuentas por pagar;
+
+liquidez;
+
+exposición de proyectos;
+
+centro de atención;
+
+información histórica y comparaciones por periodo;
+
+exportaciones gerenciales en PDF.
+
+El dashboard consolida información proveniente de distintos módulos sin reemplazar a los módulos propietarios de cada dato.
+
+M8 — Crédito
+
+solicitudes crediticias;
+
+evaluación y administración de crédito;
+
+límite global;
+
+exposición utilizada;
+
+estados y condiciones de crédito;
+
+integración de información crediticia;
+
+exportación a CSV.
+
+M9 — Auditoría
+
+registro de operaciones auditables;
+
+consulta de eventos;
+
+filtros;
+
+trazabilidad por módulo, operación y resultado;
+
+identificación del ejecutor;
+
+exportaciones en PDF y CSV;
+
+mecanismos de integridad y confiabilidad del registro.
+
+M9 funciona como mecanismo transversal de auditoría del sistema.
+
+Arquitectura del proyecto
+
+La versión actual del código se encuentra consolidada principalmente en:
+
+CODIGO/
+├── Controladores/
+└── Vistas/
+
+CODIGO/Controladores
+
+Backend desarrollado con:
+
+Node.js
+
+Express
+
+TypeScript
+
+Prisma ORM
+
+PostgreSQL
+
+Contiene controladores modulares M1Controller a M9Controller, servicios, validaciones, utilidades, pruebas, scripts y migraciones Prisma.
+
+CODIGO/Vistas
+
+Frontend desarrollado con:
+
+React
+
+TypeScript
+
+Vite
+
+React Router
+
+Recharts
+
+Lucide React
+
+Tailwind CSS
+
+Incluye vistas para clientes, cotizaciones, pagos, proveedores, remuneraciones, dashboard, crédito, auditoría y seguridad.
+
+Tecnologías utilizadas
+
+Capa
+
+Tecnologías
+
+Frontend
+
+React 19, TypeScript, Vite, React Router, Recharts, Lucide React, Tailwind CSS
+
+Backend
+
+Node.js, Express, TypeScript
+
+ORM
+
+Prisma
+
+Base de datos
+
+PostgreSQL
+
+Pruebas
+
+Node Test Runner
+
+Control de versiones
+
+Git y GitHub
+
+Instalación y ejecución local
+
+1. Clonar el repositorio
+
 git clone https://github.com/Midas2704/Grupo18-PuertasBlindadas.git
 cd Grupo18-PuertasBlindadas
-```
 
-### 2. Levantar la Capa de Persistencia (Base de Datos)
-Para inicializar la base de datos PostgreSQL, se debe ejecutar el script SQL ubicado en la raíz del proyecto: `Base_de_datos_Tres_Schemas.sql`. Este documento contiene todas las instrucciones necesarias para generar las tablas y relaciones de los esquemas utilizados por el sistema.
+2. Backend
 
-### 3. Configurar y Ejecutar la capa de controladores
-```bash
-cd Controladores
+cd CODIGO/Controladores
 npm install
-
-# Configurar variables de entorno requeridas en el archivo .env
-# Ejemplo: DATABASE_URL="postgresql://user:pass@host:5432/db"
-
-# Levantar el servidor en modo desarrollo
+npm run prisma:generate
 npm run dev
-```
-El backend estará disponible por defecto en `http://localhost:3000`.
 
-### 4. Configurar y Ejecutar la capa de vistas
-Abre una nueva pestaña en tu terminal y ejecuta:
-```bash
-cd Vistas
+La conexión a PostgreSQL se configura mediante DATABASE_URL en el archivo .env.
+
+Ejemplo:
+
+DATABASE_URL="postgresql://usuario:password@host:5432/base_datos"
+
+No se incluyen credenciales reales en el repositorio.
+
+Para aplicar migraciones:
+
+npm run db:migrate
+
+3. Frontend
+
+En otra terminal:
+
+cd CODIGO/Vistas
 npm install
-
-# Levantar el servidor de desarrollo de Vite
 npm run dev
-```
-La aplicación web estará disponible por defecto en `http://localhost:5173`.
 
-## Capa de Persistencia y Scripts (Prisma)
+Vite mostrará en consola la dirección local disponible.
 
-El proyecto utiliza Prisma ORM. Algunos de los comandos y scripts útiles disponibles en `Controladores`:
-- `npx prisma db pull`: Sincroniza el esquema de Prisma desde la base de datos externa.
-- `npx prisma generate`: Genera el cliente de Prisma actualizado.
-- `npx prisma studio`: Abre la interfaz visual de la base de datos en el navegador.
+Comandos útiles
 
-Adicionalmente, los scripts para la carga inicial de datos (seeding) masivos o de limpieza se encuentran ubicados en `Controladores/scripts` (ej. `massive_seed_v2.js`) y `Controladores/prisma/seed.ts`.
+Backend
 
-## Documentación Adicional
+Desde CODIGO/Controladores:
 
-El repositorio incluye la documentación oficial exigida a lo largo de las distintas fases del proyecto, separada en las siguientes carpetas:
+npm run dev
+npm run build
+npm test
+npm run prisma:validate
+npm run prisma:generate
+npm run prisma:studio
+npm run db:migrate
 
-### 📁 /Documento 0
-Contiene todos los entregables iniciales relacionados con la formulación del proyecto, levantamiento de requerimientos y conformación del equipo.
-- **Documentos principales:** Informe inicial de requerimientos (`Documento0_EquipoFinanzas...docx`) y la presentación del inicial (`Sistema Financiero Puertas Blindadas.pptx`).
-- **Validación:** Evidencia de la aceptación de requerimientos por parte del cliente (`Correo Aceptacion...png`).
-- **Subcarpetas:** `CV` (Currículums del equipo) y `Anexo`.
+Datos de demostración
 
-### 📁 /Incremento1
-Contiene todas las herramientas, informes y diagramas entregados correspondientes al primer incremento de desarrollo.
-- **Documentos principales:** El informe oficial del incremento (`Informe Incremento 1...docx`) y la presentación del mismo (`Puertas Blindadas Sistema financiero.pptx`).
-- **Multimedia:** Video de demostración funcional del primer incremento (`Demostracion Incremento 1.mp4`).
-- **Subcarpetas de Arquitectura y Diseño:**
-  - `Diagramas Casos de Uso`: Modelamiento de la interacción de los actores con el sistema.
-  - `Diagramas de Secuencia`: Flujo de operaciones internos del sistema financiero.
-  - `Anexo`: Diseños de arquitectura adicionales, incluyendo diagramas de componentes, despliegue, navegación y MERE.
-  - `Retrospectiva`: Documentación sobre la retrospectiva ágil del equipo en esta iteración.
+npm run db:seed:demo
+npm run db:seed:demo:status
+npm run db:seed:demo:verify
+npm run db:seed:demo:clean
 
----
-*Desarrollado bajo los estándares y lineamientos de la Facultad de Ingeniería.*
+Frontend
+
+Desde CODIGO/Vistas:
+
+npm run dev
+npm run build
+npm run lint
+npm run preview
+
+Base de datos y Prisma
+
+Las migraciones se encuentran en:
+
+CODIGO/Controladores/prisma/migrations/
+
+El repositorio también conserva Base_de_datos_Tres_Schemas.sql como parte de la documentación y evolución histórica de la solución.
+
+Pruebas
+
+La suite automatizada del backend se encuentra en:
+
+CODIGO/Controladores/pruebas/
+
+Para ejecutarla:
+
+cd CODIGO/Controladores
+npm test
+
+Para validar las compilaciones:
+
+# Backend
+cd CODIGO/Controladores
+npm run build
+
+# Frontend
+cd ../Vistas
+npm run build
+
+Documentación del proyecto
+
+Documento 0/
+
+Antecedentes iniciales del proyecto, levantamiento de requerimientos, documentos base, anexos y antecedentes del equipo.
+
+Incremento1/
+
+Documentación del primer incremento, incluyendo informe, presentación, demostración, diagramas y anexos de arquitectura y diseño.
+
+Incremento 2/
+
+Documentación del segundo incremento:
+
+informe;
+
+presentación;
+
+diagramas de casos de uso;
+
+diagramas de secuencia;
+
+anexos.
+
+Diagramas Caso de Uso/
+
+Contiene los diagramas de casos de uso incorporados durante la tercera entrega y la actualización documental del alcance funcional.
+
+La documentación formal del tercer incremento puede consolidarse en una carpeta Incremento 3/ cuando se incorporen informe, presentación, anexos y demás entregables.
+
+Organización funcional
+
+M1  Clientes
+M2  Cotizaciones y Notas de Venta
+M3  Pagos
+M4  Seguridad y Permisos
+M5  Proveedores, Egresos y Cuentas por Pagar
+M6  Remuneraciones
+M7  Dashboard Gerencial
+M8  Crédito
+M9  Auditoría
+
+Consideraciones
+
+No versionar archivos .env, credenciales ni secretos.
+
+Mantener fuera de Git node_modules, compilados, archivos temporales y salidas generadas.
+
+Mantener cambios de base de datos mediante migraciones controladas.
+
+Respetar la separación de responsabilidades entre módulos.
+
+La auditoría transversal pertenece a M9.
+
+Las exportaciones documentales deben reflejar datos reales disponibles en el sistema.
+
+Repositorio
+
+Midas2704/Grupo18-PuertasBlindadas
+
+Proyecto desarrollado por el Grupo 18 para Puertas Blindadas.
