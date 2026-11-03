@@ -1,3 +1,4 @@
+import { confirmarAccion } from '../../components/DialogosSistema';
 import React, { useEffect, useState } from 'react';
 import { CalendarClock, CheckCircle2 } from 'lucide-react';
 import { solicitarFinanzas } from '../../api/finanzas';
@@ -11,7 +12,7 @@ const UmbralPorVencer: React.FC = () => {
       .then(datos => setDias(String(datos.dias_habiles ?? '')))
       .catch(error => setMensaje(error.message));
   }, []);
-  const guardar = async (evento: React.FormEvent) => { evento.preventDefault(); const valor = Number(dias); if (!Number.isInteger(valor) || valor < 0) { setMensaje('Ingresa una cantidad entera de días hábiles igual o mayor a cero'); return; } if (!window.confirm('¿Confirmas guardar el umbral vigente?')) return; const respuesta = await solicitarFinanzas('/billing/configuracion/umbral', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({diasHabiles:valor}) }); const datos=await respuesta.json(); if (!respuesta.ok) { setMensaje(datos.error); return; } setDias(String(datos.dias_habiles)); setMensaje('Umbral guardado; valor vigente actualizado'); };
+  const guardar = async (evento: React.FormEvent) => { evento.preventDefault(); const valor = Number(dias); if (!Number.isInteger(valor) || valor < 0) { setMensaje('Ingresa una cantidad entera de días hábiles igual o mayor a cero'); return; } if (!await confirmarAccion('¿Confirmas guardar el umbral vigente?')) return; const respuesta = await solicitarFinanzas('/billing/configuracion/umbral', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({diasHabiles:valor}) }); const datos=await respuesta.json(); if (!respuesta.ok) { setMensaje(datos.error); return; } setDias(String(datos.dias_habiles)); setMensaje('Umbral guardado; valor vigente actualizado'); };
   return <div className="mx-auto flex min-h-full w-full max-w-7xl flex-col p-4 font-sans sm:p-6 lg:p-8">
     <header className="mb-8 border-b border-gray-200 pb-5"><h1 className="text-3xl font-bold text-gray-900">Mantenedor financiero</h1><p className="mt-2 text-gray-500">Configura los parámetros operativos utilizados por el módulo de Finanzas.</p></header>
     {mensaje&&<p role="status" className="mb-6 rounded-lg border border-orange-100 bg-orange-50 p-4 text-orange-900">{mensaje}</p>}

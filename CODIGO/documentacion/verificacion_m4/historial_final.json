@@ -1,0 +1,96 @@
+{
+  "tablasOperativasVerificadas": 139,
+  "datosOperativosIdenticos": true,
+  "operativa": [
+    {
+      "migration_name": "000_base_existente",
+      "checksum": "3bc3083326e56f471823f850d768bb87f9e1a21202b65645e8fcc635a6db6a64",
+      "started_at": "2026-09-08T00:16:11.150Z",
+      "finished_at": "2026-09-08T00:16:11.150Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 0
+    },
+    {
+      "migration_name": "001_base_i2",
+      "checksum": "1cb23dccad980cb9e9c207878d3b0688d851571e6511e297e847d955f3e86bd6",
+      "started_at": "2026-09-08T00:16:12.792Z",
+      "finished_at": "2026-09-08T00:16:13.067Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    },
+    {
+      "migration_name": "002_secuencias_heredadas",
+      "checksum": "59d7251d6ab868c35973422bede1d2a7d5473a0edbeddf6f194216f406781f3d",
+      "started_at": "2026-09-08T00:19:50.296Z",
+      "finished_at": "2026-09-08T00:19:50.367Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    },
+    {
+      "migration_name": "003_seguridad_m4",
+      "checksum": "927f16c958e6221b988a08b0f2e31d45e487a2d0029c000e2775120afb0f0aa0",
+      "started_at": "2026-09-08T15:02:33.324Z",
+      "finished_at": "2026-09-08T15:02:33.464Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    },
+    {
+      "migration_name": "004_destino_excedente",
+      "checksum": "d7230963ec74ccef7c9db399aad0d092b183d5f216810e52e5a557c84a4399a0",
+      "started_at": "2026-09-08T15:13:24.183Z",
+      "finished_at": "2026-09-08T15:13:24.208Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    }
+  ],
+  "independiente": [
+    {
+      "migration_name": "000_base_existente",
+      "checksum": "3bc3083326e56f471823f850d768bb87f9e1a21202b65645e8fcc635a6db6a64",
+      "started_at": "2026-09-08T04:51:15.275Z",
+      "finished_at": "2026-09-08T04:51:15.893Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    },
+    {
+      "migration_name": "001_base_i2",
+      "checksum": "1cb23dccad980cb9e9c207878d3b0688d851571e6511e297e847d955f3e86bd6",
+      "started_at": "2026-09-08T04:51:15.893Z",
+      "finished_at": "2026-09-08T04:51:16.007Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    },
+    {
+      "migration_name": "002_secuencias_heredadas",
+      "checksum": "59d7251d6ab868c35973422bede1d2a7d5473a0edbeddf6f194216f406781f3d",
+      "started_at": "2026-09-08T04:51:16.008Z",
+      "finished_at": "2026-09-08T04:51:16.049Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    },
+    {
+      "migration_name": "003_seguridad_m4",
+      "checksum": "5fbd8d19b02a298250cfc05417b7c9c04c6c9ade4d03d0b7cf6ca3c298066cdb",
+      "started_at": "2026-09-08T20:41:50.928Z",
+      "finished_at": null,
+      "rolled_back_at": "2026-09-08T21:04:18.109Z",
+      "applied_steps_count": 0
+    },
+    {
+      "migration_name": "003_seguridad_m4",
+      "checksum": "927f16c958e6221b988a08b0f2e31d45e487a2d0029c000e2775120afb0f0aa0",
+      "started_at": "2026-09-08T21:04:19.368Z",
+      "finished_at": "2026-09-08T21:04:19.529Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    },
+    {
+      "migration_name": "004_destino_excedente",
+      "checksum": "d7230963ec74ccef7c9db399aad0d092b183d5f216810e52e5a557c84a4399a0",
+      "started_at": "2026-09-08T21:04:19.529Z",
+      "finished_at": "2026-09-08T21:04:19.536Z",
+      "rolled_back_at": null,
+      "applied_steps_count": 1
+    }
+  ]
+}

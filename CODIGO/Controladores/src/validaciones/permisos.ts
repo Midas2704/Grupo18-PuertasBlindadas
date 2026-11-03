@@ -23,7 +23,7 @@ export const operacionesPermiso: Record<string, string> = {
  pasarEnvioRevision:'CU146', cerrarFinancieramenteEnvio:'CU147', reabrirEnvio:'CU148', consultarCajaChica:'CU149', obtenerGastoCajaChica:'CU149', configurarFondoCajaChica:'CU150', registrarGastoCajaChica:'CU151', adjuntarRespaldoCajaChica:'CU152', aprobarGastoCajaChica:'CU153', rechazarGastoCajaChica:'CU154',
  listarEmpleados:'CU155', obtenerEmpleado:'CU155', crearEmpleado:'CU156',
  actualizarDatosBaseEmpleado:'CU157', catalogosLaborales:'CU157', listarRelacionesLaborales:'CU157', crearRelacionLaboral:'CU157', actualizarRelacionLaboral:'CU157',
- catalogosRemuneracionales:'CU158', obtenerPerfilRemuneracional:'CU158', actualizarPerfilRemuneracional:'CU158',
+ catalogosRemuneracionales:'CU158', obtenerPerfilRemuneracional:'CU158', actualizarPerfilRemuneracional:'CU158', obtenerHistorialRemuneracionalEmpleado:'CU191',
  catalogosAsignacionEsquemas:'CU159', listarAsignacionesEsquemaEmpleado:'CU159', asignarEsquemaEmpleado:'CU159', finalizarAsignacionEsquemaEmpleado:'CU159',
  catalogoHaberes:'CU160', listarAsignacionesHaberEmpleado:'CU160', asignarHaberEmpleado:'CU160', finalizarAsignacionHaberEmpleado:'CU160',
  obtenerConfiguracionDocumental:'CU161', actualizarConfiguracionDocumental:'CU161',

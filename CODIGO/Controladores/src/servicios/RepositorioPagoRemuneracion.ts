@@ -137,6 +137,15 @@ export class RepositorioPagoRemuneracionPrisma {
     return cliente.pago_remuneracion.findMany({ include: { medio_pago: true, reversiones: true }, orderBy: { creado_en: 'desc' }, take: 100 });
   }
 
+  async listarPorOrigenes(cliente: ClientePago, origenes: OrigenPagoRemuneracion[]) {
+    if (!origenes.length) return [];
+    return cliente.pago_remuneracion.findMany({
+      where: { OR: origenes.map(origen => this.criterio(origen)) },
+      include: { medio_pago: true, reversiones: { orderBy: { registrado_en: 'asc' as const } } },
+      orderBy: { creado_en: 'asc' },
+    });
+  }
+
   async anularConfirmado(cliente: ClientePago, id: number, motivo: string, idUsuario: bigint) {
     return cliente.pago_remuneracion.updateMany({ where: { id_pago_remuneracion: id, estado: 'CONFIRMADO', reversiones: { none: {} } }, data: { estado: 'ANULADO', motivo_anulacion: motivo, anulado_por: idUsuario, anulado_en: new Date() } });
   }

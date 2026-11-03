@@ -410,6 +410,7 @@ model empleado {
   sueldo_base              Decimal?                   @db.Decimal(14, 2)
   fecha_aplicacion_sueldo_base DateTime?              @db.Date
   seguro_cesantia          Boolean                    @default(true)
+  seguro_cesantia_fundamento_exclusion String?
   estado_laboral           String                     @default("activo") @db.VarChar(30)
   correo_particular        String?                    @db.VarChar(254)
   telefono_particular      String?                    @db.VarChar(30)
@@ -431,6 +432,7 @@ model empleado {
   tratamientos_remuneracionales tratamiento_remuneracional_ejecucion[]
   remuneraciones_m6            remuneracion[]
   anticipos_remuneracion_m6    anticipo_remuneracion[]
+  cotizaciones_salud_m6        cotizacion_salud_empleado[]
 
   @@index([id_cargo], map: "idx_empleado_cargo")
   @@schema("finanzas")
@@ -861,6 +863,21 @@ model prevision_salud {
   estado_prevision_salud String     @default("activo") @db.VarChar(20)
   empleado               empleado[]
 
+  @@schema("finanzas")
+}
+
+model cotizacion_salud_empleado {
+  id_cotizacion_salud Int       @id @default(autoincrement())
+  id_empleado         Int
+  valor               Decimal   @db.Decimal(14, 6)
+  unidad              String    @db.VarChar(20)
+  vigencia_desde      DateTime  @db.Date
+  vigencia_hasta      DateTime? @db.Date
+  activa              Boolean   @default(true)
+  empleado            empleado  @relation(fields: [id_empleado], references: [id_empleado], onDelete: Restrict, onUpdate: NoAction)
+
+  @@unique([id_empleado, vigencia_desde], map: "uq_cotizacion_salud_empleado_vigencia")
+  @@index([id_empleado, vigencia_desde, vigencia_hasta], map: "idx_cotizacion_salud_empleado_resolucion")
   @@schema("finanzas")
 }
 
@@ -1892,6 +1909,11 @@ model remuneracion {
   total_haberes           Decimal?               @db.Decimal(14, 4)
   total_deducciones       Decimal?               @db.Decimal(14, 4)
   total_aportes_empleador Decimal?               @db.Decimal(14, 4)
+  total_descuentos_previsionales Decimal?         @db.Decimal(14, 4)
+  total_impuesto          Decimal?                @db.Decimal(14, 4)
+  total_otras_deducciones Decimal?                @db.Decimal(14, 4)
+  costo_empresa           Decimal?                @db.Decimal(14, 4)
+  snapshot_previsional    Json?
   base_imponible          Decimal?               @db.Decimal(14, 4)
   base_tributable         Decimal?               @db.Decimal(14, 4)
   liquido_preliminar      Decimal?               @db.Decimal(14, 4)

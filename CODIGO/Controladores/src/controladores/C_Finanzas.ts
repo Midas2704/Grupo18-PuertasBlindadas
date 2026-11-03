@@ -50,7 +50,7 @@ export type Operacion = 'salud' | 'listarClientes' | 'abrirFicha' | 'dashboard' 
   | 'registrarComisionBancaria' | 'listarEnviosImportaciones' | 'obtenerEnvioImportacion' | 'crearEnvioImportacion' | 'asociarOrdenEnvio' | 'registrarCostoEnvio' | 'actualizarCostoEnvio'
   | 'pasarEnvioRevision' | 'cerrarFinancieramenteEnvio' | 'reabrirEnvio' | 'consultarCajaChica' | 'obtenerGastoCajaChica' | 'configurarFondoCajaChica' | 'registrarGastoCajaChica' | 'adjuntarRespaldoCajaChica' | 'aprobarGastoCajaChica' | 'rechazarGastoCajaChica'
   | 'listarEmpleados' | 'obtenerEmpleado' | 'crearEmpleado' | 'actualizarDatosBaseEmpleado' | 'catalogosLaborales' | 'listarRelacionesLaborales' | 'crearRelacionLaboral' | 'actualizarRelacionLaboral'
-  | 'catalogosRemuneracionales' | 'obtenerPerfilRemuneracional' | 'actualizarPerfilRemuneracional'
+  | 'catalogosRemuneracionales' | 'obtenerPerfilRemuneracional' | 'actualizarPerfilRemuneracional' | 'obtenerHistorialRemuneracionalEmpleado'
   | 'catalogosAsignacionEsquemas' | 'listarAsignacionesEsquemaEmpleado' | 'asignarEsquemaEmpleado' | 'finalizarAsignacionEsquemaEmpleado'
   | 'catalogoHaberes' | 'listarAsignacionesHaberEmpleado' | 'asignarHaberEmpleado' | 'finalizarAsignacionHaberEmpleado'
   | 'obtenerConfiguracionDocumental' | 'actualizarConfiguracionDocumental'
@@ -193,6 +193,15 @@ export class C_Finanzas {
       case 'actualizarRelacionLaboral': return this.m6.actualizarRelacionLaboral(identificador(parametros.id), identificador(parametros.relacionId), cuerpo);
       case 'catalogosRemuneracionales': return this.m6.catalogosRemuneracionales();
       case 'obtenerPerfilRemuneracional': return this.m6.obtenerPerfilRemuneracional(identificador(parametros.id));
+      case 'obtenerHistorialRemuneracionalEmpleado': {
+        const historial = await this.m6.obtenerHistorialRemuneracional(identificador(parametros.id), solicitud.consulta || {});
+        if (!actor.permisos.includes('CU355') && !actor.administrador) return historial;
+        const auditoria = await this.m9.consultar({ modulo:'M6', operacion:'PAGO_PREPARADO_MODIFICADO', pagina:1, tamano:200, orden:'desc' }, scopeM9DesdeActor(actor));
+        const porPago = new Map<string, unknown[]>();
+        for (const evento of auditoria.eventos) { const referencia = evento.referencia?.id; if (referencia) porPago.set(referencia, [...(porPago.get(referencia) || []), evento]); }
+        for (const periodo of historial.periodos) for (const pago of periodo.pagos) (pago as any).auditoria = { ...(pago as any).auditoria, eventos:porPago.get(String((pago as any).id)) || [], puedeVer:true };
+        return historial;
+      }
       case 'actualizarPerfilRemuneracional': return this.m6.actualizarPerfilRemuneracional(identificador(parametros.id), cuerpo);
       case 'catalogosAsignacionEsquemas': return this.m6.catalogosAsignacionEsquemas();
       case 'listarAsignacionesEsquemaEmpleado': return this.m6.listarAsignacionesEsquemaEmpleado(identificador(parametros.id));
@@ -267,12 +276,12 @@ export class C_Finanzas {
       case 'registrarAnticipo': return this.m6.registrarAnticipo(cuerpo, actor.id);
       case 'obtenerAnticipo': return this.m6.obtenerAnticipo(identificador(parametros.id));
       case 'prepararPagoAnticipo': return this.m6.prepararPagoAnticipo(identificador(parametros.id), cuerpo, actor.id);
-      case 'actualizarPagoAnticipo': return this.m6.actualizarPagoAnticipo(identificador(parametros.id), cuerpo);
+      case 'actualizarPagoAnticipo': return this.m6.actualizarPagoAnticipo(identificador(parametros.id), cuerpo, actor.id);
       case 'confirmarPagoAnticipo': return this.m6.confirmarPagoAnticipo(identificador(parametros.id), actor.id);
       case 'listarPagosRemuneracion': return this.m6.listarPagosRemuneracion();
       case 'obtenerPagoRemuneracion': return this.m6.obtenerPagoRemuneracion(identificador(parametros.id));
       case 'prepararPagoFinal': return this.m6.prepararPagoFinal(cuerpo, actor.id);
-      case 'actualizarPagoFinal': return this.m6.actualizarPagoFinal(identificador(parametros.id), cuerpo);
+      case 'actualizarPagoFinal': return this.m6.actualizarPagoFinal(identificador(parametros.id), cuerpo, actor.id);
       case 'confirmarPagoFinal': return this.m6.confirmarPagoFinal(identificador(parametros.id), actor.id);
       case 'listarBoletasHonorariosConfirmadas': return this.m6.listarBoletasHonorariosConfirmadas();
       case 'listarPrestadoresHonorarios': return this.m6.listarPrestadoresHonorarios();
@@ -285,7 +294,7 @@ export class C_Finanzas {
       case 'confirmarBoletaHonorarios': return this.m6.confirmarBoletaHonorarios(identificador(parametros.id));
       case 'consultarRetencionesHonorariosMensuales': return this.m6.consultarRetencionesHonorariosMensuales(solicitud.consulta?.anio, solicitud.consulta?.mes);
       case 'prepararPagoHonorarios': return this.m6.prepararPagoHonorarios(identificador(parametros.id), cuerpo, actor.id);
-      case 'actualizarPagoHonorarios': return this.m6.actualizarPagoHonorarios(identificador(parametros.id), cuerpo);
+      case 'actualizarPagoHonorarios': return this.m6.actualizarPagoHonorarios(identificador(parametros.id), cuerpo, actor.id);
       case 'confirmarPagoHonorarios': return this.m6.confirmarPagoHonorarios(identificador(parametros.id), actor.id);
       case 'obtenerDetallePagoRemuneracion': return this.m6.obtenerPagoRemuneracion(identificador(parametros.id));
       case 'anularPagoRemuneracion': return this.m6.anularPagoRemuneracion(identificador(parametros.id), cuerpo, actor.id);

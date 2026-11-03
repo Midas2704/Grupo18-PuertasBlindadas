@@ -26,11 +26,22 @@ export interface CondicionDocumentalRegistrada {
   destinatarioLogico?: unknown;
 }
 
+export interface EventoHistorialDocumento {
+  id: number;
+  entidad: string;
+  entidadId: number;
+  accion: string;
+  resultado: string;
+  fecha: Date;
+  usuario: string | null;
+}
+
 type ClienteAuditoriaLegacy = Pick<Prisma.TransactionClient, 'evento_auditoria'>;
 
 export interface AuditoriaDocumental {
   registrar(contexto: object, evento: EventoDocumento): Promise<{ referenciaEvento: number }>;
   ultimaCondicionEntrega(contexto: object, tipoDocumento: string, idDocumento: number): Promise<CondicionDocumentalRegistrada | null>;
+  listarEventosHistorial(contexto: object, idsRemuneraciones: number[], idsPeriodos: number[]): Promise<EventoHistorialDocumento[]>;
 }
 
 const normalizarCondicion = (valor: unknown): CondicionDocumento => {
@@ -83,5 +94,30 @@ export class AuditoriaDocumentalLegacyPrisma implements AuditoriaDocumental {
       canal: metadata.canal,
       destinatarioLogico: metadata.destinatarioLogico,
     };
+  }
+
+  async listarEventosHistorial(contexto: object, idsRemuneraciones: number[], idsPeriodos: number[]) {
+    if (!idsRemuneraciones.length && !idsPeriodos.length) return [];
+    const cliente = contexto as ClienteAuditoriaLegacy;
+    const eventos = await cliente.evento_auditoria.findMany({
+      where: {
+        tipo_evento: 'M6_DOCUMENTO_REMUNERACION',
+        OR: [
+          { entidad_afectada: 'REMUNERACION', id_registro_afectado: { in: idsRemuneraciones } },
+          { entidad_afectada: 'PERIODO_REMUNERACION', id_registro_afectado: { in: idsPeriodos } },
+        ],
+      },
+      include: { usuario: true },
+      orderBy: { fecha_evento: 'asc' },
+    });
+    return eventos.map(evento => ({
+      id: evento.id_evento_auditoria,
+      entidad: evento.entidad_afectada,
+      entidadId: evento.id_registro_afectado,
+      accion: evento.accion_realizada.split('_').join(' ').toLowerCase(),
+      resultado: evento.resultado_evento,
+      fecha: evento.fecha_evento,
+      usuario: evento.usuario.usuario_nombre_completo_primer_nombre_usuario || evento.usuario.usuario_username,
+    }));
   }
 }

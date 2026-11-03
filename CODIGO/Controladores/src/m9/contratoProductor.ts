@@ -42,6 +42,9 @@ export const CATALOGO_PRODUCTORES_M9: Record<string, EspecificacionAuditableM9> 
   confirmarOperacionPago: { modulo:'M5', operacion:'PAGO_PROVEEDOR_CONFIRMADO', entidad:'PAGO_PROVEEDOR', critico:false },
   aprobarGastoCajaChica: { modulo:'M5', operacion:'GASTO_CAJA_APROBADO', entidad:'GASTO_CAJA_CHICA', critico:false },
   confirmarPagoFinal: { modulo:'M6', operacion:'PAGO_REMUNERACION_CONFIRMADO', entidad:'PAGO_REMUNERACION', critico:false },
+  actualizarPagoAnticipo: { modulo:'M6', operacion:'PAGO_PREPARADO_MODIFICADO', entidad:'PAGO_REMUNERACION', critico:false },
+  actualizarPagoFinal: { modulo:'M6', operacion:'PAGO_PREPARADO_MODIFICADO', entidad:'PAGO_REMUNERACION', critico:false },
+  actualizarPagoHonorarios: { modulo:'M6', operacion:'PAGO_PREPARADO_MODIFICADO', entidad:'PAGO_REMUNERACION', critico:false },
   confirmarBoletaHonorarios: { modulo:'M6', operacion:'BOLETA_HONORARIOS_CONFIRMADA', entidad:'BOLETA_HONORARIOS', critico:false },
   registrarResultadoVisita: { modulo:'M6', operacion:'RESULTADO_TERRENO_REGISTRADO', entidad:'VISITA_TERRENO', critico:false },
   descargarPdfDashboardM7: { modulo:'M7', operacion:'EXPORTACION_DASHBOARD_CONFIRMADA', entidad:'DASHBOARD', critico:false, consultaSensible:true },
@@ -91,6 +94,7 @@ export class ProductorAuditoriaM9 {
     const id = referencia(solicitud, salida);
     const identidad = solicitud.idSolicitud?.trim() || randomUUID();
     const razon = motivo(solicitud.cuerpo);
+    const delta = salida && typeof salida === 'object' ? (salida as { __auditoriaM9?: { anterior?: JsonM9; nuevo?: JsonM9 } }).__auditoriaM9 : undefined;
     return {
       identidadLogica: `${especificacion.modulo}:${operacionOwner}:${identidad}`,
       versionContrato: VERSION_CONTRATO_M9,
@@ -100,6 +104,8 @@ export class ProductorAuditoriaM9 {
       operacion:especificacion.operacion, resultado,
       ...(id ? { referencia:{ tipo:especificacion.entidad, id } } : {}),
       ...(razon ? { motivo:razon } : {}),
+      ...(delta?.anterior ? { anterior:delta.anterior } : {}),
+      ...(delta?.nuevo ? { nuevo:delta.nuevo } : {}),
       motivoRequerido:especificacion.motivoRequerido,
       causa:error instanceof ErrorAplicacion ? error.codigo : error ? 'ERROR_OWNER' : undefined,
       critico:especificacion.critico, capacidad:'EMITIR_EVENTO_M9',

@@ -1,0 +1,768 @@
+{
+  "cantidades": {
+    "tablas": [
+      141,
+      141
+    ],
+    "columnas": [
+      1075,
+      1075
+    ],
+    "restricciones": [
+      926,
+      926
+    ],
+    "indices": [
+      216,
+      216
+    ],
+    "vistas": [
+      2,
+      2
+    ],
+    "funciones": [
+      0,
+      0
+    ],
+    "triggers": [
+      0,
+      0
+    ],
+    "enums": [
+      0,
+      0
+    ],
+    "secuencias": [
+      114,
+      114
+    ]
+  },
+  "diferencias": {
+    "restricciones": {
+      "soloOperativa": [
+        {
+          "esquema": "finanzas",
+          "tabla": "afp",
+          "nombre": "chk_afp_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_afp)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "alerta_financiera",
+          "nombre": "chk_alerta_financiera_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_alerta)::text = ANY ((ARRAY['abierta'::character varying, 'en_revision'::character varying, 'cerrada'::character varying, 'anulada'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "alerta_financiera",
+          "nombre": "chk_alerta_financiera_nivel",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((nivel_alerta)::text = ANY ((ARRAY['baja'::character varying, 'media'::character varying, 'alta'::character varying, 'critica'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "cargo",
+          "nombre": "chk_cargo_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_cargo)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "cliente_financiero",
+          "nombre": "chk_cliente_financiero_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_financiero)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying, 'bloqueado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "concepto_remuneracion",
+          "nombre": "chk_concepto_remuneracion_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_concepto)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "concepto_remuneracion",
+          "nombre": "chk_concepto_remuneracion_naturaleza",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((naturaleza_concepto)::text = ANY ((ARRAY['haber'::character varying, 'descuento'::character varying, 'bono'::character varying, 'retencion'::character varying, 'otro'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "conciliacion",
+          "nombre": "chk_conciliacion_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_conciliacion)::text = ANY ((ARRAY['pendiente'::character varying, 'conciliada'::character varying, 'observada'::character varying, 'anulada'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "costo_proyecto",
+          "nombre": "chk_costo_proyecto_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_costo)::text = ANY ((ARRAY['registrado'::character varying, 'validado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "credito_proyecto",
+          "nombre": "chk_credito_proyecto_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_credito)::text = ANY ((ARRAY['vigente'::character varying, 'pagado'::character varying, 'vencido'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "detalle_conciliacion",
+          "nombre": "chk_detalle_conciliacion_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_revision)::text = ANY ((ARRAY['pendiente'::character varying, 'revisado'::character varying, 'resuelto'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "documento_compra_proveedor",
+          "nombre": "chk_documento_compra_proveedor_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_documento)::text = ANY ((ARRAY['registrado'::character varying, 'pendiente_pago'::character varying, 'pagado'::character varying, 'vencido'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "documento_tributario",
+          "nombre": "chk_documento_tributario_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_documento)::text = ANY ((ARRAY['emitido'::character varying, 'pagado'::character varying, 'vencido'::character varying, 'anulado'::character varying, 'referenciado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "empleado",
+          "nombre": "chk_empleado_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_laboral)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying, 'desvinculado'::character varying, 'suspendido'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "evaluacion_credito",
+          "nombre": "chk_evaluacion_credito_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_evaluacion)::text = ANY ((ARRAY['vigente'::character varying, 'reemplazada'::character varying, 'anulada'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "evento_auditoria",
+          "nombre": "chk_evento_auditoria_resultado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((resultado_evento)::text = ANY ((ARRAY['registrado'::character varying, 'aprobado'::character varying, 'rechazado'::character varying, 'fallido'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "ficha_cliente",
+          "nombre": "chk_ficha_cliente_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_ficha)::text = ANY ((ARRAY['activa'::character varying, 'inactiva'::character varying, 'bloqueada'::character varying, 'cerrada'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "fondo_global_credito",
+          "nombre": "chk_fondo_global_credito_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_fondo)::text = ANY ((ARRAY['vigente'::character varying, 'cerrado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "gasto_caja_chica",
+          "nombre": "chk_gasto_caja_chica_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_validacion)::text = ANY ((ARRAY['pendiente'::character varying, 'aprobado'::character varying, 'rechazado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "historial_precio_material",
+          "nombre": "chk_historial_precio_material_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_precio)::text = ANY ((ARRAY['vigente'::character varying, 'reemplazado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "historial_tarifa_tarea",
+          "nombre": "chk_historial_tarifa_tarea_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tarifa)::text = ANY ((ARRAY['vigente'::character varying, 'reemplazada'::character varying, 'anulada'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "hito_cobro",
+          "nombre": "chk_hito_cobro_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_hito)::text = ANY ((ARRAY['pendiente'::character varying, 'pagado'::character varying, 'parcial'::character varying, 'vencido'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "limite_credito_cliente",
+          "nombre": "chk_limite_credito_cliente_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_limite)::text = ANY ((ARRAY['vigente'::character varying, 'reemplazado'::character varying, 'suspendido'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "liquidacion_remuneracion",
+          "nombre": "chk_liquidacion_remuneracion_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_liquidacion)::text = ANY ((ARRAY['generada'::character varying, 'aprobada'::character varying, 'pagada'::character varying, 'anulada'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "medio_pago",
+          "nombre": "chk_medio_pago_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_medio_pago)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "moneda",
+          "nombre": "chk_moneda_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_moneda)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "movimiento_bancario",
+          "nombre": "chk_movimiento_bancario_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_conciliacion)::text = ANY ((ARRAY['pendiente'::character varying, 'conciliado'::character varying, 'observado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "movimiento_financiero",
+          "nombre": "chk_movimiento_financiero_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_movimiento)::text = ANY ((ARRAY['registrado'::character varying, 'conciliado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "movimiento_financiero",
+          "nombre": "chk_movimiento_financiero_naturaleza",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((naturaleza_movimiento)::text = ANY ((ARRAY['ingreso'::character varying, 'egreso'::character varying, 'ajuste'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "nota_venta",
+          "nombre": "chk_nota_venta_estado_pago",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_pago)::text = ANY ((ARRAY['pendiente'::character varying, 'parcial'::character varying, 'pagada'::character varying, 'vencida'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "origen_alerta_financiera",
+          "nombre": "chk_origen_alerta_financiera_entidad",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((entidad_origen)::text = ANY ((ARRAY['ficha_cliente'::character varying, 'nota_venta'::character varying, 'documento_tributario'::character varying, 'documento_compra_proveedor'::character varying, 'proyecto_financiero'::character varying, 'credito_proyecto'::character varying, 'evaluacion_credito'::character varying, 'fondo_global_credito'::character varying, 'proveedor'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "origen_movimiento_financiero",
+          "nombre": "chk_origen_movimiento_financiero_entidad",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((entidad_origen)::text = ANY ((ARRAY['pago_cliente'::character varying, 'pago_proveedor'::character varying, 'gasto_caja_chica'::character varying, 'liquidacion_remuneracion'::character varying, 'ajuste_manual'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "pago_cliente",
+          "nombre": "chk_pago_cliente_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_verificacion)::text = ANY ((ARRAY['pendiente'::character varying, 'verificado'::character varying, 'rechazado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "pago_proveedor",
+          "nombre": "chk_pago_proveedor_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_pago)::text = ANY ((ARRAY['registrado'::character varying, 'verificado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "pais",
+          "nombre": "chk_pais_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_pais)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "prevision_salud",
+          "nombre": "chk_prevision_salud_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_prevision_salud)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "proveedor",
+          "nombre": "chk_proveedor_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_proveedor)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying, 'bloqueado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "proyecto_financiero",
+          "nombre": "chk_proyecto_financiero_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_financiero_proyecto)::text = ANY ((ARRAY['activo'::character varying, 'en_revision'::character varying, 'cerrado'::character varying, 'anulado'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tarea_catalogada",
+          "nombre": "chk_tarea_catalogada_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tarea)::text = ANY ((ARRAY['activa'::character varying, 'inactiva'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tarea_remunerable",
+          "nombre": "chk_tarea_remunerable_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_validacion)::text = ANY ((ARRAY['pendiente'::character varying, 'validada'::character varying, 'rechazada'::character varying, 'anulada'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tipo_cliente_financiero",
+          "nombre": "chk_tipo_cliente_financiero_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tipo_cliente_financiero)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tipo_documento",
+          "nombre": "chk_tipo_documento_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tipo_documento)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tipo_identificador",
+          "nombre": "chk_tipo_identificador_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tipo_identificador)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tipo_vinculo_laboral",
+          "nombre": "chk_tipo_vinculo_laboral_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tipo_vinculo_laboral)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        },
+        {
+          "esquema": "terreno",
+          "tabla": "item_comercial",
+          "nombre": "chk_terreno_item_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_item)::text = ANY ((ARRAY['activo'::character varying, 'inactivo'::character varying])::text[])))"
+        }
+      ],
+      "soloIndependiente": [
+        {
+          "esquema": "finanzas",
+          "tabla": "afp",
+          "nombre": "chk_afp_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_afp)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "alerta_financiera",
+          "nombre": "chk_alerta_financiera_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_alerta)::text = ANY (ARRAY[('abierta'::character varying)::text, ('en_revision'::character varying)::text, ('cerrada'::character varying)::text, ('anulada'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "alerta_financiera",
+          "nombre": "chk_alerta_financiera_nivel",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((nivel_alerta)::text = ANY (ARRAY[('baja'::character varying)::text, ('media'::character varying)::text, ('alta'::character varying)::text, ('critica'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "cargo",
+          "nombre": "chk_cargo_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_cargo)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "cliente_financiero",
+          "nombre": "chk_cliente_financiero_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_financiero)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text, ('bloqueado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "concepto_remuneracion",
+          "nombre": "chk_concepto_remuneracion_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_concepto)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "concepto_remuneracion",
+          "nombre": "chk_concepto_remuneracion_naturaleza",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((naturaleza_concepto)::text = ANY (ARRAY[('haber'::character varying)::text, ('descuento'::character varying)::text, ('bono'::character varying)::text, ('retencion'::character varying)::text, ('otro'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "conciliacion",
+          "nombre": "chk_conciliacion_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_conciliacion)::text = ANY (ARRAY[('pendiente'::character varying)::text, ('conciliada'::character varying)::text, ('observada'::character varying)::text, ('anulada'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "costo_proyecto",
+          "nombre": "chk_costo_proyecto_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_costo)::text = ANY (ARRAY[('registrado'::character varying)::text, ('validado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "credito_proyecto",
+          "nombre": "chk_credito_proyecto_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_credito)::text = ANY (ARRAY[('vigente'::character varying)::text, ('pagado'::character varying)::text, ('vencido'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "detalle_conciliacion",
+          "nombre": "chk_detalle_conciliacion_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_revision)::text = ANY (ARRAY[('pendiente'::character varying)::text, ('revisado'::character varying)::text, ('resuelto'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "documento_compra_proveedor",
+          "nombre": "chk_documento_compra_proveedor_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_documento)::text = ANY (ARRAY[('registrado'::character varying)::text, ('pendiente_pago'::character varying)::text, ('pagado'::character varying)::text, ('vencido'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "documento_tributario",
+          "nombre": "chk_documento_tributario_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_documento)::text = ANY (ARRAY[('emitido'::character varying)::text, ('pagado'::character varying)::text, ('vencido'::character varying)::text, ('anulado'::character varying)::text, ('referenciado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "empleado",
+          "nombre": "chk_empleado_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_laboral)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text, ('desvinculado'::character varying)::text, ('suspendido'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "evaluacion_credito",
+          "nombre": "chk_evaluacion_credito_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_evaluacion)::text = ANY (ARRAY[('vigente'::character varying)::text, ('reemplazada'::character varying)::text, ('anulada'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "evento_auditoria",
+          "nombre": "chk_evento_auditoria_resultado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((resultado_evento)::text = ANY (ARRAY[('registrado'::character varying)::text, ('aprobado'::character varying)::text, ('rechazado'::character varying)::text, ('fallido'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "ficha_cliente",
+          "nombre": "chk_ficha_cliente_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_ficha)::text = ANY (ARRAY[('activa'::character varying)::text, ('inactiva'::character varying)::text, ('bloqueada'::character varying)::text, ('cerrada'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "fondo_global_credito",
+          "nombre": "chk_fondo_global_credito_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_fondo)::text = ANY (ARRAY[('vigente'::character varying)::text, ('cerrado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "gasto_caja_chica",
+          "nombre": "chk_gasto_caja_chica_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_validacion)::text = ANY (ARRAY[('pendiente'::character varying)::text, ('aprobado'::character varying)::text, ('rechazado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "historial_precio_material",
+          "nombre": "chk_historial_precio_material_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_precio)::text = ANY (ARRAY[('vigente'::character varying)::text, ('reemplazado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "historial_tarifa_tarea",
+          "nombre": "chk_historial_tarifa_tarea_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tarifa)::text = ANY (ARRAY[('vigente'::character varying)::text, ('reemplazada'::character varying)::text, ('anulada'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "hito_cobro",
+          "nombre": "chk_hito_cobro_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_hito)::text = ANY (ARRAY[('pendiente'::character varying)::text, ('pagado'::character varying)::text, ('parcial'::character varying)::text, ('vencido'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "limite_credito_cliente",
+          "nombre": "chk_limite_credito_cliente_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_limite)::text = ANY (ARRAY[('vigente'::character varying)::text, ('reemplazado'::character varying)::text, ('suspendido'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "liquidacion_remuneracion",
+          "nombre": "chk_liquidacion_remuneracion_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_liquidacion)::text = ANY (ARRAY[('generada'::character varying)::text, ('aprobada'::character varying)::text, ('pagada'::character varying)::text, ('anulada'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "medio_pago",
+          "nombre": "chk_medio_pago_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_medio_pago)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "moneda",
+          "nombre": "chk_moneda_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_moneda)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "movimiento_bancario",
+          "nombre": "chk_movimiento_bancario_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_conciliacion)::text = ANY (ARRAY[('pendiente'::character varying)::text, ('conciliado'::character varying)::text, ('observado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "movimiento_financiero",
+          "nombre": "chk_movimiento_financiero_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_movimiento)::text = ANY (ARRAY[('registrado'::character varying)::text, ('conciliado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "movimiento_financiero",
+          "nombre": "chk_movimiento_financiero_naturaleza",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((naturaleza_movimiento)::text = ANY (ARRAY[('ingreso'::character varying)::text, ('egreso'::character varying)::text, ('ajuste'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "nota_venta",
+          "nombre": "chk_nota_venta_estado_pago",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_pago)::text = ANY (ARRAY[('pendiente'::character varying)::text, ('parcial'::character varying)::text, ('pagada'::character varying)::text, ('vencida'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "origen_alerta_financiera",
+          "nombre": "chk_origen_alerta_financiera_entidad",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((entidad_origen)::text = ANY (ARRAY[('ficha_cliente'::character varying)::text, ('nota_venta'::character varying)::text, ('documento_tributario'::character varying)::text, ('documento_compra_proveedor'::character varying)::text, ('proyecto_financiero'::character varying)::text, ('credito_proyecto'::character varying)::text, ('evaluacion_credito'::character varying)::text, ('fondo_global_credito'::character varying)::text, ('proveedor'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "origen_movimiento_financiero",
+          "nombre": "chk_origen_movimiento_financiero_entidad",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((entidad_origen)::text = ANY (ARRAY[('pago_cliente'::character varying)::text, ('pago_proveedor'::character varying)::text, ('gasto_caja_chica'::character varying)::text, ('liquidacion_remuneracion'::character varying)::text, ('ajuste_manual'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "pago_cliente",
+          "nombre": "chk_pago_cliente_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_verificacion)::text = ANY (ARRAY[('pendiente'::character varying)::text, ('verificado'::character varying)::text, ('rechazado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "pago_proveedor",
+          "nombre": "chk_pago_proveedor_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_pago)::text = ANY (ARRAY[('registrado'::character varying)::text, ('verificado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "pais",
+          "nombre": "chk_pais_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_pais)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "prevision_salud",
+          "nombre": "chk_prevision_salud_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_prevision_salud)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "proveedor",
+          "nombre": "chk_proveedor_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_proveedor)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text, ('bloqueado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "proyecto_financiero",
+          "nombre": "chk_proyecto_financiero_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_financiero_proyecto)::text = ANY (ARRAY[('activo'::character varying)::text, ('en_revision'::character varying)::text, ('cerrado'::character varying)::text, ('anulado'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tarea_catalogada",
+          "nombre": "chk_tarea_catalogada_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tarea)::text = ANY (ARRAY[('activa'::character varying)::text, ('inactiva'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tarea_remunerable",
+          "nombre": "chk_tarea_remunerable_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_validacion)::text = ANY (ARRAY[('pendiente'::character varying)::text, ('validada'::character varying)::text, ('rechazada'::character varying)::text, ('anulada'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tipo_cliente_financiero",
+          "nombre": "chk_tipo_cliente_financiero_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tipo_cliente_financiero)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tipo_documento",
+          "nombre": "chk_tipo_documento_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tipo_documento)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tipo_identificador",
+          "nombre": "chk_tipo_identificador_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tipo_identificador)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "finanzas",
+          "tabla": "tipo_vinculo_laboral",
+          "nombre": "chk_tipo_vinculo_laboral_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_tipo_vinculo_laboral)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        },
+        {
+          "esquema": "terreno",
+          "tabla": "item_comercial",
+          "nombre": "chk_terreno_item_estado",
+          "tipo": "c",
+          "validada": true,
+          "definicion": "CHECK (((estado_item)::text = ANY (ARRAY[('activo'::character varying)::text, ('inactivo'::character varying)::text])))"
+        }
+      ]
+    }
+  }
+}

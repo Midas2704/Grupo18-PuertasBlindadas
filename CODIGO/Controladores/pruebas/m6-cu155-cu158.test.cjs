@@ -186,6 +186,7 @@ test('M6 T1 CU155-CU158 administra el maestro actual de empleados', async (t) =>
         idAfp: afp.id_afp,
         idInstitucionSalud: salud.id_prevision_salud,
         seguroCesantia: false,
+        fundamentoExclusionCesantia: 'Exclusión documentada para prueba',
         correoParticular: 'laura@example.cl',
         telefonoParticular: '+56912345678',
         direccionParticular: 'Dirección de prueba',

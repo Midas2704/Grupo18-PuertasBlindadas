@@ -113,7 +113,7 @@ test('CU36/CU51/CU57: documentos, anulaciones y comprobante PDF', async t => {
     await t.test('CU57 produce un PDF con catálogo, página y referencias válidas',async()=>{
       const resultado=await m3.generarComprobante(anulable.id_pago_cliente); const pdf=Buffer.from(resultado.contenido.split(',')[1],'base64'); const texto=pdf.toString('latin1');
       assert.equal(pdf.subarray(0,8).toString('ascii'),'%PDF-1.4'); assert.match(texto,/\/Type \/Catalog/); assert.match(texto,/\/Type \/Page/); assert.match(texto,/Comprobante de Pago/); assert.match(texto,/startxref/);
-      assert.match(texto,new RegExp(cliente.rut_cliente.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'))); assert.match(texto,/Nombre o razón social/); assert.match(texto,new RegExp(cliente.nombre_razon_social_referencia.normalize('NFD').replace(/[\u0300-\u036f]/g,'')));
+      assert.match(texto,new RegExp(cliente.rut_cliente.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'))); assert.match(texto,/Nombre o razón social/); assert.match(texto.normalize('NFD').replace(/[\u0300-\u036f]/g,''),new RegExp(cliente.nombre_razon_social_referencia.normalize('NFD').replace(/[\u0300-\u036f]/g,'')));
       const inicio=Number(texto.match(/startxref\n(\d+)/)[1]); assert.equal(texto.slice(inicio,inicio+4),'xref'); assert.ok(texto.endsWith('%%EOF\n'));
     });
 

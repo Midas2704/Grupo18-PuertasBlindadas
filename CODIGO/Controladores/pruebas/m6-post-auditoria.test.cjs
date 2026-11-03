@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const { randomUUID } = require('node:crypto');
 const { prisma } = require('../dist/db');
 const { M6Controller } = require('../dist/controladores/M6Controller');
+const { prepararPrevisionM6 } = require('./soporte-prevision-m6.cjs');
 
 function rutValido() {
   const cuerpo = String(Math.floor(Math.random() * 8_000_000) + 1_000_000);
@@ -19,7 +20,7 @@ function rutValido() {
 test('M6 correcciones finales post-auditoria', async (t) => {
   const modulo = new M6Controller();
   const sufijo = randomUUID().slice(0, 8);
-  const ids = { empleados: [], usuarios: [], relaciones: [], tramos: [], conceptos: [], esquemas: [], periodos: [] };
+  const ids = { empleados: [], usuarios: [], relaciones: [], tramos: [], conceptos: [], esquemas: [], periodos: [], parametros: [] };
   let calculoFebrero;
 
   const empleado = await modulo.crearEmpleado({ rut: rutValido(), nombres: 'Auditoria', apellidoPaterno: 'Final' });
@@ -29,6 +30,7 @@ test('M6 correcciones finales post-auditoria', async (t) => {
   ids.usuarios.push(usuario.usuario_id_usuario);
   const relacion = await prisma.relacion_laboral_empleado.create({ data: { id_empleado: empleado.id, fecha_inicio: new Date('2199-01-01'), estado: 'vigente' } });
   ids.relaciones.push(relacion.id_relacion_laboral_empleado);
+  ids.parametros.push(...await prepararPrevisionM6(prisma,{empleados:[empleado.id],desde:'2199-01-01',hasta:'2199-12-31'}));
   const tramo = await prisma.tramo_impuesto_renta.create({ data: { vigencia_desde: new Date('2199-01-01'), vigencia_hasta: new Date('2199-12-31'), orden: 1, limite_desde: 0, limite_hasta: null, factor: 0, rebaja: 0, unidad: 'CLP', estado: 'activo' } });
   ids.tramos.push(tramo.id_tramo_impuesto_renta);
 
@@ -163,14 +165,15 @@ test('M6 correcciones finales post-auditoria', async (t) => {
     });
 
     await t.test('12 períodos cerrados permanecen intactos', async () => {
-      const abril = await modulo.calcularRemuneracion({ idEmpleado: empleado.id, anio: 2199, mes: 4 }, usuario.usuario_id_usuario);
-      if (!ids.periodos.includes(abril.remuneracion.periodo.id)) ids.periodos.push(abril.remuneracion.periodo.id);
-      await modulo.cerrarRemuneracion(abril.remuneracion.id, usuario.usuario_id_usuario);
-      await prisma.periodo_remuneracion.update({ where: { id_periodo_remuneracion: abril.remuneracion.periodo.id }, data: { cerrado_en: new Date(), cerrado_por: usuario.usuario_id_usuario } });
-      const antes = await modulo.obtenerRemuneracion(abril.remuneracion.id);
+      const periodoCerrado = await modulo.calcularRemuneracion({ idEmpleado: empleado.id, anio: 2199, mes: 7 }, usuario.usuario_id_usuario);
+      if (!ids.periodos.includes(periodoCerrado.remuneracion.periodo.id)) ids.periodos.push(periodoCerrado.remuneracion.periodo.id);
+      assert.deepEqual(periodoCerrado.bloqueos, []);
+      await modulo.cerrarRemuneracion(periodoCerrado.remuneracion.id, usuario.usuario_id_usuario);
+      await prisma.periodo_remuneracion.update({ where: { id_periodo_remuneracion: periodoCerrado.remuneracion.periodo.id }, data: { cerrado_en: new Date(), cerrado_por: usuario.usuario_id_usuario } });
+      const antes = await modulo.obtenerRemuneracion(periodoCerrado.remuneracion.id);
       await prisma.configuracion_concepto_remuneracion.updateMany({ where: { id_concepto: haberHistorico.id_concepto_remuneracion }, data: { valor: 999 } });
-      await assert.rejects(modulo.calcularRemuneracion({ idEmpleado: empleado.id, anio: 2199, mes: 4 }, usuario.usuario_id_usuario), (error) => error.estado === 409);
-      const despues = await modulo.obtenerRemuneracion(abril.remuneracion.id);
+      await assert.rejects(modulo.calcularRemuneracion({ idEmpleado: empleado.id, anio: 2199, mes: 7 }, usuario.usuario_id_usuario), (error) => error.estado === 409);
+      const despues = await modulo.obtenerRemuneracion(periodoCerrado.remuneracion.id);
       assert.deepEqual(despues.totales, antes.totales);
       assert.deepEqual(despues.componentes.map((item) => item.id), antes.componentes.map((item) => item.id));
     });
@@ -188,6 +191,7 @@ test('M6 correcciones finales post-auditoria', async (t) => {
     await prisma.tarifa_esquema_remuneracional.deleteMany({ where: { id_esquema: { in: ids.esquemas } } });
     await prisma.esquema_remuneracional.deleteMany({ where: { id_esquema_remuneracional: { in: ids.esquemas } } });
     await prisma.relacion_laboral_empleado.deleteMany({ where: { id_relacion_laboral_empleado: { in: ids.relaciones } } });
+    await prisma.parametro_remuneracional.deleteMany({ where: { id_parametro_remuneracional: { in: [...new Set(ids.parametros)] } } });
     await prisma.tramo_impuesto_renta.deleteMany({ where: { id_tramo_impuesto_renta: { in: ids.tramos } } });
     await prisma.usuario.deleteMany({ where: { usuario_id_usuario: { in: ids.usuarios } } });
     await prisma.empleado.deleteMany({ where: { id_empleado: { in: ids.empleados } } });

@@ -8,6 +8,7 @@ import { OrigenPagoRemuneracion, RepositorioPagoRemuneracionPrisma } from '../se
 import { archivoCalculoPreliminarM6, archivoComprobanteAnticipoM6, archivoLiquidacionM6, archivoPeriodoRemuneracionesM6 } from '../m6/documentosRemuneracionPdf';
 import { CorreoDesarrollo, CorreoDocumental } from '../utilidades/correo';
 import { AuditoriaDocumental, AuditoriaDocumentalLegacyPrisma, CondicionDocumento } from '../servicios/AuditoriaDocumental';
+import { calcularPrevisionLegal } from '../m6/calculoPrevisional';
 
 interface ActorDocumentoM6 { id: bigint; alcanceEmpleadoId?: number | null }
 interface ActorTerrenoM6 { id: bigint; administrador: boolean }
@@ -193,6 +194,97 @@ export class M6Controller {
     };
   }
 
+  async obtenerHistorialRemuneracional(idEmpleado: number, consulta: Record<string, unknown> = {}) {
+    const empleado = await prisma.empleado.findUnique({ where: { id_empleado: idEmpleado }, select: { id_empleado: true, rut_empleado: true, nombres: true, apellido_paterno: true, apellido_materno: true } });
+    if (!empleado) throw new ErrorAplicacion(404, 'Empleado no encontrado');
+    const anio = consulta.anio === undefined || consulta.anio === '' ? null : Number(consulta.anio);
+    if (anio !== null && (!Number.isInteger(anio) || anio < 1900 || anio > 9999)) throw new ErrorAplicacion(400, 'Año inválido');
+    const desde = fechaEntrada(consulta.desde, 'Fecha desde', false);
+    const hasta = fechaEntrada(consulta.hasta, 'Fecha hasta', false);
+    if (desde && hasta && desde > hasta) throw new ErrorAplicacion(400, 'El rango de fechas es inválido');
+    const tipoEvento = texto(consulta.tipoEvento || 'TODOS', 30).toUpperCase();
+    if (!['TODOS', 'REMUNERACION', 'PAGO', 'AJUSTE', 'REVERSION', 'DOCUMENTO'].includes(tipoEvento)) throw new ErrorAplicacion(400, 'Tipo de evento inválido');
+    const periodoWhere: Prisma.periodo_remuneracionWhereInput = {
+      ...(anio === null ? {} : { anio }),
+      ...(desde ? { fecha_fin: { gte: desde } } : {}),
+      ...(hasta ? { fecha_inicio: { lte: hasta } } : {}),
+    };
+    const remuneraciones = await prisma.remuneracion.findMany({
+      where: { id_empleado: idEmpleado, periodo: periodoWhere },
+      include: {
+        periodo: true,
+        componentes: { include: { concepto: true }, orderBy: { id_componente_remuneracion: 'asc' } },
+        ajustes_posteriores: { include: { regularizacion: true }, orderBy: { creado_en: 'asc' } },
+        creador: true, calculador: true, cerrador: true, reemplazada_por: true,
+      },
+      orderBy: [{ periodo: { anio: 'desc' } }, { periodo: { mes: 'desc' } }, { creado_en: 'asc' }],
+    });
+    const anticipos = await prisma.anticipo_remuneracion.findMany({ where: { id_empleado: idEmpleado, periodo: periodoWhere }, include: { periodo: true }, orderBy: { creado_en: 'asc' } });
+    const idsRemuneraciones = remuneraciones.map(item => item.id_remuneracion);
+    const ajustes = remuneraciones.flatMap(item => item.ajustes_posteriores);
+    const idsRegularizaciones = ajustes.flatMap(item => item.regularizacion ? [item.regularizacion.id_regularizacion] : []);
+    const idsAnticipos = anticipos.map(item => item.id_anticipo);
+    const pagos = await this.repositorioPago.listarPorOrigenes(prisma, [
+      ...idsRemuneraciones.map(id => this.repositorioPago.remuneracion(id)),
+      ...idsRegularizaciones.map(id => this.repositorioPago.regularizacion(id)),
+      ...idsAnticipos.map(id => this.repositorioPago.anticipo(id)),
+    ]);
+    const idsUsuarios = [...new Set(
+      remuneraciones
+        .flatMap(item => [item.creado_por, item.calculado_por, item.cerrado_por])
+        .concat(pagos.flatMap(item => [item.creado_por, item.confirmado_por, item.anulado_por, ...item.reversiones.map(reversion => reversion.registrado_por)]))
+        .filter((id): id is bigint => id !== null)
+        .map(id => id.toString()),
+    )];
+    const usuarios = await prisma.usuario.findMany({ where: { usuario_id_usuario: { in: idsUsuarios.map(id => BigInt(id)) } }, select: { usuario_id_usuario: true, usuario_username: true, usuario_nombre_completo_primer_nombre_usuario: true } });
+    const nombresUsuario = new Map(usuarios.map(item => [item.usuario_id_usuario.toString(), item.usuario_nombre_completo_primer_nombre_usuario || item.usuario_username]));
+    const idsPeriodos = [...new Set(remuneraciones.map(item => item.id_periodo_remuneracion))];
+    const documentos = await this.auditoriaDocumental.listarEventosHistorial(prisma, idsRemuneraciones, idsPeriodos);
+    const numero = (valor: Prisma.Decimal | null) => valor === null ? null : Number(valor);
+    const presentarPagoHistorial = (pago: (typeof pagos)[number]) => {
+      const totalRevertido = pago.reversiones.reduce((total, item) => total.add(item.monto), new Prisma.Decimal(0));
+      const montoEfectivo = pago.estado === 'CONFIRMADO' ? Prisma.Decimal.max(new Prisma.Decimal(0), pago.monto.sub(totalRevertido)) : new Prisma.Decimal(0);
+      const eventos = [
+        { tipo: 'PAGO', accion: 'Pago preparado', fecha: pago.creado_en, monto: Number(pago.monto), usuario: nombresUsuario.get(pago.creado_por.toString()) || null, motivo: null },
+        ...(pago.confirmado_en ? [{ tipo: 'PAGO', accion: 'Pago confirmado', fecha: pago.confirmado_en, monto: Number(pago.monto), usuario: pago.confirmado_por ? nombresUsuario.get(pago.confirmado_por.toString()) || null : null, motivo: null }] : []),
+        ...pago.reversiones.map(item => ({ tipo: 'REVERSION', accion: 'Reversión de pago', fecha: item.registrado_en, monto: -Number(item.monto), usuario: nombresUsuario.get(item.registrado_por.toString()) || null, motivo: item.motivo })),
+        ...(pago.anulado_en ? [{ tipo: 'PAGO', accion: 'Pago anulado', fecha: pago.anulado_en, monto: Number(pago.monto), usuario: pago.anulado_por ? nombresUsuario.get(pago.anulado_por.toString()) || null : null, motivo: pago.motivo_anulacion }] : []),
+      ];
+      return { id: pago.id_pago_remuneracion, origenTipo: pago.origen_tipo, origenId: pago.origen_id, estado: pago.estado, montoOriginal: Number(pago.monto), montoRevertido: Number(totalRevertido), montoEfectivo: Number(montoEfectivo), medioPago: pago.medio_pago.nombre_medio_pago, respaldo: pago.respaldo, referencia: pago.referencia, eventos, auditoria: { entidadTipo: 'PAGO_REMUNERACION', entidadReferencia: String(pago.id_pago_remuneracion) } };
+    };
+    const pagosPresentados = pagos.map(presentarPagoHistorial);
+    const periodos = new Map<string, any>();
+    const asegurarPeriodo = (periodo: { anio: number; mes: number; fecha_inicio: Date; fecha_fin: Date }) => {
+      const clave = `${periodo.anio}-${String(periodo.mes).padStart(2, '0')}`;
+      if (!periodos.has(clave)) periodos.set(clave, { clave, anio: periodo.anio, mes: periodo.mes, fechaInicio: periodo.fecha_inicio, fechaFin: periodo.fecha_fin, remuneraciones: [], anticipos: [], pagos: [], ajustes: [], documentos: [], resumen: { liquido: 0, pagadoEfectivo: 0, pendiente: 0, ajustes: 0 } });
+      return periodos.get(clave);
+    };
+    const porPeriodo = new Map<string, typeof remuneraciones>();
+    for (const remuneracion of remuneraciones) {
+      const clave = `${remuneracion.periodo.anio}-${remuneracion.periodo.mes}`;
+      porPeriodo.set(clave, [...(porPeriodo.get(clave) || []), remuneracion]);
+    }
+    for (const remuneracion of remuneraciones) {
+      const periodo = asegurarPeriodo(remuneracion.periodo);
+      const versiones = porPeriodo.get(`${remuneracion.periodo.anio}-${remuneracion.periodo.mes}`) || [];
+      const version = versiones.findIndex(item => item.id_remuneracion === remuneracion.id_remuneracion) + 1;
+      const pagosRemuneracion = pagosPresentados.filter(item => item.origenTipo === 'REMUNERACION' && item.origenId === remuneracion.id_remuneracion);
+      const snapshot = remuneracion.snapshot_previsional && typeof remuneracion.snapshot_previsional === 'object' ? remuneracion.snapshot_previsional : null;
+      periodo.remuneraciones.push({ id: remuneracion.id_remuneracion, version, vigente: !remuneracion.reemplazada_por, reemplazaA: remuneracion.reemplaza_a_id ? `Versión ${Math.max(1, version - 1)}` : null, estado: remuneracion.estado, creadoEn: remuneracion.creado_en, calculadoEn: remuneracion.calculado_en, cerradoEn: remuneracion.cerrado_en, actores: { creador: nombresUsuario.get(remuneracion.creado_por.toString()) || null, calculador: remuneracion.calculado_por ? nombresUsuario.get(remuneracion.calculado_por.toString()) || null : null, cerrador: remuneracion.cerrado_por ? nombresUsuario.get(remuneracion.cerrado_por.toString()) || null : null }, totales: { haberes: numero(remuneracion.total_haberes), deduccionesTrabajador: numero(remuneracion.total_deducciones), descuentosPrevisionales: numero(remuneracion.total_descuentos_previsionales), impuesto: numero(remuneracion.total_impuesto), otrasDeducciones: numero(remuneracion.total_otras_deducciones), aportesEmpleador: numero(remuneracion.total_aportes_empleador), liquido: numero(remuneracion.liquido_preliminar), costoEmpresa: numero(remuneracion.costo_empresa), baseImponible: numero(remuneracion.base_imponible), baseTributable: numero(remuneracion.base_tributable) }, componentes: remuneracion.componentes.map(item => this.presentarComponente(item)), snapshotPrevisional: snapshot, pagos: pagosRemuneracion });
+      if (remuneracion.estado !== 'reemplazada') { periodo.resumen.liquido += Number(remuneracion.liquido_preliminar || 0); periodo.resumen.pagadoEfectivo += pagosRemuneracion.reduce((total, item) => total + item.montoEfectivo, 0); }
+      for (const ajuste of remuneracion.ajustes_posteriores) {
+        const pagoRegularizacion = ajuste.regularizacion ? pagosPresentados.filter(item => item.origenTipo === 'REGULARIZACION' && item.origenId === ajuste.regularizacion!.id_regularizacion) : [];
+        const presentado = { id: ajuste.id_ajuste_posterior, remuneracionId: ajuste.id_remuneracion, fechaHallazgo: ajuste.fecha_hallazgo, direccion: ajuste.direccion, monto: Number(ajuste.monto), motivo: ajuste.motivo, tratamiento: ajuste.tratamiento, periodoOrigenId: ajuste.id_periodo_origen, periodoAplicableId: ajuste.id_periodo_aplicable, regularizacion: ajuste.regularizacion ? { id: ajuste.regularizacion.id_regularizacion, monto: Number(ajuste.regularizacion.monto), estado: ajuste.regularizacion.estado, creadoEn: ajuste.regularizacion.creado_en, cerradoEn: ajuste.regularizacion.cerrado_en, pagos: pagoRegularizacion } : null };
+        periodo.ajustes.push(presentado); periodo.resumen.ajustes += ajuste.direccion === 'NEGATIVO' ? -Number(ajuste.monto) : Number(ajuste.monto);
+      }
+    }
+    for (const anticipo of anticipos) { const periodo = asegurarPeriodo(anticipo.periodo); const pagosAnticipo = pagosPresentados.filter(item => item.origenTipo === 'ANTICIPO' && item.origenId === anticipo.id_anticipo); periodo.anticipos.push({ id: anticipo.id_anticipo, modalidad: anticipo.modalidad, valorIngresado: Number(anticipo.valor_ingresado), montoFinal: numero(anticipo.monto_final), estadoValorizacion: anticipo.estado_valorizacion, creadoEn: anticipo.creado_en, pagos: pagosAnticipo }); }
+    for (const periodo of periodos.values()) { periodo.pagos = pagosPresentados.filter(item => periodo.remuneraciones.some((remuneracion: any) => item.origenTipo === 'REMUNERACION' && item.origenId === remuneracion.id) || periodo.anticipos.some((anticipo: any) => item.origenTipo === 'ANTICIPO' && item.origenId === anticipo.id) || periodo.ajustes.some((ajuste: any) => item.origenTipo === 'REGULARIZACION' && item.origenId === ajuste.regularizacion?.id)); periodo.resumen.pendiente = Math.max(0, periodo.resumen.liquido - periodo.resumen.pagadoEfectivo); }
+    for (const documento of documentos) { const periodo = documento.entidad === 'PERIODO_REMUNERACION' ? [...periodos.values()].find(item => idsPeriodos.includes(documento.entidadId) && remuneraciones.some(rem => rem.id_periodo_remuneracion === documento.entidadId && rem.periodo.anio === item.anio && rem.periodo.mes === item.mes)) : [...periodos.values()].find(item => item.remuneraciones.some((rem: any) => rem.id === documento.entidadId)); if (periodo) periodo.documentos.push(documento); }
+    const salida = [...periodos.values()].sort((a, b) => b.anio - a.anio || b.mes - a.mes).map(periodo => ({ ...periodo, remuneraciones: tipoEvento === 'TODOS' || tipoEvento === 'REMUNERACION' ? periodo.remuneraciones : [], pagos: tipoEvento === 'TODOS' || ['PAGO', 'REVERSION'].includes(tipoEvento) ? periodo.pagos : [], ajustes: tipoEvento === 'TODOS' || tipoEvento === 'AJUSTE' ? periodo.ajustes : [], documentos: tipoEvento === 'TODOS' || tipoEvento === 'DOCUMENTO' ? periodo.documentos : [], anticipos: tipoEvento === 'TODOS' || tipoEvento === 'PAGO' ? periodo.anticipos : [] }));
+    return { empleado: { id: empleado.id_empleado, rut: empleado.rut_empleado, nombreCompleto: nombreCompleto(empleado) }, filtros: { anio, desde, hasta, tipoEvento }, periodos: salida };
+  }
+
   async catalogosLaborales() {
     const tiposVinculo = await prisma.tipo_vinculo_laboral.findMany({
       where: { estado_tipo_vinculo_laboral: 'activo' },
@@ -362,6 +454,7 @@ export class M6Controller {
         id_afp: true,
         id_prevision_salud: true,
         seguro_cesantia: true,
+        seguro_cesantia_fundamento_exclusion: true,
         correo_particular: true,
         telefono_particular: true,
         direccion_particular: true,
@@ -370,7 +463,8 @@ export class M6Controller {
         canal_documental: true,
         cargo: { select: { nombre_cargo: true } },
         afp: { select: { nombre_afp: true } },
-        prevision_salud: { select: { nombre_prevision_salud: true } },
+        prevision_salud: { select: { nombre_prevision_salud: true, tipo_prevision_salud: true } },
+        cotizaciones_salud_m6: { where: { activa: true }, orderBy: { vigencia_desde: 'desc' }, take: 1 },
       },
     });
     if (!empleado) throw new ErrorAplicacion(404, 'Empleado no encontrado');
@@ -384,7 +478,10 @@ export class M6Controller {
       afp: empleado.afp?.nombre_afp || null,
       idInstitucionSalud: empleado.id_prevision_salud,
       institucionSalud: empleado.prevision_salud?.nombre_prevision_salud || null,
+      tipoInstitucionSalud: empleado.prevision_salud?.tipo_prevision_salud || null,
       seguroCesantia: empleado.seguro_cesantia,
+      fundamentoExclusionCesantia: empleado.seguro_cesantia_fundamento_exclusion,
+      cotizacionSalud: empleado.cotizaciones_salud_m6[0] ? { valor: Number(empleado.cotizaciones_salud_m6[0].valor), unidad: empleado.cotizaciones_salud_m6[0].unidad, vigenciaDesde: empleado.cotizaciones_salud_m6[0].vigencia_desde, vigenciaHasta: empleado.cotizaciones_salud_m6[0].vigencia_hasta } : null,
       correoParticular: empleado.correo_particular,
       telefonoParticular: empleado.telefono_particular,
       direccionParticular: empleado.direccion_particular,
@@ -409,6 +506,7 @@ export class M6Controller {
       if (typeof entrada.seguroCesantia !== 'boolean') throw new ErrorAplicacion(400, 'Seguro de cesantía inválido');
       data.seguro_cesantia = entrada.seguroCesantia;
     }
+    if (entrada.fundamentoExclusionCesantia !== undefined) data.seguro_cesantia_fundamento_exclusion = texto(entrada.fundamentoExclusionCesantia, 1000) || null;
     if (entrada.correoParticular !== undefined) {
       const correo = texto(entrada.correoParticular, 254) || null;
       if (correo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) throw new ErrorAplicacion(400, 'Correo particular inválido');
@@ -425,11 +523,36 @@ export class M6Controller {
 
     try {
       await prisma.$transaction(async (tx) => {
-        if (!await tx.empleado.count({ where: { id_empleado: idEmpleado } })) throw new ErrorAplicacion(404, 'Empleado no encontrado');
+        const empleadoActual = await tx.empleado.findUnique({ where: { id_empleado: idEmpleado }, select: { id_prevision_salud: true } });
+        if (!empleadoActual) throw new ErrorAplicacion(404, 'Empleado no encontrado');
         if (typeof idCargo === 'number' && !await tx.cargo.count({ where: { id_cargo: idCargo, estado_cargo: 'activo' } })) throw new ErrorAplicacion(404, 'Cargo activo no encontrado');
         if (typeof idAfp === 'number' && !await tx.afp.count({ where: { id_afp: idAfp, estado_afp: 'activo' } })) throw new ErrorAplicacion(404, 'AFP activa no encontrada');
-        if (typeof idSalud === 'number' && !await tx.prevision_salud.count({ where: { id_prevision_salud: idSalud, estado_prevision_salud: 'activo' } })) throw new ErrorAplicacion(404, 'Institución de salud activa no encontrada');
+        const idSaludEfectivo = idSalud === undefined ? empleadoActual.id_prevision_salud : idSalud;
+        const institucionSalud = typeof idSaludEfectivo === 'number'
+          ? await tx.prevision_salud.findFirst({ where: { id_prevision_salud: idSaludEfectivo, estado_prevision_salud: 'activo' }, select: { tipo_prevision_salud: true } })
+          : null;
+        if (typeof idSalud === 'number' && !institucionSalud) throw new ErrorAplicacion(404, 'Institución de salud activa no encontrada');
+        if (data.seguro_cesantia === false && !String(data.seguro_cesantia_fundamento_exclusion || '').trim()) throw new ErrorAplicacion(400, 'La exclusión del Seguro de Cesantía requiere fundamento');
+        if (data.seguro_cesantia === true) data.seguro_cesantia_fundamento_exclusion = null;
         await tx.empleado.update({ where: { id_empleado: idEmpleado }, data });
+        const configuraSalud = [entrada.cotizacionSaludValor, entrada.cotizacionSaludUnidad, entrada.cotizacionSaludVigenciaDesde].some(valor => valor !== undefined);
+        const esIsapre = String(institucionSalud?.tipo_prevision_salud || '').toUpperCase() === 'ISAPRE';
+        if (!esIsapre) {
+          if (configuraSalud && [entrada.cotizacionSaludValor, entrada.cotizacionSaludUnidad, entrada.cotizacionSaludVigenciaDesde].some(valor => valor !== undefined && valor !== null && valor !== '')) {
+            throw new ErrorAplicacion(400, 'La cotización pactada sólo corresponde a una Isapre');
+          }
+          await tx.cotizacion_salud_empleado.updateMany({ where: { id_empleado: idEmpleado, activa: true }, data: { activa: false } });
+        }
+        if (configuraSalud && esIsapre) {
+          const valor = decimalMonetario(entrada.cotizacionSaludValor, 'Cotización de salud', true);
+          const unidad = texto(entrada.cotizacionSaludUnidad, 20).toUpperCase();
+          const vigenciaDesde = fechaEntrada(entrada.cotizacionSaludVigenciaDesde, 'Vigencia de cotización de salud')!;
+          if (!['PORCENTAJE', 'UF', 'CLP'].includes(unidad)) throw new ErrorAplicacion(400, 'Unidad de cotización de salud inválida');
+          if (unidad === 'PORCENTAJE' && valor.gt(1)) throw new ErrorAplicacion(400, 'El porcentaje debe informarse como factor decimal');
+          const anterior = await tx.cotizacion_salud_empleado.findFirst({ where: { id_empleado: idEmpleado, activa: true, vigencia_desde: { lt: vigenciaDesde }, OR: [{ vigencia_hasta: null }, { vigencia_hasta: { gte: vigenciaDesde } }] }, orderBy: { vigencia_desde: 'desc' } });
+          if (anterior) await tx.cotizacion_salud_empleado.update({ where: { id_cotizacion_salud: anterior.id_cotizacion_salud }, data: { vigencia_hasta: new Date(vigenciaDesde.getTime() - 86400000) } });
+          await tx.cotizacion_salud_empleado.upsert({ where: { id_empleado_vigencia_desde: { id_empleado: idEmpleado, vigencia_desde: vigenciaDesde } }, create: { id_empleado: idEmpleado, valor, unidad, vigencia_desde: vigenciaDesde }, update: { valor, unidad, activa: true } });
+        }
       });
       return this.obtenerPerfilRemuneracional(idEmpleado);
     } catch (error) {
@@ -1019,7 +1142,7 @@ export class M6Controller {
       empleado: { id: item.empleado.id_empleado, rut: item.empleado.rut_empleado, nombre: nombreCompleto(item.empleado) },
       calculadoEn: item.calculado_en, cerradoEn: item.cerrado_en, reemplazaAId: item.reemplaza_a_id,
       reapertura: { solicitadaEn: item.reapertura_solicitada_en, solicitadaPor: item.reapertura_solicitada_por?.toString() || null, motivo: item.reapertura_motivo, aprobadaEn: item.reapertura_aprobada_en, aprobadaPor: item.reapertura_aprobada_por?.toString() || null },
-      totales: { haberes: item.total_haberes === null ? null : Number(item.total_haberes), deducciones: item.total_deducciones === null ? null : Number(item.total_deducciones), aportesEmpleador: item.total_aportes_empleador === null ? null : Number(item.total_aportes_empleador), baseImponible: item.base_imponible === null ? null : Number(item.base_imponible), baseTributable: item.base_tributable === null ? null : Number(item.base_tributable), liquidoPreliminar: item.liquido_preliminar === null ? null : Number(item.liquido_preliminar) },
+      totales: { haberes: item.total_haberes === null ? null : Number(item.total_haberes), deducciones: item.total_deducciones === null ? null : Number(item.total_deducciones), descuentosPrevisionales: item.total_descuentos_previsionales === null ? null : Number(item.total_descuentos_previsionales), impuesto: item.total_impuesto === null ? null : Number(item.total_impuesto), otrasDeducciones: item.total_otras_deducciones === null ? null : Number(item.total_otras_deducciones), aportesEmpleador: item.total_aportes_empleador === null ? null : Number(item.total_aportes_empleador), costoEmpresa: item.costo_empresa === null ? null : Number(item.costo_empresa), baseImponible: item.base_imponible === null ? null : Number(item.base_imponible), baseTributable: item.base_tributable === null ? null : Number(item.base_tributable), liquidoPreliminar: item.liquido_preliminar === null ? null : Number(item.liquido_preliminar) },
       componentes: item.componentes.map((componente: any) => this.presentarComponente(componente)),
       condicionPago: estadoPago,
       ajustesPosteriores: (item.ajustes_posteriores || []).map((ajuste: any) => ({
@@ -1155,6 +1278,14 @@ export class M6Controller {
         conservados.add(anterior.id_componente_remuneracion);
         continue;
       }
+      if (anterior && ['DEDUCCION_PREVISIONAL', 'IMPUESTO_RENTA', 'APORTE_EMPLEADOR_AUTOMATICO'].includes(String(candidato.tipo)) && anterior._count.componentes_derivados === 0) {
+        await tx.componente_remuneracion.update({
+          where: { id_componente_remuneracion: anterior.id_componente_remuneracion },
+          data: { descripcion: candidato.descripcion, monto: candidato.monto, referencia_origen: candidato.referencia_origen, version_origen: candidato.version_origen, estado_revision: 'aprobado', motivo: null, revisado_por: candidato.revisado_por, fecha_revision: candidato.fecha_revision },
+        });
+        conservados.add(anterior.id_componente_remuneracion);
+        continue;
+      }
       if (anterior) {
         const descartable = ['propuesto', 'conflicto', 'pendiente_valorizacion'].includes(anterior.estado_revision)
           && anterior.revisado_por === null && anterior.fecha_revision === null && anterior._count.componentes_derivados === 0;
@@ -1189,7 +1320,7 @@ export class M6Controller {
 
   private async calcularEnTransaccion(tx: Prisma.TransactionClient, idRemuneracion: number, idUsuario: bigint) {
     const actual = await this.remuneracionAbierta(tx, idRemuneracion);
-    const remuneracion = await tx.remuneracion.findUniqueOrThrow({ where: { id_remuneracion: idRemuneracion }, include: { periodo: true, empleado: true, componentes: { include: { concepto: true } } } });
+    const remuneracion = await tx.remuneracion.findUniqueOrThrow({ where: { id_remuneracion: idRemuneracion }, include: { periodo: true, empleado: { include: { afp: true, prevision_salud: true } }, componentes: { include: { concepto: true } } } });
     const componentes: Prisma.componente_remuneracionCreateManyInput[] = [];
     const agregar = (data: Omit<Prisma.componente_remuneracionCreateManyInput, 'id_remuneracion' | 'creado_por'>) => componentes.push({ ...data, id_remuneracion: idRemuneracion, creado_por: idUsuario });
     if (remuneracion.empleado.sueldo_base !== null && remuneracion.empleado.fecha_aplicacion_sueldo_base && remuneracion.empleado.fecha_aplicacion_sueldo_base <= remuneracion.periodo.fecha_fin) {
@@ -1249,32 +1380,25 @@ export class M6Controller {
       const pagoAnticipo = pagosAnticipo.find(item => item.idAnticipo === anticipo.id_anticipo)!;
       agregar({ tipo: 'DEDUCCION_AUTOMATICA', descripcion: 'Anticipo efectivamente pagado neto de reversiones', monto: pagoAnticipo.montoEfectivo, fuente_tipo: 'AUTOMATICA', clave_negocio: `ANTICIPO:${anticipo.id_anticipo}`, referencia_origen: `PAGO_ANTICIPO:${pagoAnticipo.idPago}`, estado_revision: 'aprobado', revisado_por: idUsuario, fecha_revision: new Date() });
     }
-    await this.sincronizarAutomaticos(tx, idRemuneracion, componentes, ['SUELDO_BASE', 'HABER_AUTOMATICO', 'HECHO_TERRENO', 'DEDUCCION_AUTOMATICA', 'APORTE_EMPLEADOR_AUTOMATICO']);
-    let baseTributable = new Prisma.Decimal(0);
+    await this.sincronizarAutomaticos(tx, idRemuneracion, componentes, ['SUELDO_BASE', 'HABER_AUTOMATICO', 'HECHO_TERRENO', 'DEDUCCION_AUTOMATICA']);
+    let baseImponible = new Prisma.Decimal(0);
     const componentesBase = await tx.componente_remuneracion.findMany({ where: { id_remuneracion: idRemuneracion, estado_revision: 'aprobado', monto: { not: null } } });
-    for (const item of componentesBase.filter(x => x.direccion !== 'NEGATIVO' && !['DEDUCCION_AUTOMATICA', 'APORTE_EMPLEADOR_AUTOMATICO', 'IMPUESTO_RENTA'].includes(x.tipo))) baseTributable = baseTributable.add(item.monto!);
-    const tramos = await tx.tramo_impuesto_renta.findMany({ where: { estado: 'activo', vigencia_desde: { lte: remuneracion.periodo.fecha_fin }, OR: [{ vigencia_hasta: null }, { vigencia_hasta: { gte: remuneracion.periodo.fecha_inicio } }] }, orderBy: { orden: 'asc' } });
-    const setsTributarios = new Set(tramos.map(x => `${x.vigencia_desde.toISOString()}|${x.vigencia_hasta?.toISOString() || ''}`));
-    const tramo = setsTributarios.size === 1 ? tramos.find(x => baseTributable.gte(x.limite_desde) && (x.limite_hasta === null || baseTributable.lte(x.limite_hasta))) : null;
-    const impuesto: Prisma.componente_remuneracionCreateManyInput[] = [];
-    const agregarImpuesto = (data: Omit<Prisma.componente_remuneracionCreateManyInput, 'id_remuneracion' | 'creado_por'>) => impuesto.push({ ...data, id_remuneracion: idRemuneracion, creado_por: idUsuario });
-    if (tramo && tramo.factor.isZero() && tramo.rebaja.isZero()) {
-      agregarImpuesto({ tipo: 'IMPUESTO_RENTA', descripcion: 'Impuesto a la renta según tramo vigente sin cargo', monto: new Prisma.Decimal(0), fuente_tipo: 'AUTOMATICA', clave_negocio: 'IMPUESTO_RENTA', referencia_origen: `TRAMO:${tramo.id_tramo_impuesto_renta}`, version_origen: tramo.vigencia_desde.toISOString().slice(0, 10), estado_revision: 'aprobado', revisado_por: idUsuario, fecha_revision: new Date() });
-    } else {
-      agregarImpuesto({ tipo: 'IMPUESTO_RENTA', descripcion: 'Impuesto a la renta pendiente', monto: null, fuente_tipo: 'AUTOMATICA', clave_negocio: 'IMPUESTO_RENTA', referencia_origen: tramo ? `TRAMO:${tramo.id_tramo_impuesto_renta}` : null, version_origen: tramo?.vigencia_desde.toISOString().slice(0, 10) || null, estado_revision: 'pendiente_valorizacion', motivo: tramos.length === 0 ? 'No existe set tributario vigente' : setsTributarios.size > 1 ? 'Existen múltiples sets tributarios efectivos' : !tramo ? 'La base no coincide con un tramo configurado' : 'La fórmula tributaria no está definida explícitamente por el modelo vigente' });
-    }
-    await this.sincronizarAutomaticos(tx, idRemuneracion, impuesto, ['IMPUESTO_RENTA']);
+    for (const item of componentesBase.filter(x => x.direccion !== 'NEGATIVO' && !['DEDUCCION_AUTOMATICA', 'DEDUCCION_PREVISIONAL', 'APORTE_EMPLEADOR_AUTOMATICO', 'IMPUESTO_RENTA'].includes(x.tipo))) baseImponible = baseImponible.add(item.monto!);
+    const legal = await calcularPrevisionLegal(tx, { idEmpleado: remuneracion.id_empleado, fechaInicio: remuneracion.periodo.fecha_inicio, fechaFin: remuneracion.periodo.fecha_fin, baseImponible, afp: remuneracion.empleado.afp?.nombre_afp || null, salud: remuneracion.empleado.prevision_salud ? { nombre: remuneracion.empleado.prevision_salud.nombre_prevision_salud, tipo: remuneracion.empleado.prevision_salud.tipo_prevision_salud } : null, seguroCesantia: remuneracion.empleado.seguro_cesantia, fundamentoExclusionCesantia: remuneracion.empleado.seguro_cesantia_fundamento_exclusion });
+    const componentesLegales: Prisma.componente_remuneracionCreateManyInput[] = legal.componentes.map(item => ({ id_remuneracion: idRemuneracion, creado_por: idUsuario, tipo: item.tipo, descripcion: item.descripcion, monto: item.monto, fuente_tipo: 'AUTOMATICA', clave_negocio: item.claveNegocio, referencia_origen: item.referenciaOrigen, version_origen: item.versionOrigen, estado_revision: 'aprobado', revisado_por: idUsuario, fecha_revision: new Date() }));
+    await this.sincronizarAutomaticos(tx, idRemuneracion, componentesLegales, ['DEDUCCION_PREVISIONAL', 'IMPUESTO_RENTA', 'APORTE_EMPLEADOR_AUTOMATICO']);
     const todos = await tx.componente_remuneracion.findMany({ where: { id_remuneracion: idRemuneracion } });
     let haberes = new Prisma.Decimal(0), deducciones = new Prisma.Decimal(0), aportes = new Prisma.Decimal(0);
     for (const item of todos.filter(x => x.estado_revision === 'aprobado' && x.monto !== null)) {
       if (item.tipo === 'APORTE_EMPLEADOR_AUTOMATICO') aportes = aportes.add(item.monto!);
-      else if (item.tipo === 'DEDUCCION_AUTOMATICA' || item.tipo === 'IMPUESTO_RENTA' || item.direccion === 'NEGATIVO') deducciones = deducciones.add(item.monto!);
+      else if (item.tipo === 'DEDUCCION_AUTOMATICA' || item.tipo === 'DEDUCCION_PREVISIONAL' || item.tipo === 'IMPUESTO_RENTA' || item.direccion === 'NEGATIVO') deducciones = deducciones.add(item.monto!);
       else haberes = haberes.add(item.monto!);
     }
     const recargada = await tx.remuneracion.findUniqueOrThrow({ where: { id_remuneracion: idRemuneracion }, include: { periodo: true, empleado: true, componentes: { include: { concepto: true } } } });
     const revision = await this.bloqueosRemuneracion(tx, recargada); const liquido = haberes.sub(deducciones);
     if (liquido.isNegative()) revision.bloqueos.push({ codigo: 'LIQUIDO_NEGATIVO', detalle: 'Las deducciones superan los haberes' });
-    await tx.remuneracion.update({ where: { id_remuneracion: actual.id_remuneracion }, data: { calculado_en: new Date(), calculado_por: idUsuario, total_haberes: haberes, total_deducciones: deducciones, total_aportes_empleador: aportes, base_imponible: haberes, base_tributable: haberes, liquido_preliminar: revision.bloqueos.length ? null : liquido } });
+    const otrasDeducciones = deducciones.sub(legal.descuentosPrevisionales).sub(legal.impuesto);
+    await tx.remuneracion.update({ where: { id_remuneracion: actual.id_remuneracion }, data: { calculado_en: new Date(), calculado_por: idUsuario, total_haberes: haberes, total_deducciones: deducciones, total_descuentos_previsionales: legal.descuentosPrevisionales, total_impuesto: legal.impuesto, total_otras_deducciones: otrasDeducciones, total_aportes_empleador: aportes, costo_empresa: haberes.add(aportes), snapshot_previsional: legal.snapshot as Prisma.InputJsonValue, base_imponible: legal.baseImponible, base_tributable: legal.baseTributable, liquido_preliminar: revision.bloqueos.length ? null : liquido } });
     return revision;
   }
 
@@ -1693,7 +1817,7 @@ export class M6Controller {
     return item ? { tipo: 'BOLETA_HONORARIOS', id: origen.id, descripcion: `${item.prestador.nombre_razon_social} · folio ${item.folio}` } : null;
   }
 
-  async actualizarPagoRemuneracion(idPago: number, entrada: Record<string, unknown>) {
+  async actualizarPagoRemuneracion(idPago: number, entrada: Record<string, unknown>, idUsuario?: bigint) {
     const actual = await this.repositorioPago.obtener(prisma, idPago); if (!actual) throw new ErrorAplicacion(404, 'Pago de remuneración no encontrado');
     if (actual.estado !== 'PREPARADO') throw new ErrorAplicacion(409, 'Sólo un pago PREPARADO puede corregirse');
     const monto = entrada.monto === undefined ? actual.monto : decimalMonetario(entrada.monto, 'Monto del pago', true);
@@ -1704,7 +1828,11 @@ export class M6Controller {
     if (!medio || medio.estado_medio_pago !== 'activo' || !medio.codigo_medio_pago || medio.requiere_respaldo === null) throw new ErrorAplicacion(409, 'El medio de pago no tiene configuración M6 válida');
     if (medio.requiere_respaldo && !respaldo) throw new ErrorAplicacion(400, 'El medio de pago exige respaldo');
     await this.repositorioPago.actualizarPreparado(prisma, idPago, { monto, idMedioPago: idMedio, respaldo, referencia });
-    return this.obtenerPagoRemuneracion(idPago);
+    const detalle = await this.obtenerPagoRemuneracion(idPago);
+    const anterior = { monto: Number(actual.monto), medioPagoId: actual.id_medio_pago, respaldo: actual.respaldo, referencia: actual.referencia };
+    const nuevo = { monto: Number(monto), medioPagoId: idMedio, respaldo, referencia };
+    Object.defineProperty(detalle, '__auditoriaM9', { value: { anterior, nuevo, actor: idUsuario?.toString() }, enumerable: false });
+    return detalle;
   }
 
   async confirmarPagoRemuneracion(idPago: number, idUsuario: bigint) {
@@ -1752,9 +1880,9 @@ export class M6Controller {
     if (!permitidos.includes(this.repositorioPago.tipoPublico(origen))) throw new ErrorAplicacion(403, 'El pago no pertenece al caso de uso autorizado');
   }
 
-  async actualizarPagoAnticipo(idPago: number, entrada: Record<string, unknown>) { await this.exigirTipoPago(idPago, ['ANTICIPO']); return this.actualizarPagoRemuneracion(idPago, entrada); }
+  async actualizarPagoAnticipo(idPago: number, entrada: Record<string, unknown>, idUsuario?: bigint) { await this.exigirTipoPago(idPago, ['ANTICIPO']); return this.actualizarPagoRemuneracion(idPago, entrada, idUsuario); }
   async confirmarPagoAnticipo(idPago: number, idUsuario: bigint) { await this.exigirTipoPago(idPago, ['ANTICIPO']); return this.confirmarPagoRemuneracion(idPago, idUsuario); }
-  async actualizarPagoFinal(idPago: number, entrada: Record<string, unknown>) { await this.exigirTipoPago(idPago, ['REMUNERACION', 'REGULARIZACION']); return this.actualizarPagoRemuneracion(idPago, entrada); }
+  async actualizarPagoFinal(idPago: number, entrada: Record<string, unknown>, idUsuario?: bigint) { await this.exigirTipoPago(idPago, ['REMUNERACION', 'REGULARIZACION']); return this.actualizarPagoRemuneracion(idPago, entrada, idUsuario); }
   async confirmarPagoFinal(idPago: number, idUsuario: bigint) { await this.exigirTipoPago(idPago, ['REMUNERACION', 'REGULARIZACION']); return this.confirmarPagoRemuneracion(idPago, idUsuario); }
 
   async listarPrestadoresHonorarios() {
@@ -1937,7 +2065,7 @@ export class M6Controller {
   }
 
   async prepararPagoHonorarios(idBoleta: number, entrada: Record<string, unknown>, idUsuario: bigint) { return this.prepararPagoRemuneracion(this.repositorioPago.boletaHonorarios(idBoleta), entrada, idUsuario); }
-  async actualizarPagoHonorarios(idPago: number, entrada: Record<string, unknown>) { await this.exigirTipoPago(idPago, ['BOLETA_HONORARIOS']); return this.actualizarPagoRemuneracion(idPago, entrada); }
+  async actualizarPagoHonorarios(idPago: number, entrada: Record<string, unknown>, idUsuario?: bigint) { await this.exigirTipoPago(idPago, ['BOLETA_HONORARIOS']); return this.actualizarPagoRemuneracion(idPago, entrada, idUsuario); }
   async confirmarPagoHonorarios(idPago: number, idUsuario: bigint) { await this.exigirTipoPago(idPago, ['BOLETA_HONORARIOS']); return this.confirmarPagoRemuneracion(idPago, idUsuario); }
 
   async anularPagoRemuneracion(idPago: number, entrada: Record<string, unknown>, idUsuario: bigint) {

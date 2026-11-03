@@ -2,7 +2,7 @@ import { Router, RequestHandler } from 'express';
 import { randomUUID } from 'node:crypto';
 import { C_Finanzas, Operacion } from '../controladores/C_Finanzas';
 
-export function crearRutasFinanzas(fachada: C_Finanzas) {
+export function crearRutasFinanzas(fachada: C_Finanzas): Router {
   const rutas = Router();
   const derivar = (operacion: Operacion): RequestHandler => async (solicitud, respuesta, siguiente) => {
     try {
@@ -136,6 +136,7 @@ export function crearRutasFinanzas(fachada: C_Finanzas) {
   rutas.post('/empleados/:id/relaciones-laborales', derivar('crearRelacionLaboral'));
   rutas.patch('/empleados/:id/relaciones-laborales/:relacionId', derivar('actualizarRelacionLaboral'));
   rutas.get('/empleados/:id/perfil-remuneracional', derivar('obtenerPerfilRemuneracional'));
+  rutas.get('/empleados/:id/historial-remuneracional', derivar('obtenerHistorialRemuneracionalEmpleado'));
   rutas.patch('/empleados/:id/perfil-remuneracional', derivar('actualizarPerfilRemuneracional'));
   rutas.get('/empleados/:id/esquemas', derivar('listarAsignacionesEsquemaEmpleado'));
   rutas.post('/empleados/:id/esquemas', derivar('asignarEsquemaEmpleado'));

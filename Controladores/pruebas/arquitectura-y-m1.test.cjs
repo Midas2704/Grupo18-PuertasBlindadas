@@ -37,16 +37,16 @@ async function consultar(ruta, opciones) {
   return { estado: respuesta.status, resultado: await respuesta.json() };
 }
 
-test('sólo existen cinco controladores y no hay llamadas entre módulos', () => {
+test('sólo existen los controladores modulares autorizados y no hay llamadas entre módulos', () => {
   const carpeta = resolve('src/controladores');
-  assert.deepEqual(readdirSync(carpeta).sort(), ['C_Finanzas.ts', 'M1Controller.ts', 'M2Controller.ts', 'M3Controller.ts', 'M4Controller.ts']);
-  for (const nombre of ['M1Controller.ts', 'M2Controller.ts', 'M3Controller.ts', 'M4Controller.ts']) {
+  assert.deepEqual(readdirSync(carpeta).sort(), ['C_Finanzas.ts', 'M1Controller.ts', 'M2Controller.ts', 'M3Controller.ts', 'M4Controller.ts', 'M5Controller.ts', 'M6Controller.ts', 'M7Controller.ts', 'M8Controller.ts', 'M9Controller.ts']);
+  for (const nombre of ['M1Controller.ts', 'M2Controller.ts', 'M3Controller.ts', 'M4Controller.ts', 'M5Controller.ts', 'M6Controller.ts', 'M7Controller.ts', 'M8Controller.ts', 'M9Controller.ts']) {
     const codigo = readFileSync(resolve(carpeta, nombre), 'utf8');
-    assert.doesNotMatch(codigo, /from ['"].*(?:M[1234]Controller|C_Finanzas)['"]/);
+    assert.doesNotMatch(codigo, /from ['"].*(?:M[123456789]Controller|C_Finanzas)['"]/);
     assert.doesNotMatch(codigo, /\$(?:queryRaw|executeRaw)|\.query\(|Router\(/);
   }
   const rutas = readFileSync(resolve('src/rutas/finanzas.ts'), 'utf8');
-  assert.doesNotMatch(rutas, /prisma|M[1234]Controller/);
+  assert.doesNotMatch(rutas, /prisma|M[123456789]Controller/);
 });
 test('la fachada autoriza una vez y compone el dashboard mediante M1 y M2', async () => {
   let autorizaciones = 0;

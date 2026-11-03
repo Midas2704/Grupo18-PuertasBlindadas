@@ -9,3 +9,5 @@ build/
 
 Incremento 2/Demo Caso de Uso.mp4
 Incremento 2/Demo Completa.mp4
+*.tsbuildinfo
+*.patch

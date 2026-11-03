@@ -1,6 +1,6 @@
 import { prisma } from '../src/db';
 import { futuro } from '../src/utilidades/seguridad';
-import { codigosImplementados, codigosTodosLosCU, codigosGerencia, codigosSecretaria, codigosContador, dependenciasPermiso } from '../src/validaciones/permisos';
+import { codigosImplementados, codigosTodosLosCU, codigosGerencia, codigosSecretaria, codigosContador, dependenciasPermiso, moduloPermiso } from '../src/validaciones/permisos';
 import { asegurarCuentaRaiz } from '../src/administracion/cuentaRaiz';
 export async function sembrarM4() {
  if(process.env.NODE_ENV==='production') throw new Error('El seed de credenciales ficticias sólo se permite en desarrollo');
@@ -8,9 +8,11 @@ export async function sembrarM4() {
  await prisma.$transaction(async tx=>{
   const permisos=new Map<string,bigint>();
   for(const codigo of [...new Set([...codigosImplementados, ...codigosTodosLosCU])]) {
-   const permiso=await tx.permiso.upsert({where:{codigo_m4:codigo},update:{},create:{codigo_m4:codigo,activo_m4:true,permiso_modulo:Number(codigo.slice(2))>=59?'M4':Number(codigo.slice(2))>=42?'M3':Number(codigo.slice(2))>=12?'M2':'M1',permiso_nombre_del_permiso:codigo,permiso_descripcion:`Operación ${codigo}`,requiere_administrador:['CU65','CU66','CU74'].includes(codigo)}});
+   const datos={activo_m4:true,permiso_modulo:moduloPermiso(codigo),permiso_nombre_del_permiso:codigo,permiso_descripcion:`Operación ${codigo}`,requiere_administrador:['CU65','CU66','CU74'].includes(codigo)};
+   const permiso=await tx.permiso.upsert({where:{codigo_m4:codigo},update:{permiso_modulo:moduloPermiso(codigo)},create:{codigo_m4:codigo,...datos}});
    permisos.set(codigo,permiso.permiso_id_permiso);
   }
+  await tx.permiso_dependencia.deleteMany({where:{id_permiso:{in:Array.from({length:66},(_,indice)=>`CU${121+indice}`).map(codigo=>permisos.get(codigo)!)}}});
   for(const [codigo,necesarios] of Object.entries(dependenciasPermiso)) for(const requerido of necesarios) await tx.permiso_dependencia.upsert({where:{id_permiso_id_requerido:{id_permiso:permisos.get(codigo)!,id_requerido:permisos.get(requerido)!}},update:{},create:{id_permiso:permisos.get(codigo)!,id_requerido:permisos.get(requerido)!}});
   const perfiles=new Map<string,bigint>();
   for(const [codigo,nombre,codigos] of [['gerencia','Gerencia',codigosGerencia],['secretaria','Secretaría',codigosSecretaria],['contador','Contador',codigosContador]] as const) {

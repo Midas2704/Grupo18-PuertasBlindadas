@@ -3,20 +3,21 @@ import { prisma } from '../db';
 import { ErrorAplicacion } from '../utilidades/ErrorAplicacion';
 import { comprobarClave, hashClave, validarClave, secreto, huella, futuro, politica } from '../utilidades/seguridad';
 import { CorreoRecuperacion, CorreoDesarrollo } from '../utilidades/correo';
-import { codigosTodosLosCU, operacionesPermiso, operacionesQueRequierenAdministrador } from '../validaciones/permisos';
+import { codigosAdministrador, operacionesPermiso, operacionesQueRequierenAdministrador, permiteOperacion } from '../validaciones/permisos';
 import { texto } from '../validaciones/solicitudes';
+import { validarYNormalizarRut, variantesRut } from '../utilidades/rut';
 
 type Transaccion = Prisma.TransactionClient;
 type Entrada = Record<string, unknown>;
 export interface ContextoSesion { direccion?: string; agente?: string; secretoSesion?: string }
 const incluirAccesos = { perfil: { include: { perfil_permiso: { include: { permiso: true } } } }, particulares: { include: { permiso: true } }, seguridad: true, empleado_seguridad: true } satisfies Prisma.usuarioInclude;
 type Cuenta = Prisma.usuarioGetPayload<{include: typeof incluirAccesos}>;
-export interface ActorAutenticado { id: bigint; sesion: string; permisos: string[]; configuracion: string; administrador: boolean; cambiarClave: boolean; nombre: string; acceso: string }
+export interface ActorAutenticado { id: bigint; sesion: string; permisos: string[]; configuracion: string; administrador: boolean; cambiarClave: boolean; nombre: string; acceso: string; alcanceEmpleadoId?: number | null }
 const error = (estado: number, mensaje: string): never => { throw new ErrorAplicacion(estado,mensaje); };
 const idCuenta = (valor: unknown) => { if (!/^\d+$/.test(String(valor))) return error(400,'Usuario inválido'); return BigInt(String(valor)); };
 const confirmar = (entrada: Entrada) => { if (entrada.confirmado !== true) error(400,'Debes confirmar la operación'); };
 const permisosEfectivos = (cuenta: Cuenta) => {
- if(cuenta.usuario_es_administrador && cuenta.perfil?.codigo_m4 === 'gerencia') return codigosTodosLosCU;
+ if(cuenta.usuario_es_administrador && cuenta.perfil?.codigo_m4 === 'gerencia') return codigosAdministrador;
  const permisos = cuenta.configuracion_particular ? cuenta.particulares.map(v => v.permiso) : (cuenta.perfil?.perfil_permiso.filter(v => v.perfil_permiso_activo).map(v => v.permiso) || []);
  return permisos.filter(p => p.activo_m4 && p.codigo_m4 && (!p.requiere_administrador || cuenta.usuario_es_administrador)).map(p => p.codigo_m4!);
 };
@@ -75,13 +76,15 @@ export class M4Controller {
   const personales=['miSesion','cambiarClave','cerrarSesion'];
   if(cambiarClave && !personales.includes(operacion)) return error(403,'Debes cambiar tu contraseña antes de continuar');
   const permisos=permisosEfectivos(cuenta);
-  if (Number(operacionesPermiso[operacion]?.slice(2)) >= 59 && cuenta.perfil?.codigo_m4 !== 'gerencia') return error(403,'La operación requiere configuración de Gerencia');
+  const numeroCU = Number(operacionesPermiso[operacion]?.slice(2));
+  if (numeroCU >= 59 && numeroCU <= 74 && cuenta.perfil?.codigo_m4 !== 'gerencia') return error(403,'La operación requiere configuración de Gerencia');
   if (operacionesQueRequierenAdministrador.has(operacion) && !cuenta.usuario_es_administrador) return error(403,'La operación requiere rol Administrador');
-  if(!personales.includes(operacion) && (!operacionesPermiso[operacion] || !permisos.includes(operacionesPermiso[operacion]!))) return error(403,'No tienes permiso para esta operación');
+  if(!personales.includes(operacion) && !permiteOperacion(operacion, permisos)) return error(403,'No tienes permiso para esta operación');
   if(adicionales.some(p=>!permisos.includes(p))) return error(403,'No tienes permiso para los filtros o condiciones solicitados');
   const vencePorInactividad = new Date(Math.min(finAbsoluto.getTime(), ahora.getTime() + politica.inactividadMinutos * 60000));
   await prisma.sesion_usuario.update({where:{id:sesion.id},data:{vence:vencePorInactividad}});
-  return {id:cuenta.usuario_id_usuario,sesion:sesion.id,permisos,configuracion:cuenta.perfil?.codigo_m4 || '',administrador:!!cuenta.usuario_es_administrador,cambiarClave,nombre:this.presentar(cuenta).nombre || '',acceso:cuenta.acceso_m4 || ''};
+  const perfilInterno = ['gerencia','contador','secretaria'].includes(cuenta.perfil?.codigo_m4 || '');
+  return {id:cuenta.usuario_id_usuario,sesion:sesion.id,permisos,configuracion:cuenta.perfil?.codigo_m4 || '',administrador:!!cuenta.usuario_es_administrador,cambiarClave,nombre:this.presentar(cuenta).nombre || '',acceso:cuenta.acceso_m4 || '',alcanceEmpleadoId:perfilInterno?undefined:(cuenta.empleado_seguridad?.id_empleado ?? null)};
  }
  async iniciarSesion(entrada:Entrada, contexto:ContextoSesion) {
   const acceso=texto(entrada.acceso,100).replace(/\./g,'').toLowerCase();
@@ -135,21 +138,22 @@ export class M4Controller {
  }
  private async validarPermisos(tx:Transaccion,codigos:string[],administrador=false) {
   const seleccion=await tx.permiso.findMany({where:{codigo_m4:{in:codigos},activo_m4:true},include:{dependencias:{include:{requerido:true}}}});
-  if(seleccion.length!==new Set(codigos).size || seleccion.some(p=>(p.requiere_administrador || Number(p.codigo_m4?.slice(2))>=59)&&!administrador)) error(400,'Permiso no asignable');
+  if(seleccion.length!==new Set(codigos).size || seleccion.some(p=>{const numero=Number(p.codigo_m4?.slice(2));return (p.requiere_administrador || numero>=59&&numero<=74)&&!administrador;})) error(400,'Permiso no asignable');
   if(seleccion.some(p=>p.dependencias.some(d=>!codigos.includes(d.requerido.codigo_m4!)))) error(409,'No se puede mantener un permiso sin sus dependencias');
   return seleccion;
  }
  async registrarUsuario(actor:ActorAutenticado,entrada:Entrada) {
   confirmar(entrada);
   return this.transaccion(async tx=>{
-   const rut=texto(entrada.rutEmpleado,15);
-   const empleado=await tx.empleado.findUnique({where:{rut_empleado:rut},include:{usuario:true,cuenta_m4:true}});
+   const rut=validarYNormalizarRut(texto(entrada.rutEmpleado,15));
+   if(!rut) return error(400,'El RUT del empleado es obligatorio');
+   const empleado=await tx.empleado.findFirst({where:{rut_empleado:{in:variantesRut(rut)}},include:{usuario:true,cuenta_m4:true}});
    if(!empleado || empleado.estado_laboral!=='activo') return error(400,'Sólo puede crearse una cuenta para un Empleado activo');
    if(empleado.cuenta_m4 || empleado.usuario.length) return error(409,'El Empleado ya tiene un Usuario asociado');
    const perfil=await tx.perfil.findUnique({where:{codigo_m4:texto(entrada.configuracion)}});
    if(!perfil?.activo_m4) return error(400,'Configuración no válida');
    const correo=texto(entrada.correo,254);if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) return error(400,'Correo inválido');
-   const cuenta=await tx.usuario.create({data:{acceso_m4:rut.replace(/\./g,'').toLowerCase(),empleado_m4:rut,empleado_rut_empleado:rut,usuario_correo:correo,usuario_username:rut,usuario_estado_cuenta:'activo',perfil_id_perfil:perfil.perfil_id_perfil,usuario_fecha_de_creacion:new Date(),usuario_es_administrador:false}});
+   const cuenta=await tx.usuario.create({data:{acceso_m4:rut.replace(/\./g,'').toLowerCase(),empleado_m4:empleado.rut_empleado,empleado_rut_empleado:empleado.rut_empleado,usuario_correo:correo,usuario_username:rut,usuario_estado_cuenta:'activo',perfil_id_perfil:perfil.perfil_id_perfil,usuario_fecha_de_creacion:new Date(),usuario_es_administrador:false}});
    if(entrada.permisos!==undefined) {
     if(!perfil.admite_particulares || !Array.isArray(entrada.permisos) || !entrada.permisos.length) return error(400,'Configuración particular no válida');
     const permisos=await this.validarPermisos(tx,entrada.permisos.map(p=>texto(p)));

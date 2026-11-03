@@ -12,20 +12,21 @@ const { hashClave, comprobarClave, futuro, huella, politica } = require('../dist
 const { codigosTodosLosCU, codigosGerencia, codigosSecretaria, codigosContador, matrizPermisosPorCU } = require('../dist/validaciones/permisos');
 const { sembrarM4 } = require('../prisma/seed-m4.ts');
 
-test('la matriz de perfiles coincide con los actores de los 74 CU',()=>{
+test('la matriz conserva perfiles previos y asigna M8 por capacidad',()=>{
   const tramo=(desde,hasta)=>Array.from({length:hasta-desde+1},(_,i)=>`CU${String(desde+i).padStart(2,'0')}`);
   const actores={
-    gerencia:tramo(1,74),
-    secretaria:[...tramo(5,12),...tramo(14,22),...tramo(24,30),'CU32',...tramo(34,36),...tramo(39,40),...tramo(42,50),...tramo(55,56),...tramo(68,70)],
-    contador:[...tramo(5,11),...tramo(37,38),...tramo(42,58),...tramo(68,70)],
+    gerencia:[...tramo(1,120),...tramo(123,154),'CU259',...tramo(262,274),'CU355','CU359'],
+    secretaria:[...tramo(5,12),...tramo(14,22),...tramo(24,30),'CU32',...tramo(34,36),...tramo(39,40),...tramo(42,50),...tramo(55,56),...tramo(68,70),'CU76',...tramo(80,86),'CU88','CU89','CU90','CU91','CU92','CU93','CU95','CU96','CU97','CU98','CU99','CU101','CU102','CU103','CU105',...tramo(106,109),...tramo(111,114),...tramo(116,119),'CU123','CU128','CU129','CU131','CU138','CU139',...tramo(142,147),'CU149','CU151','CU152','CU259','CU260','CU261','CU262','CU270','CU272','CU355'],
+    contador:[...tramo(5,11),...tramo(37,38),...tramo(42,58),...tramo(68,70),...tramo(80,88).filter(codigo=>!['CU89','CU90'].includes(codigo)),'CU93','CU95',...tramo(97,109),...tramo(111,120),...tramo(123,136),'CU138','CU139',...tramo(141,149),...tramo(151,154),'CU270','CU272','CU355','CU359'],
   };
   const esperados=Object.fromEntries(Object.entries(actores).map(([perfil,codigos])=>[perfil,codigos.filter(codigo=>!['CU68','CU69','CU70'].includes(codigo))]));
-  assert.deepEqual(codigosTodosLosCU,tramo(1,74));
+  assert.deepEqual(codigosTodosLosCU,tramo(1,274));
   assert.deepEqual(codigosGerencia,esperados.gerencia);
   assert.deepEqual(codigosSecretaria,esperados.secretaria);
   assert.deepEqual(codigosContador,esperados.contador);
-  assert.deepEqual(Object.keys(matrizPermisosPorCU),tramo(1,74));
-  for(const codigo of tramo(1,74)) assert.deepEqual(matrizPermisosPorCU[codigo],[...Object.keys(actores).filter(perfil=>actores[perfil].includes(codigo))]);
+  const catalogo=[...tramo(1,274),'CU355','CU359'];
+  assert.deepEqual(Object.keys(matrizPermisosPorCU),catalogo);
+  for(const codigo of catalogo) assert.deepEqual(matrizPermisosPorCU[codigo],[...Object.keys(actores).filter(perfil=>actores[perfil].includes(codigo))]);
 });
 
 test('RF vigente: perfiles M4, seed y política de acceso', async t => {
@@ -111,8 +112,8 @@ test('CU36/CU51/CU57: documentos, anulaciones y comprobante PDF', async t => {
 
     await t.test('CU57 produce un PDF con catálogo, página y referencias válidas',async()=>{
       const resultado=await m3.generarComprobante(anulable.id_pago_cliente); const pdf=Buffer.from(resultado.contenido.split(',')[1],'base64'); const texto=pdf.toString('latin1');
-      assert.equal(pdf.subarray(0,8).toString('ascii'),'%PDF-1.4'); assert.match(texto,/\/Type \/Catalog/); assert.match(texto,/\/Type \/Page/); assert.match(texto,/xref\n0 6/);
-      assert.match(texto,new RegExp(cliente.rut_cliente.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'))); assert.match(texto,/Cliente:/); assert.match(texto,new RegExp(cliente.nombre_razon_social_referencia.normalize('NFD').replace(/[\u0300-\u036f]/g,'')));
+      assert.equal(pdf.subarray(0,8).toString('ascii'),'%PDF-1.4'); assert.match(texto,/\/Type \/Catalog/); assert.match(texto,/\/Type \/Page/); assert.match(texto,/Comprobante de Pago/); assert.match(texto,/startxref/);
+      assert.match(texto,new RegExp(cliente.rut_cliente.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'))); assert.match(texto,/Nombre o razón social/); assert.match(texto.normalize('NFD').replace(/[\u0300-\u036f]/g,''),new RegExp(cliente.nombre_razon_social_referencia.normalize('NFD').replace(/[\u0300-\u036f]/g,'')));
       const inicio=Number(texto.match(/startxref\n(\d+)/)[1]); assert.equal(texto.slice(inicio,inicio+4),'xref'); assert.ok(texto.endsWith('%%EOF\n'));
     });
 

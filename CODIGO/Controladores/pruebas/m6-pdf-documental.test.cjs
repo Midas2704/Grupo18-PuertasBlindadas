@@ -43,6 +43,25 @@ test('M6 genera documentos laborales profesionales sin alterar cálculos', async
     assert.match(pdf, /Documento histórico - reemplazado/); assert.doesNotMatch(pdf, /Oficial vigente/);
   });
 
+  await t.test('liquidación legal separa descuentos del trabajador y aportes del empleador', () => {
+    const legales = [
+      { tipo: 'DEDUCCION_PREVISIONAL', descripcion: 'AFP Habitat — Cotización obligatoria', monto: 120_000 },
+      { tipo: 'DEDUCCION_PREVISIONAL', descripcion: 'AFP Habitat — Comisión', monto: 15_240 },
+      { tipo: 'DEDUCCION_PREVISIONAL', descripcion: 'Salud Fonasa', monto: 84_000 },
+      { tipo: 'DEDUCCION_PREVISIONAL', descripcion: 'Seguro de Cesantía — trabajador', monto: 7_200 },
+      { tipo: 'IMPUESTO_RENTA', descripcion: 'Impuesto Único de Segunda Categoría', monto: 18_000 },
+      { tipo: 'APORTE_EMPLEADOR_AUTOMATICO', descripcion: 'Seguro de Cesantía — empleador', monto: 28_800 },
+      { tipo: 'APORTE_EMPLEADOR_AUTOMATICO', descripcion: 'Cuenta individual — aporte empleador', monto: 1_200 },
+      { tipo: 'APORTE_EMPLEADOR_AUTOMATICO', descripcion: 'Cotización con Rentabilidad Protegida', monto: 10_800 },
+      { tipo: 'APORTE_EMPLEADOR_AUTOMATICO', descripcion: 'Seguro Social Previsional — SIS / CEV', monto: 30_000 },
+      { tipo: 'APORTE_EMPLEADOR_AUTOMATICO', descripcion: 'Seguro accidentes del trabajo — tasa base', monto: 10_800 },
+      { tipo: 'APORTE_EMPLEADOR_AUTOMATICO', descripcion: 'Seguro SANNA', monto: 360 },
+    ];
+    const pdf = decodificar(archivoLiquidacionM6({ ...remuneracion, componentes: [...componentes, ...legales], total_descuentos_previsionales: 226_440, total_impuesto: 18_000, total_otras_deducciones: 100_000, costo_empresa: 1_531_960 }));
+    for (const texto of ['AFP Habitat', 'Salud Fonasa', 'Seguro de Cesantía', 'Impuesto Único de Segunda Categoría', 'Cotización con Rentabilidad Protegida', 'Seguro Social Previsional', 'Seguro accidentes del trabajo', 'Seguro SANNA', 'Costo empresa']) assert.match(pdf, new RegExp(texto));
+    assert.match(pdf, /no reducen el líquido del trabajador/);
+  });
+
   await t.test('preliminar es no oficial y conserva bloqueos y advertencias humanizados', () => {
     const pdf = decodificar(archivoCalculoPreliminarM6({ ...remuneracion, estado: 'abierta', cerrado_en: null }, {
       bloqueos: [{ codigo: 'TEMPORAL_M6_SIN_TRAMO', detalle: 'Falta tramo tributario vigente' }],

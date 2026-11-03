@@ -53,7 +53,7 @@ const clasificarComponentes = (componentes: Registro[]) => {
   const haberes: Registro[] = [], deducciones: Registro[] = [], aportes: Registro[] = [];
   for (const componente of componentes) {
     if (componente.tipo === 'APORTE_EMPLEADOR_AUTOMATICO' || componente.concepto?.naturaleza_concepto === 'aporte_empleador') aportes.push(componente);
-    else if (componente.tipo === 'DEDUCCION_AUTOMATICA' || componente.tipo === 'IMPUESTO_RENTA' || componente.direccion === 'NEGATIVO' || componente.concepto?.naturaleza_concepto === 'descuento') deducciones.push(componente);
+    else if (componente.tipo === 'DEDUCCION_AUTOMATICA' || componente.tipo === 'DEDUCCION_PREVISIONAL' || componente.tipo === 'IMPUESTO_RENTA' || componente.direccion === 'NEGATIVO' || componente.concepto?.naturaleza_concepto === 'descuento') deducciones.push(componente);
     else haberes.push(componente);
   }
   return { haberes, deducciones, aportes };
@@ -114,10 +114,14 @@ const resumenRemuneracion = (item: Registro): BloqueDocumentoPdf => ({
   ],
   filas: [
     { concepto: 'Total haberes', monto: formatoClpM6(item.total_haberes) },
+    { concepto: 'Total descuentos previsionales', monto: formatoClpM6(item.total_descuentos_previsionales) },
+    { concepto: 'Total impuesto', monto: formatoClpM6(item.total_impuesto) },
+    { concepto: 'Total otras deducciones', monto: formatoClpM6(item.total_otras_deducciones) },
     { concepto: 'Total deducciones', monto: formatoClpM6(item.total_deducciones) },
     { concepto: 'Base imponible', monto: formatoClpM6(item.base_imponible) },
     { concepto: 'Base tributable', monto: formatoClpM6(item.base_tributable) },
     { concepto: 'Aportes empleador', monto: formatoClpM6(item.total_aportes_empleador) },
+    { concepto: 'Costo empresa', monto: formatoClpM6(item.costo_empresa) },
   ],
   nota: 'Los aportes del empleador se informan por separado y no reducen el líquido del trabajador.',
 });
@@ -129,6 +133,7 @@ const basesRemuneracion = (item: Registro): BloqueDocumentoPdf => ({
     { concepto: 'Base imponible', monto: formatoClpM6(item.base_imponible) },
     { concepto: 'Base tributable', monto: formatoClpM6(item.base_tributable) },
     { concepto: 'Aportes empleador', monto: formatoClpM6(item.total_aportes_empleador) },
+    { concepto: 'Costo empresa', monto: formatoClpM6(item.costo_empresa) },
   ],
   nota: 'Los aportes del empleador se informan por separado y no reducen el líquido del trabajador.',
 });

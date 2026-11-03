@@ -7,6 +7,8 @@ const {C_Finanzas}=require('../dist/controladores/C_Finanzas');
 const {crearAplicacion}=require('../dist/app');
 const {hashClave,futuro}=require('../dist/utilidades/seguridad');
 // Midas manda en continuidad administrativa; el test lo deja escrito
+let secuenciaRut=Number(String(Date.now()).slice(-6));
+function rutPrueba(){const cuerpo=String(70_000_000+secuenciaRut++);let suma=0,m=2;for(let i=cuerpo.length-1;i>=0;i--){suma+=Number(cuerpo[i])*m;m=m===7?2:m+1}const r=11-(suma%11);return `${cuerpo}-${r===11?'0':r===10?'K':r}`}
 
 test('M4: sesiones, autorización, accesos y recuperación reales',async t=>{
  const ids=[];const empleados=[];const correos=[];const modulo=new M4Controller({enviar:async(correo,enlace)=>correos.push({correo,enlace})});
@@ -16,7 +18,7 @@ test('M4: sesiones, autorización, accesos y recuperación reales',async t=>{
  const vinculo=await prisma.tipo_vinculo_laboral.findUniqueOrThrow({where:{nombre_tipo_vinculo_laboral:'Demostración M4'}});
  async function crear(perfil='secretaria',estado='activo',admin=false,bloqueada=false){
   const acceso=`prueba-${randomUUID().slice(0,8)}`;
-  const rut=`9${String(Date.now()).slice(-7)}-${ids.length}`;
+  const rut=rutPrueba();
   await prisma.empleado.create({data:{rut_empleado:rut,nombres:'Prueba automática',apellido_paterno:'M4',id_cargo:cargo.id_cargo,id_tipo_vinculo_laboral:vinculo.id_tipo_vinculo_laboral,fecha_ingreso:new Date(),sueldo_base:0}});empleados.push(rut);
   const base=await prisma.perfil.findUniqueOrThrow({where:{codigo_m4:perfil}});
   const usuario=await prisma.usuario.create({data:{acceso_m4:acceso,empleado_m4:rut,empleado_rut_empleado:rut,usuario_estado_cuenta:estado,usuario_correo:`${acceso}@example.invalid`,perfil_id_perfil:base.perfil_id_perfil,usuario_es_administrador:admin,seguridad:{create:{bloqueo_persistente:bloqueada}},usuario_contrasena:{create:{usuario_contrasena:hash,activa:true,vence:futuro(60)}}}});ids.push(usuario.usuario_id_usuario);return usuario;
@@ -40,9 +42,9 @@ test('M4: sesiones, autorización, accesos y recuperación reales',async t=>{
   await t.test('desbloqueo reinicia estado, genera temporal y limita uso normal',async()=>{const r=await modulo.modificarUsuario('desbloquearUsuario',actor,{id:bloqueada.usuario_id_usuario.toString(),confirmado:true});const acceso=await modulo.iniciarSesion({acceso:bloqueada.acceso_m4,clave:r.claveTemporal},{});assert.equal(acceso.usuario.cambiarClave,true);await assert.rejects(modulo.autorizar('listarClientes',{secretoSesion:acceso.token}),/cambiar tu contraseña/);await modulo.autorizar('cambiarClave',{secretoSesion:acceso.token});});
   await t.test('cierre administrativo invalida sólo sesión seleccionada',async()=>{const acceso=await ingresar(alternativa);const a=await modulo.autorizar('miSesion',{secretoSesion:acceso.token});await modulo.cerrarSesionAdministrativa(actor,{id:a.sesion,confirmado:true});await assert.rejects(modulo.autorizar('miSesion',{secretoSesion:acceso.token}),/sesión finalizó/);assert.equal((await prisma.usuario.findUnique({where:{usuario_id_usuario:alternativa.usuario_id_usuario}})).usuario_estado_cuenta,'activo');});
   await t.test('configuración, desactivación y reactivación',async()=>{await modulo.modificarUsuario('cambiarConfiguracion',actor,{id:secretaria.usuario_id_usuario.toString(),configuracion:'contador',confirmado:true});await modulo.modificarUsuario('desactivarUsuario',actor,{id:secretaria.usuario_id_usuario.toString(),confirmado:true});const r=await modulo.modificarUsuario('reactivarUsuario',actor,{id:secretaria.usuario_id_usuario.toString(),confirmado:true});assert.ok(r.claveTemporal);assert.equal((await prisma.usuario.findUnique({where:{usuario_id_usuario:secretaria.usuario_id_usuario}})).configuracion_particular,false);});
-  await t.test('registro valida empleado y duplicidad',async()=>{await assert.rejects(modulo.registrarUsuario(actor,{rutEmpleado:gerente.empleado_m4,correo:'x@example.invalid',configuracion:'secretaria',confirmado:true}),/ya tiene/);await assert.rejects(modulo.registrarUsuario(actor,{rutEmpleado:'no-existe',correo:'x@example.invalid',configuracion:'secretaria',confirmado:true}),/Empleado activo/);});
+  await t.test('registro valida empleado y duplicidad',async()=>{await assert.rejects(modulo.registrarUsuario(actor,{rutEmpleado:gerente.empleado_m4,correo:'x@example.invalid',configuracion:'secretaria',confirmado:true}),/ya tiene/);await assert.rejects(modulo.registrarUsuario(actor,{rutEmpleado:rutPrueba(),correo:'x@example.invalid',configuracion:'secretaria',confirmado:true}),/Empleado activo/);await assert.rejects(modulo.registrarUsuario(actor,{rutEmpleado:'12.345.678-4',correo:'x@example.invalid',configuracion:'secretaria',confirmado:true}),error=>error.codigo==='RUT_INVALIDO');});
   await t.test('CU59 registra cuenta con temporal y CU71 la restablece',async()=>{
-   const rut=`9${String(Date.now()).slice(-7)}-8`;await prisma.empleado.create({data:{rut_empleado:rut,nombres:'Alta de prueba',apellido_paterno:'M4',id_cargo:cargo.id_cargo,id_tipo_vinculo_laboral:vinculo.id_tipo_vinculo_laboral,fecha_ingreso:new Date(),sueldo_base:0}});empleados.push(rut);
+   const rut=rutPrueba();await prisma.empleado.create({data:{rut_empleado:rut,nombres:'Alta de prueba',apellido_paterno:'M4',id_cargo:cargo.id_cargo,id_tipo_vinculo_laboral:vinculo.id_tipo_vinculo_laboral,fecha_ingreso:new Date(),sueldo_base:0}});empleados.push(rut);
    const creada=await modulo.registrarUsuario(actor,{rutEmpleado:rut,correo:'alta-prueba@example.invalid',configuracion:'secretaria',confirmado:true});ids.push(BigInt(creada.id));assert.ok(creada.claveTemporal);
    const restablecida=await modulo.modificarUsuario('restablecerClave',actor,{id:creada.id,confirmado:true});assert.notEqual(restablecida.claveTemporal,creada.claveTemporal);
    await assert.rejects(modulo.iniciarSesion({acceso:rut,clave:creada.claveTemporal},{}),/Credenciales/);

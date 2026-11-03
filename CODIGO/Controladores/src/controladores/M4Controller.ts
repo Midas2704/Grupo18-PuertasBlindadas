@@ -5,6 +5,7 @@ import { comprobarClave, hashClave, validarClave, secreto, huella, futuro, polit
 import { CorreoRecuperacion, CorreoDesarrollo } from '../utilidades/correo';
 import { codigosAdministrador, operacionesPermiso, operacionesQueRequierenAdministrador, permiteOperacion } from '../validaciones/permisos';
 import { texto } from '../validaciones/solicitudes';
+import { validarYNormalizarRut, variantesRut } from '../utilidades/rut';
 
 type Transaccion = Prisma.TransactionClient;
 type Entrada = Record<string, unknown>;
@@ -144,14 +145,15 @@ export class M4Controller {
  async registrarUsuario(actor:ActorAutenticado,entrada:Entrada) {
   confirmar(entrada);
   return this.transaccion(async tx=>{
-   const rut=texto(entrada.rutEmpleado,15);
-   const empleado=await tx.empleado.findUnique({where:{rut_empleado:rut},include:{usuario:true,cuenta_m4:true}});
+   const rut=validarYNormalizarRut(texto(entrada.rutEmpleado,15));
+   if(!rut) return error(400,'El RUT del empleado es obligatorio');
+   const empleado=await tx.empleado.findFirst({where:{rut_empleado:{in:variantesRut(rut)}},include:{usuario:true,cuenta_m4:true}});
    if(!empleado || empleado.estado_laboral!=='activo') return error(400,'Sólo puede crearse una cuenta para un Empleado activo');
    if(empleado.cuenta_m4 || empleado.usuario.length) return error(409,'El Empleado ya tiene un Usuario asociado');
    const perfil=await tx.perfil.findUnique({where:{codigo_m4:texto(entrada.configuracion)}});
    if(!perfil?.activo_m4) return error(400,'Configuración no válida');
    const correo=texto(entrada.correo,254);if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) return error(400,'Correo inválido');
-   const cuenta=await tx.usuario.create({data:{acceso_m4:rut.replace(/\./g,'').toLowerCase(),empleado_m4:rut,empleado_rut_empleado:rut,usuario_correo:correo,usuario_username:rut,usuario_estado_cuenta:'activo',perfil_id_perfil:perfil.perfil_id_perfil,usuario_fecha_de_creacion:new Date(),usuario_es_administrador:false}});
+   const cuenta=await tx.usuario.create({data:{acceso_m4:rut.replace(/\./g,'').toLowerCase(),empleado_m4:empleado.rut_empleado,empleado_rut_empleado:empleado.rut_empleado,usuario_correo:correo,usuario_username:rut,usuario_estado_cuenta:'activo',perfil_id_perfil:perfil.perfil_id_perfil,usuario_fecha_de_creacion:new Date(),usuario_es_administrador:false}});
    if(entrada.permisos!==undefined) {
     if(!perfil.admite_particulares || !Array.isArray(entrada.permisos) || !entrada.permisos.length) return error(400,'Configuración particular no válida');
     const permisos=await this.validarPermisos(tx,entrada.permisos.map(p=>texto(p)));

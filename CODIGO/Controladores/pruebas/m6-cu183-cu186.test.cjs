@@ -6,6 +6,7 @@ const { resolve } = require('node:path');
 const { prisma } = require('../dist/db');
 const { M6Controller } = require('../dist/controladores/M6Controller');
 const { codigosTodosLosCU, matrizPermisosPorCU, operacionesPermiso, permiteOperacion } = require('../dist/validaciones/permisos');
+const { prepararPrevisionM6 } = require('./soporte-prevision-m6.cjs');
 
 function rutValido(){const cuerpo=String(Math.floor(Math.random()*8_000_000)+1_000_000);let suma=0,m=2;for(let i=cuerpo.length-1;i>=0;i--){suma+=Number(cuerpo[i])*m;m=m===7?2:m+1}const r=11-(suma%11);return `${cuerpo}-${r===11?'0':r===10?'K':r}`}
 
@@ -15,6 +16,7 @@ test('M6 T7 CU183-CU186 conserva historia y registra pagos efectivos',async t=>{
  await prisma.empleado.update({where:{id_empleado:empleado.id},data:{sueldo_base:500000,fecha_aplicacion_sueldo_base:new Date('2096-01-01')}});
  const usuario=await prisma.usuario.create({data:{usuario_username:`m6t7_${sufijo}`,usuario_nombre_completo_primer_nombre_usuario:'Tanda Siete'}}),usuario2=await prisma.usuario.create({data:{usuario_username:`m6t7b_${sufijo}`,usuario_nombre_completo_primer_nombre_usuario:'Revisor Siete'}});ids.usuarios.push(usuario.usuario_id_usuario,usuario2.usuario_id_usuario);
  const relacion=await prisma.relacion_laboral_empleado.create({data:{id_empleado:empleado.id,fecha_inicio:new Date('2096-01-01'),estado:'vigente'}});ids.relaciones.push(relacion.id_relacion_laboral_empleado);
+ ids.parametros.push(...await prepararPrevisionM6(prisma,{empleados:[empleado.id],desde:'2096-01-01',hasta:'2097-12-31',sinDeduccionesTrabajador:true}));
  for(const anio of [2096,2097]){const tramo=await prisma.tramo_impuesto_renta.create({data:{vigencia_desde:new Date(`${anio}-01-01`),vigencia_hasta:new Date(`${anio}-12-31`),orden:1,limite_desde:0,limite_hasta:null,factor:0,rebaja:0,unidad:'CLP',estado:'activo'}});ids.tramos.push(tramo.id_tramo_impuesto_renta)}
  const medio=await prisma.medio_pago.create({data:{nombre_medio_pago:`Transferencia M6 ${sufijo}`,codigo_medio_pago:`M6T7${sufijo}`,estado_medio_pago:'activo',requiere_respaldo:false}});ids.medios.push(medio.id_medio_pago);
  const medioRespaldo=await prisma.medio_pago.create({data:{nombre_medio_pago:`Respaldo M6 ${sufijo}`,codigo_medio_pago:`M6R7${sufijo}`,estado_medio_pago:'activo',requiere_respaldo:true}});ids.medios.push(medioRespaldo.id_medio_pago);

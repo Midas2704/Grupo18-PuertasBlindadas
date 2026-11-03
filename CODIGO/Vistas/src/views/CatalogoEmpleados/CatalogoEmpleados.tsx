@@ -3,6 +3,7 @@ import { ArrowUpDown, BriefcaseBusiness, Eye, Plus, Search, X } from 'lucide-rea
 import { useNavigate } from 'react-router-dom';
 import { solicitarFinanzas } from '../../api/finanzas';
 import { usarSesion } from '../../seguridad/Sesion';
+import { esRutValido, formatearRutValido } from '../../utilidades/rut';
 
 type Empleado = {
   id: number;
@@ -35,6 +36,7 @@ export default function CatalogoEmpleados() {
   const [guardando, setGuardando] = useState(false);
   const [empleadoCreado, setEmpleadoCreado] = useState<number | null>(null);
   const [formulario, setFormulario] = useState({ rut: '', nombres: '', apellidoPaterno: '', apellidoMaterno: '' });
+  const rutInvalido = Boolean(formulario.rut.trim()) && !esRutValido(formulario.rut);
 
   useEffect(() => {
     const cancelacion = new AbortController();
@@ -120,12 +122,12 @@ export default function CatalogoEmpleados() {
     {modalAbierto && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"><div className="w-full max-w-xl rounded-md bg-white shadow-xl">
       <div className="flex items-center justify-between border-b px-5 py-4"><h2 className="text-lg font-bold">Nuevo empleado</h2><button title="Cerrar" onClick={() => setModalAbierto(false)} className="rounded p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button></div>
       <div className="grid gap-4 p-5 md:grid-cols-2">
-        <label className="text-sm font-medium md:col-span-2">RUT<input value={formulario.rut} onChange={(evento) => setFormulario({ ...formulario, rut: evento.target.value })} placeholder="12.345.678-5" className="mt-1 w-full rounded-md border border-gray-300 p-2.5" /></label>
+        <label className="text-sm font-medium md:col-span-2">RUT<input aria-invalid={rutInvalido} value={formulario.rut} onChange={(evento) => setFormulario({ ...formulario, rut: evento.target.value })} onBlur={() => setFormulario({ ...formulario, rut: formatearRutValido(formulario.rut) })} placeholder="12.345.678-5" className="mt-1 w-full rounded-md border border-gray-300 p-2.5" />{rutInvalido&&<span className="mt-1 block text-xs text-red-600">RUT no válido</span>}</label>
         <label className="text-sm font-medium md:col-span-2">Nombres<input value={formulario.nombres} onChange={(evento) => setFormulario({ ...formulario, nombres: evento.target.value })} className="mt-1 w-full rounded-md border border-gray-300 p-2.5" /></label>
         <label className="text-sm font-medium">Apellido paterno<input value={formulario.apellidoPaterno} onChange={(evento) => setFormulario({ ...formulario, apellidoPaterno: evento.target.value })} className="mt-1 w-full rounded-md border border-gray-300 p-2.5" /></label>
         <label className="text-sm font-medium">Apellido materno<input value={formulario.apellidoMaterno} onChange={(evento) => setFormulario({ ...formulario, apellidoMaterno: evento.target.value })} className="mt-1 w-full rounded-md border border-gray-300 p-2.5" /></label>
       </div>
-      <div className="flex justify-end gap-3 border-t px-5 py-4"><button onClick={() => setModalAbierto(false)} className="rounded-md border px-4 py-2">Cancelar</button><button disabled={guardando} onClick={() => void guardarEmpleado()} className="rounded-md bg-primary-600 px-4 py-2 font-semibold text-white disabled:opacity-50">{guardando ? 'Guardando...' : 'Registrar empleado'}</button></div>
+      <div className="flex justify-end gap-3 border-t px-5 py-4"><button onClick={() => setModalAbierto(false)} className="rounded-md border px-4 py-2">Cancelar</button><button disabled={guardando || rutInvalido || !formulario.rut.trim()} onClick={() => void guardarEmpleado()} className="rounded-md bg-primary-600 px-4 py-2 font-semibold text-white disabled:opacity-50">{guardando ? 'Guardando...' : 'Registrar empleado'}</button></div>
     </div></div>}
   </div>;
 }

@@ -3,6 +3,7 @@ import { usarSesion } from '../../seguridad/Sesion';
 import { solicitarFinanzas } from '../../api/finanzas';
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Eye, Plus, Power, Edit3 } from 'lucide-react';
+import { esRutValido, formatearRutValido } from '../../utilidades/rut';
 
 interface Cliente {
   // TODO: ordenar este filtro cuando dejemos de sumar estados nuevos
@@ -20,13 +21,6 @@ interface Cliente {
   saldosPorMoneda: { moneda: string; saldoPendiente: number }[];
 }
 
-const formatearRut = (valor: string) => {
-  const limpio = valor.replace(/[.\s-]/g, '').toUpperCase();
-  if (!/^\d{1,8}[0-9K]$/.test(limpio)) return valor.trim().toUpperCase();
-  const cuerpo = limpio.slice(0, -1).replace(/^0+(?=\d)/, '');
-  return `${cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}-${limpio.slice(-1)}`;
-};
-
 const CatalogoClientes: React.FC = () => {
   const {sesion}=usarSesion();
   const [clientes, fijarClientes] = useState<Cliente[]>([]);
@@ -42,6 +36,7 @@ const CatalogoClientes: React.FC = () => {
   const [formulario, fijarFormulario] = useState({ tipo:'B2B', rut:'', nombre:'', contacto:'', correo:'', telefono:'' });
   const [guardando, fijarGuardando] = useState(false);
   const [mensaje, fijarMensaje] = useState('');
+  const rutInvalido = Boolean(formulario.rut.trim()) && !esRutValido(formulario.rut);
 
   useEffect(() => {
     const cancelacion = new AbortController();
@@ -80,12 +75,12 @@ const CatalogoClientes: React.FC = () => {
 
       {nuevo && <form onSubmit={guardar} className="mb-8 grid grid-cols-1 gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6 md:grid-cols-3">
         <select aria-label="Tipo de cliente" className="px-3 py-2 border rounded-lg" value={formulario.tipo} onChange={e=>fijarFormulario({...formulario,tipo:e.target.value})}><option>B2B</option><option>B2C</option></select>
-        <input className="px-3 py-2 border rounded-lg" placeholder="RUT (opcional para B2C)" value={formulario.rut} onChange={e=>fijarFormulario({...formulario,rut:e.target.value})} onBlur={()=>fijarFormulario({...formulario,rut:formatearRut(formulario.rut)})}/>
+        <label className="text-sm"><span className="sr-only">RUT</span><input aria-invalid={rutInvalido} className="w-full rounded-lg border px-3 py-2" placeholder="RUT (opcional para B2C)" value={formulario.rut} onChange={e=>fijarFormulario({...formulario,rut:e.target.value})} onBlur={()=>fijarFormulario({...formulario,rut:formatearRutValido(formulario.rut)})}/>{rutInvalido&&<span className="mt-1 block text-xs text-red-600">RUT no válido</span>}</label>
         <input required className="px-3 py-2 border rounded-lg" placeholder="Nombre o Razón Social" value={formulario.nombre} onChange={e=>fijarFormulario({...formulario,nombre:e.target.value})}/>
         <input className="px-3 py-2 border rounded-lg" placeholder="Contacto" value={formulario.contacto} onChange={e=>fijarFormulario({...formulario,contacto:e.target.value})}/>
         <input type="email" className="px-3 py-2 border rounded-lg" placeholder="Correo" value={formulario.correo} onChange={e=>fijarFormulario({...formulario,correo:e.target.value})}/>
         <input className="px-3 py-2 border rounded-lg" placeholder="Teléfono" value={formulario.telefono} onChange={e=>fijarFormulario({...formulario,telefono:e.target.value})}/>
-        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center md:col-span-3"><button disabled={guardando} className="rounded-lg bg-primary-600 px-4 py-2 text-white">{guardando?'Guardando…':'Guardar cliente'}</button><button type="button" onClick={()=>fijarNuevo(false)} className="rounded-lg border px-4 py-2">Cancelar</button>{mensaje&&<span className="text-sm text-orange-700">{mensaje}</span>}</div>
+        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center md:col-span-3"><button disabled={guardando || rutInvalido || (formulario.tipo==='B2B'&&!formulario.rut.trim())} className="rounded-lg bg-primary-600 px-4 py-2 text-white disabled:opacity-50">{guardando?'Guardando…':'Guardar cliente'}</button><button type="button" onClick={()=>fijarNuevo(false)} className="rounded-lg border px-4 py-2">Cancelar</button>{mensaje&&<span className="text-sm text-orange-700">{mensaje}</span>}</div>
       </form>}
 
       <div className="mb-8 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">

@@ -6,13 +6,15 @@ const { resolve } = require('node:path');
 const { prisma } = require('../dist/db');
 const { M6Controller } = require('../dist/controladores/M6Controller');
 const { codigosTodosLosCU, matrizPermisosPorCU, operacionesPermiso } = require('../dist/validaciones/permisos');
+const { prepararPrevisionM6 } = require('./soporte-prevision-m6.cjs');
 
 function rutValido(){const cuerpo=String(Math.floor(Math.random()*8_000_000)+1_000_000);let suma=0,m=2;for(let i=cuerpo.length-1;i>=0;i--){suma+=Number(cuerpo[i])*m;m=m===7?2:m+1}const r=11-(suma%11);return `${cuerpo}-${r===11?'0':r===10?'K':r}`}
 
 test('M6 T8 CU187-CU190 honorarios, detalle, anulaciones y reversiones',async t=>{
- const modulo=new M6Controller(),s=randomUUID().slice(0,8).toUpperCase(),ids={usuarios:[],medios:[],prestadores:[],boletas:[],pagos:[],empleados:[],relaciones:[],periodos:[],tramos:[]};
+ const modulo=new M6Controller(),s=randomUUID().slice(0,8).toUpperCase(),ids={usuarios:[],medios:[],prestadores:[],boletas:[],pagos:[],empleados:[],relaciones:[],periodos:[],tramos:[],parametros:[]};
  const u=await prisma.usuario.create({data:{usuario_username:`m6t8_${s}`,usuario_nombre_completo_primer_nombre_usuario:'Tanda Ocho'}}),u2=await prisma.usuario.create({data:{usuario_username:`m6t8b_${s}`,usuario_nombre_completo_primer_nombre_usuario:'Revisor Ocho'}});ids.usuarios.push(u.usuario_id_usuario,u2.usuario_id_usuario);
  const medio=await prisma.medio_pago.create({data:{nombre_medio_pago:`M6 T8 ${s}`,codigo_medio_pago:`M6T8${s}`,estado_medio_pago:'activo',requiere_respaldo:false}}),medioR=await prisma.medio_pago.create({data:{nombre_medio_pago:`M6 T8R ${s}`,codigo_medio_pago:`M6T8R${s}`,estado_medio_pago:'activo',requiere_respaldo:true}});ids.medios.push(medio.id_medio_pago,medioR.id_medio_pago);
+ const calcularRemuneracion=modulo.calcularRemuneracion.bind(modulo);modulo.calcularRemuneracion=async(...args)=>{ids.parametros.push(...await prepararPrevisionM6(prisma,{empleados:ids.empleados,desde:'2098-01-01',hasta:'2098-12-31'}));return calcularRemuneracion(...args)};
  const prestador=await prisma.prestador_honorarios.create({data:{identificador:`76${Date.now().toString().slice(-6)}-${s[0]}`,nombre_razon_social:`Prestador ${s}`,contacto:'contacto@test.cl'}});ids.prestadores.push(prestador.id_prestador_honorarios);
  const crearBoleta=async(estado,folio)=>{const b=await prisma.boleta_honorarios.create({data:{id_prestador:prestador.id_prestador_honorarios,folio:`${folio}-${s}`,fecha_emision:new Date('2099-01-15'),bruto:1000,modalidad_tributaria:'FIJADA_POR_PRODUCTOR',tasa_aplicada:estado==='CONFIRMADA'?10:null,retencion:estado==='CONFIRMADA'?100:null,liquido:estado==='CONFIRMADA'?900:null,estado_documental:estado,respaldo:'fixture://boleta'}});ids.boletas.push(b.id_boleta_honorarios);return b};
  try{

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowUpDown, Building2, Edit3, Eye, Plus, Power, RefreshCcw, Search, ShieldCheck, X } from 'lucide-react';
 import { solicitarFinanzas } from '../../api/finanzas';
 import { usarSesion } from '../../seguridad/Sesion';
+import { esRutValido, formatearRutValido } from '../../utilidades/rut';
 
 interface Proveedor {
   idProveedor: number;
@@ -54,6 +55,10 @@ export default function CatalogoProveedores() {
   const [modal, setModal] = useState<{ modo: Modo; proveedor?: Proveedor } | null>(null);
   const [formulario, setFormulario] = useState(formularioVacio);
   const [guardando, setGuardando] = useState(false);
+  const paisSeleccionado = catalogos.paises.find(pais => String(pais.id_pais) === formulario.idPais);
+  const tipoSeleccionado = catalogos.tiposIdentificador.find(tipo => String(tipo.id_tipo_identificador) === formulario.idTipoIdentificador);
+  const esRutChileno = /chile/i.test(paisSeleccionado?.nombre_pais || '') && /\brut\b/i.test(tipoSeleccionado?.nombre_tipo_identificador || '');
+  const rutInvalido = esRutChileno && !esRutValido(formulario.identificador);
 
   useEffect(() => {
     void respuestaJson('/proveedores/catalogos').then(setCatalogos).catch(causa => setError(causa.message));
@@ -84,6 +89,7 @@ export default function CatalogoProveedores() {
 
   const guardar = async () => {
     if (!modal) return;
+    if (rutInvalido) { setError('RUT no válido'); return; }
     setGuardando(true); setError('');
     try {
       const base = { razonSocial: formulario.razonSocial, tipoProveedor: formulario.tipoProveedor, contacto: formulario.contacto, correo: formulario.correo, telefono: formulario.telefono, direccion: formulario.direccion, motivo: formulario.motivo };
@@ -137,7 +143,8 @@ export default function CatalogoProveedores() {
 
     {modal && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"><div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-md bg-white shadow-xl">
       <div className="flex items-center justify-between border-b px-5 py-4"><h2 className="text-lg font-bold">{tituloModal}</h2><button title="Cerrar" onClick={() => setModal(null)} className="rounded p-2 hover:bg-gray-100"><X className="h-5 w-5"/></button></div>
-      <div className="grid gap-4 p-5 md:grid-cols-2">
+      <div className="grid gap-4 p-5 md:grid-cols-2" onBlurCapture={() => { if (esRutChileno && esRutValido(formulario.identificador)) setFormulario({...formulario, identificador: formatearRutValido(formulario.identificador)}); }}>
+        {rutInvalido && <p className="text-sm text-red-600 md:col-span-2">RUT no válido</p>}
         {(modal.modo === 'nuevo' || modal.modo === 'identidad') && <><label className="text-sm font-medium">País<select value={formulario.idPais} onChange={evento => setFormulario({...formulario, idPais: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5"><option value="">Seleccionar</option>{catalogos.paises.map(pais => <option key={pais.id_pais} value={pais.id_pais}>{pais.nombre_pais}</option>)}</select></label><label className="text-sm font-medium">Tipo de identificación<select value={formulario.idTipoIdentificador} onChange={evento => setFormulario({...formulario, idTipoIdentificador: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5"><option value="">Seleccionar</option>{catalogos.tiposIdentificador.map(tipo => <option key={tipo.id_tipo_identificador} value={tipo.id_tipo_identificador}>{tipo.nombre_tipo_identificador}</option>)}</select></label><label className="text-sm font-medium md:col-span-2">Identificador fiscal<input value={formulario.identificador} onChange={evento => setFormulario({...formulario, identificador: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5"/></label></>}
         {(modal.modo === 'nuevo' || modal.modo === 'editar') && <><label className="text-sm font-medium md:col-span-2">Razón social<input value={formulario.razonSocial} onChange={evento => setFormulario({...formulario, razonSocial: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5"/></label><label className="text-sm font-medium md:col-span-2">Tipo de proveedor<select value={formulario.tipoProveedor} onChange={evento => setFormulario({...formulario, tipoProveedor: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5">{catalogos.tiposProveedor.map(tipo => <option key={tipo}>{tipo}</option>)}</select></label><label className="text-sm font-medium">Contacto<input value={formulario.contacto} onChange={evento => setFormulario({...formulario, contacto: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5"/></label><label className="text-sm font-medium">Correo<input type="email" value={formulario.correo} onChange={evento => setFormulario({...formulario, correo: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5"/></label><label className="text-sm font-medium">Teléfono<input value={formulario.telefono} onChange={evento => setFormulario({...formulario, telefono: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5"/></label><label className="text-sm font-medium">Dirección<input value={formulario.direccion} onChange={evento => setFormulario({...formulario, direccion: evento.target.value})} className="mt-1 w-full rounded-md border p-2.5"/></label></>}
         {(modal.modo === 'identidad' || modal.modo === 'editar') && <label className="text-sm font-medium md:col-span-2">Motivo {modal.modo === 'identidad' ? '(obligatorio)' : '(obligatorio si cambia la razón social)'}<textarea value={formulario.motivo} onChange={evento => setFormulario({...formulario, motivo: evento.target.value})} rows={3} className="mt-1 w-full rounded-md border p-2.5"/></label>}

@@ -75,6 +75,7 @@ model cargo {
   descripcion_cargo String?
   estado_cargo      String     @default("activo") @db.VarChar(20)
   empleado          empleado[]
+  asignaciones_esquema_remuneracional asignacion_esquema_remuneracional[]
 
   @@schema("finanzas")
 }
@@ -110,7 +111,11 @@ model concepto_remuneracion {
   descripcion_concepto             String?
   naturaleza_concepto              String                             @db.VarChar(30)
   estado_concepto                  String                             @default("activo") @db.VarChar(20)
+  codigo_m6                        String?                            @unique @db.VarChar(40)
   detalle_liquidacion_remuneracion detalle_liquidacion_remuneracion[]
+  asignaciones_empleado_m6         asignacion_concepto_remuneracion_empleado[]
+  configuraciones_m6               configuracion_concepto_remuneracion[]
+  componentes_m6                   componente_remuneracion[]
 
   @@schema("finanzas")
 }
@@ -186,6 +191,7 @@ model cotizacion {
   moneda                    moneda               @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_cotizacion_moneda")
   detalle_cotizacion        detalle_cotizacion[]
   nota_venta                nota_venta?
+  solicitudes_crediticias_m8 solicitud_crediticia_m8[]
 
   @@index([id_ficha_cliente], map: "idx_cotizacion_ficha")
   @@schema("finanzas")
@@ -390,27 +396,43 @@ model documento_tributario {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model empleado {
   cuenta_m4 usuario? @relation("empleado_m4")
+  id_empleado              Int                        @unique @default(autoincrement())
   rut_empleado             String                     @id @db.VarChar(15)
-  id_cargo                 Int
-  id_tipo_vinculo_laboral  Int
+  id_cargo                 Int?
+  id_tipo_vinculo_laboral  Int?
   id_prevision_salud       Int?
   id_afp                   Int?
   nombres                  String                     @db.VarChar(120)
   apellido_paterno         String                     @db.VarChar(80)
   apellido_materno         String?                    @db.VarChar(80)
   fecha_nacimiento         DateTime?                  @db.Date
-  fecha_ingreso            DateTime                   @db.Date
-  sueldo_base              Decimal                    @db.Decimal(14, 2)
+  fecha_ingreso            DateTime?                  @db.Date
+  sueldo_base              Decimal?                   @db.Decimal(14, 2)
+  fecha_aplicacion_sueldo_base DateTime?              @db.Date
   seguro_cesantia          Boolean                    @default(true)
+  seguro_cesantia_fundamento_exclusion String?
   estado_laboral           String                     @default("activo") @db.VarChar(30)
+  correo_particular        String?                    @db.VarChar(254)
+  telefono_particular      String?                    @db.VarChar(30)
+  direccion_particular     String?
+  tipo_correo              String?                    @db.VarChar(30)
+  consentimiento_electronico Boolean?
+  canal_documental         String?                    @db.VarChar(30)
   afp                      afp?                       @relation(fields: [id_afp], references: [id_afp], onDelete: Restrict, onUpdate: NoAction, map: "fk_empleado_afp")
-  cargo                    cargo                      @relation(fields: [id_cargo], references: [id_cargo], onUpdate: NoAction, map: "fk_empleado_cargo")
+  cargo                    cargo?                     @relation(fields: [id_cargo], references: [id_cargo], onDelete: Restrict, onUpdate: NoAction, map: "fk_empleado_cargo")
   prevision_salud          prevision_salud?           @relation(fields: [id_prevision_salud], references: [id_prevision_salud], onDelete: Restrict, onUpdate: NoAction, map: "fk_empleado_prevision_salud")
-  tipo_vinculo_laboral     tipo_vinculo_laboral       @relation(fields: [id_tipo_vinculo_laboral], references: [id_tipo_vinculo_laboral], onUpdate: NoAction, map: "fk_empleado_tipo_vinculo")
+  tipo_vinculo_laboral     tipo_vinculo_laboral?      @relation(fields: [id_tipo_vinculo_laboral], references: [id_tipo_vinculo_laboral], onDelete: Restrict, onUpdate: NoAction, map: "fk_empleado_tipo_vinculo")
   liquidacion_remuneracion liquidacion_remuneracion[]
   tarea_remunerable        tarea_remunerable[]
   prestamo_herramientas    prestamo_herramientas[]
   usuario                  usuario[]
+  relaciones_laborales     relacion_laboral_empleado[]
+  asignaciones_esquema_remuneracional asignacion_esquema_remuneracional[]
+  asignaciones_concepto_remuneracion asignacion_concepto_remuneracion_empleado[]
+  tratamientos_remuneracionales tratamiento_remuneracional_ejecucion[]
+  remuneraciones_m6            remuneracion[]
+  anticipos_remuneracion_m6    anticipo_remuneracion[]
+  cotizaciones_salud_m6        cotizacion_salud_empleado[]
 
   @@index([id_cargo], map: "idx_empleado_cargo")
   @@schema("finanzas")
@@ -473,6 +495,10 @@ model ficha_cliente {
   nota_venta                     nota_venta[]
   pago_cliente                   pago_cliente[]
   proyecto_financiero            proyecto_financiero[]
+  solicitudes_crediticias_m8     solicitud_crediticia_m8[]
+  condicion_crediticia_m8        condicion_crediticia_m8?
+  compromisos_credito_m8         compromiso_credito_m8[]
+  eventos_credito_m8             evento_credito_m8[]
 
   @@index([id_cliente_financiero], map: "idx_ficha_cliente_cliente")
   @@schema("finanzas")
@@ -618,8 +644,11 @@ model medio_pago {
   nombre_medio_pago      String           @unique @db.VarChar(80)
   descripcion_medio_pago String?
   estado_medio_pago      String           @default("activo") @db.VarChar(20)
+  codigo_medio_pago      String?          @unique @db.VarChar(40)
+  requiere_respaldo      Boolean?
   pago_cliente           pago_cliente[]
   pago_proveedor         pago_proveedor[]
+  pago_remuneracion      pago_remuneracion[]
 
   @@schema("finanzas")
 }
@@ -725,6 +754,8 @@ model nota_venta {
   ficha_cliente           ficha_cliente             @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_nota_venta_ficha_cliente")
   moneda                  moneda                    @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_nota_venta_moneda")
   proyecto_financiero     proyecto_financiero[]
+  solicitudes_crediticias_m8 solicitud_crediticia_m8[]
+  compromiso_credito_m8      compromiso_credito_m8?
 
   @@index([id_ficha_cliente], map: "idx_nota_venta_ficha")
   @@schema("finanzas")
@@ -785,6 +816,7 @@ model pago_cliente {
   ficha_cliente           ficha_cliente            @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onUpdate: NoAction, map: "fk_pago_cliente_ficha_cliente")
   medio_pago              medio_pago               @relation(fields: [id_medio_pago], references: [id_medio_pago], onUpdate: NoAction, map: "fk_pago_cliente_medio_pago")
   moneda                  moneda                   @relation(fields: [id_moneda], references: [id_moneda], onUpdate: NoAction, map: "fk_pago_cliente_moneda")
+  reducciones_credito_m8  reduccion_compromiso_credito_m8[]
 
   @@index([id_ficha_cliente], map: "idx_pago_cliente_ficha")
   @@schema("finanzas")
@@ -834,6 +866,21 @@ model prevision_salud {
   @@schema("finanzas")
 }
 
+model cotizacion_salud_empleado {
+  id_cotizacion_salud Int       @id @default(autoincrement())
+  id_empleado         Int
+  valor               Decimal   @db.Decimal(14, 6)
+  unidad              String    @db.VarChar(20)
+  vigencia_desde      DateTime  @db.Date
+  vigencia_hasta      DateTime? @db.Date
+  activa              Boolean   @default(true)
+  empleado            empleado  @relation(fields: [id_empleado], references: [id_empleado], onDelete: Restrict, onUpdate: NoAction)
+
+  @@unique([id_empleado, vigencia_desde], map: "uq_cotizacion_salud_empleado_vigencia")
+  @@index([id_empleado, vigencia_desde, vigencia_hasta], map: "idx_cotizacion_salud_empleado_resolucion")
+  @@schema("finanzas")
+}
+
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model proveedor {
   id_proveedor                Int                           @id @default(autoincrement())
@@ -842,6 +889,9 @@ model proveedor {
   id_moneda_preferente        Int?
   identificador_tributario    String                        @db.VarChar(50)
   nombre_razon_social         String                        @db.VarChar(150)
+  tipo_proveedor_m5           String                        @default("Ambos") @db.VarChar(30)
+  condicion_pago_dias_m5      Int?
+  condicion_pago_tipo_m5      String?                       @db.VarChar(20)
   nacionalidad_origen         String?                       @db.VarChar(80)
   contacto_proveedor          String?                       @db.VarChar(150)
   correo_proveedor            String?                       @db.VarChar(150)
@@ -862,9 +912,709 @@ model proveedor {
   material_proveedor          material_proveedor[]
   proveedor_contacto_correo   proveedor_contacto_correo[]
   proveedor_contacto_telefono proveedor_contacto_telefono[]
+  historial_proveedor_m5      historial_proveedor_m5[]
+  orden_compra_servicio_m5    orden_compra_servicio_m5[]
 
-  @@unique([id_tipo_identificador, identificador_tributario], map: "uq_proveedor_identificador")
-  @@index([id_tipo_identificador, identificador_tributario], map: "idx_proveedor_identificador")
+  @@unique([id_pais, id_tipo_identificador, identificador_tributario], map: "uq_proveedor_identidad_m5")
+  @@index([id_pais, id_tipo_identificador, identificador_tributario], map: "idx_proveedor_identidad_m5")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: historial operativo de CU76-CU79, pendiente de reconciliar con el patch definitivo.
+model historial_proveedor_m5 {
+  id_historial_proveedor_m5 Int       @id @default(autoincrement())
+  id_proveedor              Int
+  campo                      String    @db.VarChar(80)
+  valor_anterior             String?
+  valor_nuevo                String?
+  motivo                     String?
+  usuario_id_usuario         BigInt
+  fecha_hora                 DateTime  @default(now()) @db.Timestamptz(6)
+  proveedor                  proveedor @relation(fields: [id_proveedor], references: [id_proveedor], onDelete: Restrict, onUpdate: NoAction, map: "fk_historial_proveedor_m5_proveedor")
+  usuario                    usuario   @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction, map: "fk_historial_proveedor_m5_usuario")
+
+  @@index([id_proveedor, fecha_hora], map: "idx_historial_proveedor_m5_proveedor_fecha")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: persistencia mínima de OCS para CU88-CU90.
+model orden_compra_servicio_m5 {
+  id_orden_compra_servicio_m5 Int                                  @id @default(autoincrement())
+  id_proveedor                 Int
+  monto_autorizado             Decimal                              @db.Decimal(14, 2)
+  monto_autorizado_original    Decimal                              @db.Decimal(14, 2)
+  estado_ocs                   String                               @default("abierta") @db.VarChar(20)
+  referencia                   String?                              @db.VarChar(150)
+  periodo                      String?                              @db.VarChar(50)
+  descripcion                  String?
+  fecha_creacion               DateTime                             @default(now()) @db.Timestamptz(6)
+  fecha_actualizacion          DateTime                             @default(now()) @db.Timestamptz(6)
+  creado_por                   BigInt
+  id_moneda                    Int?
+  id_ficha_cliente_contexto    Int?
+  id_cotizacion_contexto       Int?
+  id_proyecto_financiero_contexto Int?
+  id_orden_trabajo_contexto    BigInt?
+  fecha_esperada_recepcion     DateTime?                            @db.Date
+  proveedor                    proveedor                            @relation(fields: [id_proveedor], references: [id_proveedor], onDelete: Restrict, onUpdate: NoAction, map: "fk_ocs_m5_proveedor")
+  usuario_creador              usuario                              @relation("ocs_m5_creador", fields: [creado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction, map: "fk_ocs_m5_creador")
+  historial                    historial_orden_compra_servicio_m5[]
+  ajustes                      ajuste_orden_compra_servicio_m5[]
+  efectos_financieros          efecto_financiero_ocs_m5[]
+  detalles_material            detalle_material_orden_compra_m5[]
+
+  @@index([id_proveedor, fecha_creacion], map: "idx_ocs_m5_proveedor_fecha")
+  @@index([estado_ocs, fecha_creacion], map: "idx_ocs_m5_estado_fecha")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: documento aislado de Legacy para CU96-CU105.
+model documento_proveedor_m5 {
+  id_documento_m5             Int       @id @default(autoincrement())
+  id_proveedor                Int
+  clase                       String    @db.VarChar(20)
+  id_tipo_documento           Int
+  folio                       String    @db.VarChar(80)
+  folio_normalizado           String    @db.VarChar(80)
+  fecha_emision               DateTime  @db.Date
+  id_moneda                   Int
+  monto_total                 Decimal   @db.Decimal(14, 2)
+  estado                      String    @default("borrador") @db.VarChar(20)
+  respaldo                    String?
+  descripcion                 String?
+  excepcion_sin_oc_tipo       String?   @db.VarChar(40)
+  excepcion_sin_oc_descripcion String?
+  fecha_vencimiento           DateTime? @db.Date
+  condicion_pago_dias_snapshot Int?
+  condicion_pago_tipo_snapshot String?  @db.VarChar(20)
+  vencimiento_justificacion   String?
+  carga_historica             Boolean   @default(false)
+  tipo_cambio                 Decimal?  @db.Decimal(14, 4)
+  tipo_cambio_origen          String?   @db.VarChar(40)
+  tipo_cambio_justificacion   String?
+  tipo_cambio_usuario         BigInt?
+  tipo_cambio_fecha           DateTime? @db.Timestamptz(6)
+  creado_por                  BigInt
+  fecha_creacion              DateTime  @default(now()) @db.Timestamptz(6)
+  confirmado_por              BigInt?
+  fecha_confirmacion          DateTime? @db.Timestamptz(6)
+
+  @@index([id_proveedor, fecha_creacion], map: "idx_documento_m5_proveedor_fecha")
+  @@index([estado, fecha_creacion], map: "idx_documento_m5_estado_fecha")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: distribución documental por OCS; OCI queda como adaptador pendiente.
+model asociacion_documento_oc_m5 {
+  id_asociacion_m5       Int      @id @default(autoincrement())
+  id_documento_m5        Int
+  tipo_orden             String   @db.VarChar(10)
+  id_ocs_m5              Int?
+  id_orden_externa       String?  @db.VarChar(100)
+  monto_asignado         Decimal  @db.Decimal(14, 2)
+  estado_diferencia      String   @default("sin_evaluar") @db.VarChar(30)
+  es_documento_final     Boolean  @default(false)
+  justificacion          String?
+  monto_disponible_snapshot Decimal? @db.Decimal(14, 2)
+  monto_excedente        Decimal  @default(0) @db.Decimal(14, 2)
+  estado_excedente       String   @default("no_aplica") @db.VarChar(20)
+  excedente_solicitado_por BigInt?
+  excedente_fecha_solicitud DateTime? @db.Timestamptz(6)
+  excedente_aprobado_por BigInt?
+  excedente_fecha_resolucion DateTime? @db.Timestamptz(6)
+
+  @@unique([id_documento_m5, id_ocs_m5], map: "uq_asociacion_documento_m5_ocs")
+  @@index([id_documento_m5], map: "idx_asociacion_documento_m5")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: catálogo provisional de categorías de egreso.
+model categoria_egreso_m5 {
+  id_categoria_egreso_m5 Int     @id @default(autoincrement())
+  nombre                  String  @unique @db.VarChar(100)
+  activo                  Boolean @default(true)
+  nombre_normalizado      String  @unique(map: "uq_categoria_egreso_m5_nombre_normalizado") @db.VarChar(100)
+  creado_por              BigInt?
+  fecha_creacion          DateTime @default(now()) @db.Timestamptz(6)
+
+  @@schema("finanzas")
+}
+
+model clasificacion_asociacion_m5 {
+  id_clasificacion_m5 Int     @id @default(autoincrement())
+  id_asociacion_m5    Int
+  id_categoria_egreso_m5 Int
+  monto                Decimal @db.Decimal(14, 2)
+  nombre_categoria_snapshot String? @db.VarChar(100)
+
+  @@unique([id_asociacion_m5, id_categoria_egreso_m5], map: "uq_clasificacion_m5_asociacion_categoria")
+  @@index([id_asociacion_m5], map: "idx_clasificacion_m5_asociacion")
+  @@schema("finanzas")
+}
+
+model propuesta_imputacion_m5 {
+  id_propuesta_imputacion_m5 Int      @id @default(autoincrement())
+  id_documento_m5            Int
+  estado                     String   @default("pendiente") @db.VarChar(20)
+  preparado_por              BigInt
+  fecha_preparacion          DateTime @default(now()) @db.Timestamptz(6)
+  confirmado_por             BigInt?
+  fecha_confirmacion         DateTime? @db.Timestamptz(6)
+
+  @@index([id_documento_m5, estado], map: "idx_imputacion_m5_documento_estado")
+  @@schema("finanzas")
+}
+
+model detalle_imputacion_m5 {
+  id_detalle_imputacion_m5 Int     @id @default(autoincrement())
+  id_propuesta_imputacion_m5 Int
+  id_clasificacion_m5      Int
+  destino                  String  @db.VarChar(20)
+  id_proyecto              BigInt?
+  id_orden_trabajo         BigInt?
+  monto                    Decimal @db.Decimal(14, 2)
+
+  @@index([id_propuesta_imputacion_m5], map: "idx_detalle_imputacion_m5_propuesta")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: obligación única generada atómicamente desde documento definitivo.
+model obligacion_proveedor_m5 {
+  id_obligacion_m5         Int      @id @default(autoincrement())
+  id_documento_m5          Int      @unique
+  id_proveedor             Int
+  monto_original           Decimal  @db.Decimal(14, 2)
+  id_moneda                Int
+  saldo_inicial            Decimal  @db.Decimal(14, 2)
+  saldo_actual             Decimal  @db.Decimal(14, 2)
+  fecha_emision            DateTime @db.Date
+  fecha_vencimiento        DateTime @db.Date
+  estado_pago              String   @default("Pendiente") @db.VarChar(20)
+  condicion_temporal       String?  @db.VarChar(20)
+  condicion_pago_dias_snapshot Int?
+  condicion_pago_tipo_snapshot String? @db.VarChar(20)
+  tipo_cambio              Decimal? @db.Decimal(14, 4)
+  tipo_cambio_origen       String?  @db.VarChar(40)
+  fecha_generacion         DateTime @default(now()) @db.Timestamptz(6)
+  generado_por             BigInt
+
+  @@index([id_proveedor, fecha_vencimiento], map: "idx_obligacion_m5_proveedor_vencimiento")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: operación agrupadora de pagos a proveedor para CU111-CU120.
+model operacion_pago_proveedor_m5 {
+  id_operacion_pago_m5 Int       @id @default(autoincrement())
+  id_proveedor         Int
+  estado               String    @default("borrador") @db.VarChar(20)
+  fecha_efectiva_pago  DateTime? @db.Date
+  creado_por           BigInt
+  fecha_creacion       DateTime  @default(now()) @db.Timestamptz(6)
+  preparado_por        BigInt?
+  fecha_preparacion    DateTime? @db.Timestamptz(6)
+  confirmado_por       BigInt?
+  fecha_confirmacion   DateTime? @db.Timestamptz(6)
+  descartado_por       BigInt?
+  fecha_descarte       DateTime? @db.Timestamptz(6)
+  total_confirmado     Decimal?  @db.Decimal(14, 2)
+
+  @@index([id_proveedor, estado, fecha_creacion], map: "idx_operacion_pago_m5_proveedor_estado")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: cada movimiento aplica un medio a una obligación M5.
+model movimiento_pago_proveedor_m5 {
+  id_movimiento_pago_m5 Int       @id @default(autoincrement())
+  id_operacion_pago_m5  Int
+  id_obligacion_m5      Int
+  id_medio_pago         Int
+  id_moneda             Int
+  monto_aplicado        Decimal   @db.Decimal(14, 2)
+  tasa_referencia       Decimal?  @db.Decimal(14, 4)
+  fuente_tasa           String?   @db.VarChar(80)
+  fecha_tasa            DateTime? @db.Date
+  tasa_manual           Boolean   @default(false)
+  tasa_manual_justificacion String?
+  tasa_manual_usuario   BigInt?
+  tasa_manual_fecha     DateTime? @db.Timestamptz(6)
+  tasa_bancaria_efectiva Decimal? @db.Decimal(14, 4)
+  equivalente_clp       Decimal?  @db.Decimal(14, 2)
+  estado                String    @default("borrador") @db.VarChar(20)
+  fecha_creacion        DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([id_operacion_pago_m5, id_movimiento_pago_m5], map: "idx_movimiento_pago_m5_operacion")
+  @@index([id_obligacion_m5], map: "idx_movimiento_pago_m5_obligacion")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: archivo único reutilizable como evidencia de operación y movimientos.
+model respaldo_pago_proveedor_m5 {
+  id_respaldo_pago_m5 Int      @id @default(autoincrement())
+  nombre_archivo      String   @db.VarChar(255)
+  contenido           String
+  creado_por          BigInt
+  fecha_creacion      DateTime @default(now()) @db.Timestamptz(6)
+
+  @@schema("finanzas")
+}
+
+model asociacion_respaldo_pago_m5 {
+  id_asociacion_respaldo_m5 Int  @id @default(autoincrement())
+  id_respaldo_pago_m5       Int
+  id_operacion_pago_m5      Int?
+  id_movimiento_pago_m5     Int?
+
+  @@index([id_respaldo_pago_m5], map: "idx_asociacion_respaldo_m5_respaldo")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: CU124 registra que el efecto vigente de un movimiento nunca ocurrió.
+model anulacion_movimiento_pago_m5 {
+  id_anulacion_movimiento_m5 Int      @id @default(autoincrement())
+  id_movimiento_pago_m5      Int      @unique
+  monto_anulado              Decimal  @db.Decimal(14, 2)
+  motivo                     String
+  id_respaldo_pago_m5        Int
+  usuario_id_usuario         BigInt
+  fecha_hora                 DateTime @default(now()) @db.Timestamptz(6)
+  grupo_operacion            String?  @db.VarChar(36)
+
+  @@index([grupo_operacion], map: "idx_anulacion_pago_m5_grupo")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: CU125 conserva cada devolución posterior al pago.
+model reversion_movimiento_pago_m5 {
+  id_reversion_movimiento_m5 Int      @id @default(autoincrement())
+  id_movimiento_pago_m5      Int
+  monto_revertido            Decimal  @db.Decimal(14, 2)
+  motivo                     String
+  id_respaldo_pago_m5        Int
+  usuario_id_usuario         BigInt
+  fecha_hora                 DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_movimiento_pago_m5, fecha_hora], map: "idx_reversion_pago_m5_movimiento")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: CU126 mantiene historial bancario sin alterar saldos.
+model conciliacion_movimiento_pago_m5 {
+  id_conciliacion_movimiento_m5 Int      @id @default(autoincrement())
+  id_movimiento_pago_m5         Int
+  resultado                     String   @db.VarChar(20)
+  observacion                   String?
+  usuario_id_usuario            BigInt
+  fecha_hora                    DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_movimiento_pago_m5, fecha_hora, id_conciliacion_movimiento_m5], map: "idx_conciliacion_pago_m5_movimiento")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: ledger inmutable de notas de crédito y débito CU128-CU130.
+model ajuste_obligacion_proveedor_m5 {
+  id_ajuste_obligacion_m5  Int      @id @default(autoincrement())
+  id_documento_ajuste_m5   Int      @unique
+  id_obligacion_m5         Int
+  id_proveedor             Int
+  id_tipo_documento        Int
+  folio_normalizado        String   @db.VarChar(80)
+  id_moneda                Int
+  tipo_ajuste              String   @db.VarChar(2)
+  monto                    Decimal  @db.Decimal(14, 2)
+  monto_aplicado_obligacion Decimal @default(0) @db.Decimal(14, 2)
+  monto_saldo_favor        Decimal  @default(0) @db.Decimal(14, 2)
+  estado                   String   @db.VarChar(30)
+  creado_por               BigInt
+  fecha_creacion           DateTime @default(now()) @db.Timestamptz(6)
+  anulado_por              BigInt?
+  fecha_anulacion          DateTime? @db.Timestamptz(6)
+  motivo_anulacion         String?
+  id_respaldo_anulacion    Int?
+
+  @@unique([id_proveedor, id_tipo_documento, folio_normalizado], map: "uq_ajuste_documental_m5_identidad")
+  @@index([id_obligacion_m5, estado], map: "idx_ajuste_obligacion_m5_obligacion")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: crédito separado de deuda; CU132 conectará compensaciones.
+model saldo_favor_proveedor_m5 {
+  id_saldo_favor_m5    Int      @id @default(autoincrement())
+  id_proveedor         Int
+  id_ajuste_origen_m5  Int      @unique
+  id_moneda            Int
+  monto_generado       Decimal  @db.Decimal(14, 2)
+  monto_disponible     Decimal  @db.Decimal(14, 2)
+  estado               String   @default("disponible") @db.VarChar(20)
+  fecha_creacion       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_proveedor, id_moneda, estado], map: "idx_saldo_favor_m5_proveedor_moneda")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: cadena de custodia de evidencia histórica CU127.
+model historial_respaldo_pago_m5 {
+  id_historial_respaldo_m5 Int      @id @default(autoincrement())
+  id_operacion_pago_m5     Int
+  id_movimiento_pago_m5    Int?
+  id_respaldo_anterior     Int
+  id_respaldo_nuevo        Int
+  motivo                   String
+  usuario_id_usuario       BigInt
+  fecha_hora               DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_operacion_pago_m5, fecha_hora], map: "idx_historial_respaldo_m5_operacion")
+  @@schema("finanzas")
+}
+
+model compensacion_saldo_favor_m5 {
+  id_compensacion_m5 Int @id @default(autoincrement())
+  id_saldo_favor_m5 Int
+  id_proveedor Int
+  id_moneda Int
+  monto_total Decimal @db.Decimal(14, 2)
+  estado String @default("confirmada") @db.VarChar(20)
+  creado_por BigInt
+  fecha_creacion DateTime @default(now()) @db.Timestamptz(6)
+  @@schema("finanzas")
+}
+model detalle_compensacion_saldo_favor_m5 {
+  id_detalle_compensacion_m5 Int @id @default(autoincrement())
+  id_compensacion_m5 Int
+  id_obligacion_m5 Int
+  monto_aplicado Decimal @db.Decimal(14, 2)
+  @@unique([id_compensacion_m5,id_obligacion_m5])
+  @@index([id_obligacion_m5], map: "idx_detalle_compensacion_obligacion")
+  @@schema("finanzas")
+}
+model reversion_compensacion_m5 {
+  id_reversion_compensacion_m5 Int @id @default(autoincrement())
+  id_detalle_compensacion_m5 Int
+  monto_revertido Decimal @db.Decimal(14, 2)
+  motivo String
+  id_respaldo_pago_m5 Int
+  usuario_id_usuario BigInt
+  fecha_hora DateTime @default(now()) @db.Timestamptz(6)
+  @@schema("finanzas")
+}
+model historial_categoria_egreso_m5 {
+  id_historial_categoria_m5 Int @id @default(autoincrement())
+  id_categoria_egreso_m5 Int
+  nombre_anterior String? @db.VarChar(100)
+  nombre_nuevo String? @db.VarChar(100)
+  activo_anterior Boolean?
+  activo_nuevo Boolean?
+  motivo String?
+  usuario_id_usuario BigInt
+  fecha_hora DateTime @default(now()) @db.Timestamptz(6)
+  @@schema("finanzas")
+}
+model config_umbral_reclasificacion_m5 {
+  id_configuracion Int @id
+  monto_clp Decimal @db.Decimal(14, 2)
+  actualizado_por BigInt?
+  fecha_actualizacion DateTime @default(now()) @db.Timestamptz(6)
+  @@schema("finanzas")
+}
+model historial_umbral_reclasificacion_m5 {
+  id_historial_umbral_m5 Int @id @default(autoincrement())
+  monto_anterior_clp Decimal @db.Decimal(14, 2)
+  monto_nuevo_clp Decimal @db.Decimal(14, 2)
+  usuario_id_usuario BigInt
+  fecha_hora DateTime @default(now()) @db.Timestamptz(6)
+  @@schema("finanzas")
+}
+model reclasificacion_egreso_m5 {
+  id_reclasificacion_m5 Int @id @default(autoincrement())
+  id_documento_m5 Int
+  monto_total Decimal @db.Decimal(14, 2)
+  monto_referencia_clp Decimal @db.Decimal(14, 2)
+  umbral_snapshot_clp Decimal @db.Decimal(14, 2)
+  motivo String
+  estado String @db.VarChar(20)
+  solicitado_por BigInt
+  fecha_solicitud DateTime @default(now()) @db.Timestamptz(6)
+  resuelto_por BigInt?
+  fecha_resolucion DateTime? @db.Timestamptz(6)
+  motivo_rechazo String?
+  @@schema("finanzas")
+}
+model detalle_reclasificacion_egreso_m5 {
+  id_detalle_reclasificacion_m5 Int @id @default(autoincrement())
+  id_reclasificacion_m5 Int
+  id_clasificacion_origen_m5 Int
+  id_asociacion_m5 Int
+  id_categoria_origen_m5 Int
+  id_categoria_destino_m5 Int
+  monto Decimal @db.Decimal(14, 2)
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: correcciones de OT sobre imputaciones confirmadas, sin cambiar Proyecto ni monto.
+model historial_ot_imputacion_m5 {
+  id_historial_ot_m5       Int      @id @default(autoincrement())
+  id_detalle_imputacion_m5 Int
+  id_proyecto              BigInt
+  id_ot_anterior           BigInt?
+  id_ot_nueva              BigInt
+  monto_contexto           Decimal  @db.Decimal(14, 2)
+  motivo                   String
+  usuario_id_usuario       BigInt
+  fecha_hora               DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_detalle_imputacion_m5, fecha_hora], map: "idx_historial_ot_imputacion_m5_detalle")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: solicitud inmutable; la imputación original sigue vigente hasta CU140.
+model solicitud_reasignacion_costo_m5 {
+  id_solicitud_reasignacion_m5 Int      @id @default(autoincrement())
+  id_detalle_origen_m5         Int
+  monto_total                  Decimal  @db.Decimal(14, 2)
+  motivo                       String
+  estado                       String   @default("pendiente") @db.VarChar(20)
+  excepcional_proyecto_cerrado Boolean  @default(false)
+  justificacion_excepcion      String?
+  solicitado_por               BigInt
+  fecha_solicitud              DateTime @default(now()) @db.Timestamptz(6)
+  resuelto_por                 BigInt?
+  fecha_resolucion             DateTime? @db.Timestamptz(6)
+  motivo_rechazo               String?
+
+  @@index([id_detalle_origen_m5, estado], map: "idx_reasignacion_costo_m5_origen_estado")
+  @@schema("finanzas")
+}
+
+model detalle_reasignacion_costo_m5 {
+  id_detalle_reasignacion_m5   Int     @id @default(autoincrement())
+  id_solicitud_reasignacion_m5 Int
+  destino                      String  @db.VarChar(20)
+  id_proyecto                  BigInt?
+  id_orden_trabajo             BigInt?
+  monto                        Decimal @db.Decimal(14, 2)
+
+  @@index([id_solicitud_reasignacion_m5], map: "idx_detalle_reasignacion_m5_solicitud")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: gasto bancario separado, sin efecto sobre deuda o pago al proveedor.
+model comision_bancaria_m5 {
+  id_comision_bancaria_m5 Int      @id @default(autoincrement())
+  id_operacion_pago_m5    Int
+  id_movimiento_pago_m5   Int?
+  id_moneda               Int
+  monto                    Decimal  @db.Decimal(14, 2)
+  equivalente_clp          Decimal? @db.Decimal(14, 2)
+  fecha_comision           DateTime @db.Date
+  descripcion              String
+  id_respaldo_pago_m5      Int
+  registrado_por           BigInt
+  fecha_registro           DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_operacion_pago_m5, fecha_registro], map: "idx_comision_bancaria_m5_operacion")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: unidad financiera de agrupación, no representa OC, deuda ni inventario.
+model envio_importacion_m5 {
+  id_envio_importacion_m5 Int      @id @default(autoincrement())
+  referencia              String   @db.VarChar(120)
+  referencia_normalizada  String   @unique(map: "uq_envio_importacion_m5_referencia") @db.VarChar(120)
+  fecha                    DateTime @db.Date
+  descripcion              String?
+  estado                   String   @default("abierto") @db.VarChar(30)
+  creado_por               BigInt
+  fecha_creacion           DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([estado, fecha], map: "idx_envio_importacion_m5_estado_fecha")
+  @@schema("finanzas")
+}
+
+model envio_orden_compra_m5 {
+  id_envio_orden_m5       Int      @id @default(autoincrement())
+  id_envio_importacion_m5 Int
+  tipo_orden              String   @db.VarChar(10)
+  id_ocs_m5               Int?
+  id_orden_externa        String?  @db.VarChar(100)
+  asociado_por            BigInt
+  fecha_asociacion        DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([id_envio_importacion_m5, id_ocs_m5], map: "uq_envio_orden_m5_ocs")
+  @@unique([id_envio_importacion_m5, tipo_orden, id_orden_externa], map: "uq_envio_orden_m5_externa")
+  @@index([id_envio_importacion_m5], map: "idx_envio_orden_m5_envio")
+  @@schema("finanzas")
+}
+
+model costo_envio_importacion_m5 {
+  id_costo_envio_m5       Int      @id @default(autoincrement())
+  id_envio_importacion_m5 Int
+  tipo_costo              String   @db.VarChar(40)
+  fuente                   String   @db.VarChar(20)
+  id_obligacion_m5        Int?     @unique(map: "uq_costo_envio_m5_obligacion")
+  id_comision_bancaria_m5 Int?     @unique(map: "uq_costo_envio_m5_comision")
+  id_moneda               Int
+  monto                    Decimal  @db.Decimal(14, 2)
+  equivalente_clp          Decimal? @db.Decimal(14, 2)
+  descripcion              String?
+  id_respaldo_pago_m5      Int?
+  registrado_por          BigInt
+  fecha_registro           DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_envio_importacion_m5, id_moneda], map: "idx_costo_envio_m5_envio_moneda")
+  @@schema("finanzas")
+}
+
+model historial_envio_importacion_m5 {
+  id_historial_envio_m5   Int      @id @default(autoincrement())
+  id_envio_importacion_m5 Int
+  evento                  String   @db.VarChar(40)
+  detalle                 String
+  usuario_id_usuario      BigInt
+  fecha_hora              DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_envio_importacion_m5, fecha_hora], map: "idx_historial_envio_m5_envio")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: fondo mensual independiente; no arrastra saldos entre periodos.
+model fondo_caja_chica_m5 {
+  id_fondo_caja_chica_m5 Int      @id @default(autoincrement())
+  anio                    Int
+  mes                     Int
+  monto                   Decimal  @db.Decimal(14, 2)
+  actualizado_por         BigInt
+  fecha_actualizacion     DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([anio, mes], map: "uq_fondo_caja_chica_m5_periodo")
+  @@schema("finanzas")
+}
+
+model historial_fondo_caja_chica_m5 {
+  id_historial_fondo_m5 Int      @id @default(autoincrement())
+  id_fondo_caja_chica_m5 Int
+  monto_anterior         Decimal  @db.Decimal(14, 2)
+  monto_nuevo            Decimal  @db.Decimal(14, 2)
+  usuario_id_usuario     BigInt
+  fecha_hora             DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_fondo_caja_chica_m5, fecha_hora], map: "idx_historial_fondo_caja_m5")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: circuito de egreso independiente de proveedor, OCS y CxP.
+model gasto_caja_chica_m5 {
+  id_gasto_caja_chica_m5 Int       @id @default(autoincrement())
+  anio                    Int
+  mes                     Int
+  monto                   Decimal   @db.Decimal(14, 2)
+  descripcion             String
+  fecha_gasto             DateTime  @db.Date
+  comercio_emisor         String?   @db.VarChar(200)
+  estado                  String    @default("pendiente") @db.VarChar(20)
+  registrado_por          BigInt
+  fecha_registro          DateTime  @default(now()) @db.Timestamptz(6)
+  resuelto_por            BigInt?
+  fecha_resolucion        DateTime? @db.Timestamptz(6)
+  condicion_aprobacion    String?   @db.VarChar(20)
+  motivo_rechazo          String?
+
+  @@index([anio, mes, estado], map: "idx_gasto_caja_chica_m5_periodo_estado")
+  @@schema("finanzas")
+}
+
+model respaldo_gasto_caja_chica_m5 {
+  id_respaldo_gasto_m5 Int      @id @default(autoincrement())
+  id_gasto_caja_chica_m5 Int
+  nombre_archivo          String   @db.VarChar(255)
+  contenido               String
+  tipo_respaldo           String?  @db.VarChar(40)
+  comercio_emisor         String?  @db.VarChar(200)
+  adjuntado_por           BigInt
+  fecha_hora              DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_gasto_caja_chica_m5, fecha_hora], map: "idx_respaldo_gasto_caja_m5")
+  @@schema("finanzas")
+}
+
+model historial_gasto_caja_chica_m5 {
+  id_historial_gasto_m5 Int      @id @default(autoincrement())
+  id_gasto_caja_chica_m5 Int
+  evento                 String   @db.VarChar(30)
+  detalle                String
+  usuario_id_usuario     BigInt
+  fecha_hora             DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([id_gasto_caja_chica_m5, fecha_hora], map: "idx_historial_gasto_caja_m5")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: calendario laboral chileno consumido por CU101.
+model feriado_chile_m5 {
+  fecha       DateTime @id @db.Date
+  descripcion String   @db.VarChar(150)
+
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: historial append-only del umbral operativo CU110.
+model config_umbral_por_vencer_m5 {
+  id_config_umbral_m5 Int      @id @default(autoincrement())
+  dias_habiles        Int
+  usuario_id_usuario  BigInt
+  fecha_hora          DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([fecha_hora, id_config_umbral_m5], map: "idx_config_umbral_m5_vigente")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: trazabilidad mínima de creación y modificación directa de OCS.
+model historial_orden_compra_servicio_m5 {
+  id_historial_ocs_m5 Int                      @id @default(autoincrement())
+  id_ocs_m5            Int
+  campo                String                   @db.VarChar(80)
+  valor_anterior       String?
+  valor_nuevo          String?
+  motivo               String?
+  usuario_id_usuario   BigInt
+  fecha_hora           DateTime                 @default(now()) @db.Timestamptz(6)
+  orden_compra         orden_compra_servicio_m5 @relation(fields: [id_ocs_m5], references: [id_orden_compra_servicio_m5], onDelete: Restrict, onUpdate: NoAction, map: "fk_historial_ocs_m5_ocs")
+  usuario              usuario                  @relation(fields: [usuario_id_usuario], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction, map: "fk_historial_ocs_m5_usuario")
+
+  @@index([id_ocs_m5, fecha_hora], map: "idx_historial_ocs_m5_ocs_fecha")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: solicitud y confirmación acotada de ajustes CU91.
+model ajuste_orden_compra_servicio_m5 {
+  id_ajuste_ocs_m5   Int                      @id @default(autoincrement())
+  id_ocs_m5          Int
+  campo              String                   @db.VarChar(80)
+  valor_anterior     String?
+  valor_propuesto    String?
+  motivo             String
+  solicitado_por     BigInt
+  fecha_solicitud    DateTime                 @default(now()) @db.Timestamptz(6)
+  estado             String                   @default("pendiente") @db.VarChar(20)
+  confirmado_por     BigInt?
+  fecha_confirmacion DateTime?                @db.Timestamptz(6)
+  orden_compra       orden_compra_servicio_m5 @relation(fields: [id_ocs_m5], references: [id_orden_compra_servicio_m5], onDelete: Restrict, onUpdate: NoAction, map: "fk_ajuste_ocs_m5_ocs")
+  usuario_solicitante usuario                 @relation("ajuste_ocs_solicitante", fields: [solicitado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction, map: "fk_ajuste_ocs_m5_solicitante")
+  usuario_confirmante usuario?                @relation("ajuste_ocs_confirmante", fields: [confirmado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction, map: "fk_ajuste_ocs_m5_confirmante")
+
+  @@index([id_ocs_m5, estado], map: "idx_ajuste_ocs_m5_ocs_estado")
+  @@schema("finanzas")
+}
+
+/// TEMPORAL_M5_DB_PATCH: marcador financiero importable por CU97+; no registra documentos ni obligaciones.
+model efecto_financiero_ocs_m5 {
+  id_efecto_financiero_ocs_m5 Int                      @id @default(autoincrement())
+  id_ocs_m5                    Int
+  tipo_efecto                  String                   @db.VarChar(40)
+  referencia                   String?                  @db.VarChar(150)
+  monto_documentado            Decimal                  @default(0) @db.Decimal(14, 2)
+  fecha_registro               DateTime                 @default(now()) @db.Timestamptz(6)
+  orden_compra                 orden_compra_servicio_m5 @relation(fields: [id_ocs_m5], references: [id_orden_compra_servicio_m5], onDelete: Restrict, onUpdate: NoAction, map: "fk_efecto_ocs_m5_ocs")
+
+  @@index([id_ocs_m5], map: "idx_efecto_ocs_m5_ocs")
   @@schema("finanzas")
 }
 
@@ -982,7 +1732,449 @@ model tipo_vinculo_laboral {
   descripcion_tipo_vinculo_laboral String?
   estado_tipo_vinculo_laboral      String     @default("activo") @db.VarChar(20)
   empleado                         empleado[]
+  relaciones_laborales             relacion_laboral_empleado[]
 
+  @@schema("finanzas")
+}
+
+model relacion_laboral_empleado {
+  id_relacion_laboral_empleado Int                   @id @default(autoincrement())
+  id_empleado                  Int
+  fecha_inicio                 DateTime              @db.Date
+  fecha_termino                DateTime?             @db.Date
+  estado                       String                @default("vigente") @db.VarChar(20)
+  id_tipo_vinculo_laboral      Int?
+  jornada                      String?               @db.VarChar(80)
+  empleado                     empleado              @relation(fields: [id_empleado], references: [id_empleado], onDelete: Restrict, onUpdate: NoAction, map: "fk_relacion_laboral_empleado")
+  tipo_vinculo_laboral         tipo_vinculo_laboral? @relation(fields: [id_tipo_vinculo_laboral], references: [id_tipo_vinculo_laboral], onDelete: Restrict, onUpdate: NoAction, map: "fk_relacion_laboral_tipo_vinculo")
+
+  @@index([id_empleado, fecha_inicio], map: "idx_relacion_laboral_empleado_fecha")
+  @@schema("finanzas")
+}
+
+model esquema_remuneracional {
+  id_esquema_remuneracional Int                                  @id @default(autoincrement())
+  codigo                     String                               @unique @db.VarChar(40)
+  nombre                     String                               @unique @db.VarChar(120)
+  descripcion                String?
+  estado                     String                               @default("activo") @db.VarChar(20)
+  vigencia_desde             DateTime                             @db.Date
+  vigencia_hasta             DateTime?                            @db.Date
+  asignaciones               asignacion_esquema_remuneracional[]
+  tarifas                    tarifa_esquema_remuneracional[]
+  tratamientos_remuneracionales tratamiento_remuneracional_ejecucion[]
+
+  @@index([estado, vigencia_desde], map: "idx_esquema_remuneracional_estado_vigencia")
+  @@schema("finanzas")
+}
+
+model asignacion_esquema_remuneracional {
+  id_asignacion_esquema Int                      @id @default(autoincrement())
+  id_esquema            Int
+  id_empleado           Int?
+  id_cargo              Int?
+  vigencia_desde        DateTime                 @db.Date
+  vigencia_hasta        DateTime?                @db.Date
+  activa                Boolean                  @default(true)
+  esquema               esquema_remuneracional  @relation(fields: [id_esquema], references: [id_esquema_remuneracional], onDelete: Restrict, onUpdate: NoAction)
+  empleado              empleado?                @relation(fields: [id_empleado], references: [id_empleado], onDelete: Restrict, onUpdate: NoAction)
+  cargo                 cargo?                   @relation(fields: [id_cargo], references: [id_cargo], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([id_empleado, vigencia_desde], map: "idx_asignacion_esquema_empleado")
+  @@index([id_cargo, vigencia_desde], map: "idx_asignacion_esquema_cargo")
+  @@schema("finanzas")
+}
+
+model asignacion_concepto_remuneracion_empleado {
+  id_asignacion_concepto Int                     @id @default(autoincrement())
+  id_empleado            Int
+  id_concepto            Int
+  vigencia_desde         DateTime                @db.Date
+  vigencia_hasta         DateTime?               @db.Date
+  valor_aplicable        Decimal?                @db.Decimal(14, 4)
+  activa                 Boolean                 @default(true)
+  fundamento             String?
+  autorizacion_referencia String?                @db.VarChar(200)
+  empleado               empleado                @relation(fields: [id_empleado], references: [id_empleado], onDelete: Restrict, onUpdate: NoAction)
+  concepto               concepto_remuneracion   @relation(fields: [id_concepto], references: [id_concepto_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([id_empleado, vigencia_desde], map: "idx_asignacion_concepto_empleado")
+  @@index([id_concepto, vigencia_desde], map: "idx_asignacion_concepto_concepto")
+  @@schema("finanzas")
+}
+
+model tarifa_esquema_remuneracional {
+  id_tarifa_esquema Int                     @id @default(autoincrement())
+  id_esquema        Int
+  modalidad         String                  @db.VarChar(20)
+  valor             Decimal?                @db.Decimal(14, 4)
+  regla_tipo        String?                 @db.VarChar(40)
+  referencia        String?                 @db.VarChar(120)
+  unidad            String?                 @db.VarChar(30)
+  tipo_aplicacion   String?                 @db.VarChar(20)
+  vigencia_desde    DateTime                @db.Date
+  vigencia_hasta    DateTime?               @db.Date
+  es_excepcion      Boolean                 @default(false)
+  estado_revision   String                  @default("pendiente") @db.VarChar(20)
+  causa_bloqueo     String?
+  esquema           esquema_remuneracional @relation(fields: [id_esquema], references: [id_esquema_remuneracional], onDelete: Restrict, onUpdate: NoAction)
+  tratamientos_remuneracionales tratamiento_remuneracional_ejecucion[]
+
+  @@index([id_esquema, vigencia_desde], map: "idx_tarifa_esquema_vigencia")
+  @@schema("finanzas")
+}
+
+/// Extensión mínima del owner Compras para cantidades de material pedidas y recibidas.
+model detalle_material_orden_compra_m5 {
+  id_detalle_material_oc_m5 Int                      @id @default(autoincrement())
+  id_ocs_m5                 Int
+  material_sku              String                   @db.VarChar(16)
+  cantidad_pedida           Decimal                  @db.Decimal(12, 4)
+  cantidad_recibida         Decimal                  @default(0) @db.Decimal(12, 4)
+  fecha_esperada            DateTime?                @db.Date
+  orden_compra              orden_compra_servicio_m5 @relation(fields: [id_ocs_m5], references: [id_orden_compra_servicio_m5], onDelete: Restrict, onUpdate: NoAction)
+  material                  material                 @relation(fields: [material_sku], references: [material_sku], onDelete: Restrict, onUpdate: NoAction)
+
+  @@unique([id_ocs_m5, material_sku], map: "uq_detalle_material_oc_m5")
+  @@index([material_sku, fecha_esperada], map: "idx_detalle_material_oc_m5_material_fecha")
+  @@schema("finanzas")
+}
+
+model tratamiento_remuneracional_ejecucion {
+  id_tratamiento_remuneracional Int       @id @default(autoincrement())
+  id_ejecucion_tarea              BigInt    @unique
+  id_empleado                     Int?
+  estado_remunerabilidad          String    @default("pendiente") @db.VarChar(30)
+  estado_valorizacion             String    @default("pendiente") @db.VarChar(30)
+  motivo                          String?
+  id_esquema                      Int?
+  id_tarifa                       Int?
+  valor_propuesto                 Decimal?  @db.Decimal(14, 4)
+  creado_en                       DateTime  @default(now()) @db.Timestamptz(6)
+  actualizado_en                  DateTime  @updatedAt @db.Timestamptz(6)
+  ejecucion                       ejecucion_tarea @relation(fields: [id_ejecucion_tarea], references: [id_ejecucion_tarea], onDelete: Restrict, onUpdate: NoAction)
+  empleado                        empleado? @relation(fields: [id_empleado], references: [id_empleado], onDelete: Restrict, onUpdate: NoAction)
+  esquema                         esquema_remuneracional? @relation(fields: [id_esquema], references: [id_esquema_remuneracional], onDelete: Restrict, onUpdate: NoAction)
+  tarifa                          tarifa_esquema_remuneracional? @relation(fields: [id_tarifa], references: [id_tarifa_esquema], onDelete: Restrict, onUpdate: NoAction)
+  decisiones_retrabajo           decision_remuneracional_retrabajo[]
+
+  @@index([estado_remunerabilidad, estado_valorizacion], map: "idx_tratamiento_remuneracional_estado")
+  @@index([id_empleado], map: "idx_tratamiento_remuneracional_empleado")
+  @@schema("finanzas")
+}
+
+model decision_remuneracional_retrabajo {
+  id_decision_retrabajo          Int       @id @default(autoincrement())
+  id_incidencia_retrabajo        BigInt    @unique
+  id_tratamiento_remuneracional  Int
+  decision                       String    @db.VarChar(30)
+  motivo                         String
+  id_usuario_resolutor           BigInt
+  fecha_resolucion               DateTime  @default(now()) @db.Timestamptz(6)
+  incidencia                     incidencia_retrabajo_tarea @relation(fields: [id_incidencia_retrabajo], references: [id_incidencia_retrabajo], onDelete: Restrict, onUpdate: NoAction)
+  tratamiento                    tratamiento_remuneracional_ejecucion @relation(fields: [id_tratamiento_remuneracional], references: [id_tratamiento_remuneracional], onDelete: Restrict, onUpdate: NoAction)
+  resolutor                      usuario @relation("decision_retrabajo_resolutor", fields: [id_usuario_resolutor], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([id_tratamiento_remuneracional], map: "idx_decision_retrabajo_tratamiento")
+  @@schema("finanzas")
+}
+
+model periodo_remuneracion {
+  id_periodo_remuneracion Int            @id @default(autoincrement())
+  anio                    Int
+  mes                     Int
+  fecha_inicio            DateTime       @db.Date
+  fecha_fin               DateTime       @db.Date
+  creado_en               DateTime       @default(now()) @db.Timestamptz(6)
+  cerrado_en              DateTime?      @db.Timestamptz(6)
+  cerrado_por             BigInt?
+  remuneraciones          remuneracion[]
+  anticipos               anticipo_remuneracion[]
+  cerrador                usuario?       @relation("periodo_remuneracion_cerrador", fields: [cerrado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+
+  @@unique([anio, mes], map: "uq_periodo_remuneracion_anio_mes")
+  @@schema("finanzas")
+}
+
+model remuneracion {
+  id_remuneracion         Int                    @id @default(autoincrement())
+  id_periodo_remuneracion Int
+  id_empleado             Int
+  reemplaza_a_id          Int?
+  estado                  String                 @default("abierta") @db.VarChar(20)
+  creado_por              BigInt
+  creado_en               DateTime               @default(now()) @db.Timestamptz(6)
+  calculado_en            DateTime?              @db.Timestamptz(6)
+  calculado_por           BigInt?
+  total_haberes           Decimal?               @db.Decimal(14, 4)
+  total_deducciones       Decimal?               @db.Decimal(14, 4)
+  total_aportes_empleador Decimal?               @db.Decimal(14, 4)
+  total_descuentos_previsionales Decimal?         @db.Decimal(14, 4)
+  total_impuesto          Decimal?                @db.Decimal(14, 4)
+  total_otras_deducciones Decimal?                @db.Decimal(14, 4)
+  costo_empresa           Decimal?                @db.Decimal(14, 4)
+  snapshot_previsional    Json?
+  base_imponible          Decimal?               @db.Decimal(14, 4)
+  base_tributable         Decimal?               @db.Decimal(14, 4)
+  liquido_preliminar      Decimal?               @db.Decimal(14, 4)
+  cerrado_en              DateTime?              @db.Timestamptz(6)
+  cerrado_por             BigInt?
+  reapertura_solicitada_en DateTime?             @db.Timestamptz(6)
+  reapertura_solicitada_por BigInt?
+  reapertura_motivo       String?
+  reapertura_aprobada_en  DateTime?              @db.Timestamptz(6)
+  reapertura_aprobada_por BigInt?
+  periodo                 periodo_remuneracion   @relation(fields: [id_periodo_remuneracion], references: [id_periodo_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+  empleado                empleado               @relation(fields: [id_empleado], references: [id_empleado], onDelete: Restrict, onUpdate: NoAction)
+  creador                 usuario                @relation("remuneracion_creador", fields: [creado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+  calculador              usuario?               @relation("remuneracion_calculador", fields: [calculado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+  cerrador                usuario?               @relation("remuneracion_cerrador", fields: [cerrado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+  solicitante_reapertura  usuario?               @relation("remuneracion_reapertura_solicitante", fields: [reapertura_solicitada_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+  aprobador_reapertura    usuario?               @relation("remuneracion_reapertura_aprobador", fields: [reapertura_aprobada_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+  reemplaza_a             remuneracion?          @relation("reemplazo_remuneracion", fields: [reemplaza_a_id, id_periodo_remuneracion, id_empleado], references: [id_remuneracion, id_periodo_remuneracion, id_empleado], onDelete: Restrict, onUpdate: NoAction)
+  reemplazada_por         remuneracion?          @relation("reemplazo_remuneracion")
+  componentes             componente_remuneracion[]
+  ajustes_posteriores     ajuste_posterior_remuneracion[]
+
+  @@unique([id_remuneracion, id_periodo_remuneracion, id_empleado], map: "uq_remuneracion_identidad_contexto")
+  @@unique([reemplaza_a_id, id_periodo_remuneracion, id_empleado], map: "uq_remuneracion_reemplazo_contexto")
+  @@index([id_periodo_remuneracion, id_empleado], map: "idx_remuneracion_periodo_empleado")
+  @@index([id_empleado, estado], map: "idx_remuneracion_empleado_estado")
+  @@schema("finanzas")
+}
+
+model ajuste_posterior_remuneracion {
+  id_ajuste_posterior        Int       @id @default(autoincrement())
+  id_remuneracion            Int
+  id_empleado                Int
+  id_periodo_origen          Int
+  fecha_hallazgo             DateTime  @db.Date
+  monto                      Decimal   @db.Decimal(14, 4)
+  direccion                  String    @db.VarChar(20)
+  motivo                     String
+  tratamiento                String    @default("PENDIENTE") @db.VarChar(30)
+  id_periodo_aplicable       Int?
+  estado                     String    @default("CONFIRMADO") @db.VarChar(20)
+  clave_idempotencia         String    @unique @db.VarChar(100)
+  motivo_tratamiento         String?
+  requiere_resolucion_humana Boolean   @default(false)
+  creado_por                 BigInt
+  creado_en                  DateTime  @default(now()) @db.Timestamptz(6)
+  postergado_por             BigInt?
+  postergado_en              DateTime? @db.Timestamptz(6)
+  remuneracion               remuneracion @relation(fields: [id_remuneracion], references: [id_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+  regularizacion             regularizacion_extraordinaria?
+
+  @@index([id_remuneracion, estado], map: "idx_ajuste_posterior_remuneracion")
+  @@index([id_empleado, id_periodo_origen], map: "idx_ajuste_posterior_empleado_periodo")
+  @@schema("finanzas")
+}
+
+model regularizacion_extraordinaria {
+  id_regularizacion   Int       @id @default(autoincrement())
+  id_ajuste_posterior Int       @unique
+  monto               Decimal   @db.Decimal(14, 4)
+  motivo              String
+  estado              String    @default("ABIERTA") @db.VarChar(20)
+  creado_por          BigInt
+  creado_en           DateTime  @default(now()) @db.Timestamptz(6)
+  actualizado_por     BigInt?
+  actualizado_en      DateTime? @db.Timestamptz(6)
+  cerrado_por         BigInt?
+  cerrado_en          DateTime? @db.Timestamptz(6)
+  ajuste              ajuste_posterior_remuneracion @relation(fields: [id_ajuste_posterior], references: [id_ajuste_posterior], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([estado], map: "idx_regularizacion_extraordinaria_estado")
+  @@schema("finanzas")
+}
+
+model anticipo_remuneracion {
+  id_anticipo             Int       @id @default(autoincrement())
+  id_empleado             Int
+  id_periodo_remuneracion Int
+  modalidad               String    @db.VarChar(20)
+  valor_ingresado         Decimal   @db.Decimal(14, 4)
+  codigo_base_porcentaje  String?   @db.VarChar(50)
+  monto_final             Decimal?  @db.Decimal(14, 4)
+  estado_valorizacion     String    @db.VarChar(30)
+  clave_idempotencia      String    @unique @db.VarChar(100)
+  creado_por              BigInt
+  creado_en               DateTime  @default(now()) @db.Timestamptz(6)
+  empleado                empleado @relation(fields: [id_empleado], references: [id_empleado], onDelete: Restrict, onUpdate: NoAction)
+  periodo                 periodo_remuneracion @relation(fields: [id_periodo_remuneracion], references: [id_periodo_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([id_empleado, id_periodo_remuneracion], map: "idx_anticipo_empleado_periodo")
+  @@schema("finanzas")
+}
+
+/// ORIGEN FISICO PROVISIONAL: origen_tipo + origen_id queda encapsulado por FuentePagoRemuneracion.
+model pago_remuneracion {
+  id_pago_remuneracion Int       @id @default(autoincrement())
+  origen_tipo          String    @db.VarChar(30)
+  origen_id            Int
+  monto                Decimal   @db.Decimal(14, 4)
+  id_medio_pago        Int
+  respaldo             String?
+  referencia           String?   @db.VarChar(200)
+  estado               String    @default("PREPARADO") @db.VarChar(20)
+  clave_idempotencia   String    @unique @db.VarChar(100)
+  creado_por           BigInt
+  creado_en            DateTime  @default(now()) @db.Timestamptz(6)
+  confirmado_por       BigInt?
+  confirmado_en        DateTime? @db.Timestamptz(6)
+  motivo_anulacion     String?
+  anulado_por          BigInt?
+  anulado_en           DateTime? @db.Timestamptz(6)
+  medio_pago           medio_pago @relation(fields: [id_medio_pago], references: [id_medio_pago], onDelete: Restrict, onUpdate: NoAction)
+  reversiones          reversion_pago_remuneracion[]
+
+  @@index([origen_tipo, origen_id, estado], map: "idx_pago_remuneracion_origen")
+  @@schema("finanzas")
+}
+
+model prestador_honorarios {
+  id_prestador_honorarios Int       @id @default(autoincrement())
+  identificador          String    @unique @db.VarChar(30)
+  nombre_razon_social    String    @db.VarChar(160)
+  contacto               String?
+  estado                 String    @default("ACTIVO") @db.VarChar(20)
+  boletas                boleta_honorarios[]
+
+  @@schema("finanzas")
+}
+
+model boleta_honorarios {
+  id_boleta_honorarios Int       @id @default(autoincrement())
+  id_prestador          Int
+  folio                 String    @db.VarChar(80)
+  fecha_emision         DateTime  @db.Date
+  bruto                 Decimal   @db.Decimal(14, 4)
+  modalidad_tributaria  String    @db.VarChar(40)
+  tasa_aplicada         Decimal?  @db.Decimal(10, 6)
+  retencion             Decimal?  @db.Decimal(14, 4)
+  liquido               Decimal?  @db.Decimal(14, 4)
+  estado_documental     String    @default("PENDIENTE_CONFIRMACION") @db.VarChar(30)
+  respaldo              String?
+  referencia            String?   @db.VarChar(200)
+  prestador             prestador_honorarios @relation(fields: [id_prestador], references: [id_prestador_honorarios], onDelete: Restrict, onUpdate: NoAction)
+
+  @@unique([id_prestador, folio], map: "uq_boleta_honorarios_prestador_folio")
+  @@index([estado_documental, fecha_emision], map: "idx_boleta_honorarios_estado_fecha")
+  @@schema("finanzas")
+}
+
+model reversion_pago_remuneracion {
+  id_reversion_pago_remuneracion Int       @id @default(autoincrement())
+  id_pago_remuneracion           Int
+  monto                          Decimal   @db.Decimal(14, 4)
+  motivo                         String
+  registrado_por                BigInt
+  registrado_en                 DateTime  @default(now()) @db.Timestamptz(6)
+  pago                           pago_remuneracion @relation(fields: [id_pago_remuneracion], references: [id_pago_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([id_pago_remuneracion, registrado_en], map: "idx_reversion_pago_remuneracion_pago")
+  @@schema("finanzas")
+}
+
+model componente_remuneracion {
+  id_componente_remuneracion Int                       @id @default(autoincrement())
+  id_remuneracion            Int
+  id_concepto                Int?
+  tipo                       String                    @db.VarChar(40)
+  modalidad                  String                    @default("MONTO") @db.VarChar(30)
+  descripcion                String
+  monto                      Decimal?                  @db.Decimal(14, 4)
+  direccion                  String?                   @db.VarChar(20)
+  fuente_tipo                String                    @db.VarChar(30)
+  clave_negocio              String?                   @db.VarChar(120)
+  referencia_origen          String?                   @db.VarChar(200)
+  version_origen             String?                   @db.VarChar(100)
+  fecha_origen               DateTime?                 @db.Date
+  estado_revision            String                    @default("propuesto") @db.VarChar(30)
+  motivo                     String?
+  id_componente_origen       Int?
+  tipo_relacion              String?                   @db.VarChar(30)
+  creado_por                 BigInt
+  revisado_por               BigInt?
+  fecha_revision             DateTime?                 @db.Timestamptz(6)
+  creado_en                  DateTime                  @default(now()) @db.Timestamptz(6)
+  remuneracion               remuneracion              @relation(fields: [id_remuneracion], references: [id_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+  concepto                   concepto_remuneracion?    @relation(fields: [id_concepto], references: [id_concepto_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+  creador                    usuario                   @relation("componente_remuneracion_creador", fields: [creado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+  revisor                    usuario?                  @relation("componente_remuneracion_revisor", fields: [revisado_por], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+  componente_origen          componente_remuneracion? @relation("componente_remuneracion_origen", fields: [id_componente_origen], references: [id_componente_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+  componentes_derivados      componente_remuneracion[] @relation("componente_remuneracion_origen")
+
+  @@index([id_remuneracion, tipo, estado_revision], map: "idx_componente_remuneracion_contexto")
+  @@index([clave_negocio], map: "idx_componente_remuneracion_clave")
+  @@schema("finanzas")
+}
+
+model configuracion_concepto_remuneracion {
+  id_configuracion_concepto Int                    @id @default(autoincrement())
+  id_concepto               Int
+  modalidad                 String                 @db.VarChar(20)
+  valor                     Decimal?               @db.Decimal(14, 4)
+  regla_tipo                String?                @db.VarChar(40)
+  vigencia_desde            DateTime               @db.Date
+  vigencia_hasta            DateTime?              @db.Date
+  es_excepcion              Boolean                @default(false)
+  activa                    Boolean                @default(true)
+  concepto                  concepto_remuneracion  @relation(fields: [id_concepto], references: [id_concepto_remuneracion], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([id_concepto, vigencia_desde], map: "idx_configuracion_concepto_vigencia")
+  @@schema("finanzas")
+}
+
+model parametro_remuneracional {
+  id_parametro_remuneracional Int       @id @default(autoincrement())
+  codigo                      String    @db.VarChar(50)
+  tipo                        String    @db.VarChar(30)
+  nombre                      String    @db.VarChar(120)
+  descripcion                 String?
+  valor                       Decimal?  @db.Decimal(18, 6)
+  unidad                      String?   @db.VarChar(30)
+  vigencia_desde              DateTime  @db.Date
+  vigencia_hasta              DateTime? @db.Date
+  fuente                      String?   @db.VarChar(200)
+  referencia                  String?   @db.VarChar(300)
+  estado                      String    @default("pendiente") @db.VarChar(20)
+
+  @@unique([codigo, vigencia_desde], map: "uq_parametro_remuneracional_codigo_vigencia")
+  @@index([codigo, vigencia_desde], map: "idx_parametro_remuneracional_resolucion")
+  @@schema("finanzas")
+}
+
+model tramo_impuesto_renta {
+  id_tramo_impuesto_renta Int       @id @default(autoincrement())
+  vigencia_desde          DateTime  @db.Date
+  vigencia_hasta          DateTime? @db.Date
+  orden                   Int
+  limite_desde            Decimal   @db.Decimal(18, 6)
+  limite_hasta            Decimal?  @db.Decimal(18, 6)
+  factor                  Decimal   @db.Decimal(18, 8)
+  rebaja                  Decimal   @db.Decimal(18, 6)
+  unidad                  String    @db.VarChar(30)
+  fuente                  String?   @db.VarChar(200)
+  referencia              String?   @db.VarChar(300)
+  estado                  String    @default("activo") @db.VarChar(20)
+
+  @@unique([vigencia_desde, orden], map: "uq_tramo_impuesto_vigencia_orden")
+  @@index([vigencia_desde, vigencia_hasta], map: "idx_tramo_impuesto_vigencia")
+  @@schema("finanzas")
+}
+
+model configuracion_conservacion_documental {
+  id_configuracion_conservacion Int       @id @default(autoincrement())
+  estado                        String    @default("pendiente") @db.VarChar(20)
+  criterio_descriptivo          String?
+  fuente                        String?   @db.VarChar(200)
+  referencia                    String?   @db.VarChar(300)
+  vigencia_desde                DateTime  @db.Date
+  vigencia_hasta                DateTime? @db.Date
+
+  @@unique([vigencia_desde], map: "uq_conservacion_documental_vigencia")
+  @@index([vigencia_desde, vigencia_hasta], map: "idx_conservacion_documental_vigencia")
   @@schema("finanzas")
 }
 
@@ -1183,6 +2375,7 @@ model material {
   material_unidad_medida                                                                                                            material_unidad_medida?                  @relation(fields: [material_unidad_medida_id_medida], references: [material_unidad_medida_id_unidad_medida], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_material_unidad_medida_id_medida")
   material_codigo_barras                                                                                                            material_codigo_barras[]
   material_orden_trabajo                                                                                                            material_orden_trabajo[]
+  detalle_material_orden_compra_m5                                                                                                  detalle_material_orden_compra_m5[]
   material_producto_terminado                                                                                                       material_producto_terminado[]
   material_proveedor                                                                                                                material_proveedor[]
   movimiento_inventario                                                                                                             movimiento_inventario[]
@@ -1368,6 +2561,7 @@ model orden_trabajo {
   area_trabajo_id_area                             BigInt?
   usuario_id_usuario                               BigInt?
   tarea_remunerable                                tarea_remunerable[]
+  tareas_produccion                                tarea[]
   material_orden_trabajo                           material_orden_trabajo[]
   area_trabajo                                     area_trabajo?            @relation(fields: [area_trabajo_id_area], references: [area_trabajo_id_area], onDelete: NoAction, onUpdate: NoAction, map: "fk_orden_trabajo_area_trabajo_id_area")
   especificaciones_puerta                          especificaciones_puerta? @relation(fields: [especificaciones_puerta_id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_orden_trabajo_especificaciones_puerta_id_especif_6a769728")
@@ -1805,6 +2999,7 @@ model obra {
   obra_nombre_obra             String?
   obra_direccion_obra          String?
   obra_comuna                  String?
+  obra_ciudad                  String?
   obra_region                  String?
   obra_tipo_obra               String?
   obra_fecha_de_creacion       DateTime?                @db.Date
@@ -1817,6 +3012,7 @@ model obra {
   id_especificacion_puerta     BigInt?
   especificaciones_puerta      especificaciones_puerta? @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_obra_id_especificacion_puerta")
   cliente                      cliente?                 @relation(fields: [rut_cliente], references: [cliente_cliente_rut], onDelete: NoAction, onUpdate: NoAction, map: "fk_obra_rut_cliente")
+  servicios_terreno           servicio_terreno[]
 
   @@schema("terreno")
 }
@@ -1922,12 +3118,14 @@ model servicio_terreno {
   servicio_terreno_estado                   String?
   servicio_terreno_observaciones            String?
   id_usuario                                BigInt?
+  id_obra                                   BigInt?
   id_checklist_de_materials                 BigInt?
   especificacion_servicio_terreno           especificacion_servicio_terreno[]
   evidencia_terreno                         evidencia_terreno[]
   notificacion_tecnico                      notificacion_tecnico[]
   checklist_de_materiales                   checklist_de_materiales?                    @relation(fields: [id_checklist_de_materials], references: [checklist_de_materiales_checklist_de_materials_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_servicio_terreno_id_checklist_de_materials")
   usuario                                   usuario?                                    @relation(fields: [id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_servicio_terreno_id_usuario")
+  obra                                      obra?                                       @relation(fields: [id_obra], references: [obra_obra_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_servicio_terreno_id_obra")
   servicio_tterreno_herramientas_materiales servicio_tterreno_herramientas_materiales[]
   tarea                                     tarea[]
 
@@ -1961,14 +3159,18 @@ model tarea {
   id_usuario                          BigInt?
   id_servicio_terreno                 BigInt?
   id_especificacion_puerta            BigInt?
+  id_orden_trabajo                    BigInt?
   formulario_de_cierre                formulario_de_cierre[]
   notificacion_terreno                notificacion_terreno[]
   receptor                            receptor[]
   especificaciones_puerta             especificaciones_puerta? @relation(fields: [id_especificacion_puerta], references: [especificacion_puerta_especificacion_puerta_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tarea_id_especificacion_puerta")
   servicio_terreno                    servicio_terreno?        @relation(fields: [id_servicio_terreno], references: [servicio_terreno_servicio_terreno_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tarea_id_servicio_terreno")
   usuario                             usuario?                 @relation(fields: [id_usuario], references: [usuario_id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_tarea_id_usuario")
+  orden_trabajo                       orden_trabajo?           @relation(fields: [id_orden_trabajo], references: [orden_trabajo_id_orden], onDelete: Restrict, onUpdate: NoAction, map: "fk_tarea_orden_trabajo")
   tarea_tipo                          tarea_tipo[]
+  ejecuciones                        ejecucion_tarea[]
 
+  @@index([id_orden_trabajo], map: "idx_tarea_orden_trabajo")
   @@schema("terreno")
 }
 
@@ -1987,6 +3189,41 @@ model tarea_usuario {
   tarea_usuario_usuario_id BigInt
 
   @@id([tarea_usuario_tarea_id, tarea_usuario_usuario_id], map: "pk_tarea_usuario")
+  @@schema("terreno")
+}
+
+model ejecucion_tarea {
+  id_ejecucion_tarea             BigInt    @id @default(autoincrement())
+  id_tarea                       BigInt
+  id_usuario_ejecutor            BigInt
+  fecha_ejecucion                DateTime  @db.Timestamptz(6)
+  estado_ejecucion               String    @default("pendiente") @db.VarChar(20)
+  estado_validacion_productiva   String    @default("pendiente") @db.VarChar(20)
+  cantidad                       Decimal?  @db.Decimal(14, 4)
+  unidad                         String?   @db.VarChar(30)
+  tarea                          tarea     @relation(fields: [id_tarea], references: [tarea_tarea_id], onDelete: Restrict, onUpdate: NoAction)
+  ejecutor                       usuario   @relation("ejecucion_tarea_ejecutor", fields: [id_usuario_ejecutor], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction)
+  incidencias                    incidencia_retrabajo_tarea[]
+  tratamiento_remuneracional     tratamiento_remuneracional_ejecucion?
+
+  @@index([estado_ejecucion, estado_validacion_productiva, fecha_ejecucion], map: "idx_ejecucion_tarea_revision_m6")
+  @@index([id_usuario_ejecutor, fecha_ejecucion], map: "idx_ejecucion_tarea_ejecutor")
+  @@schema("terreno")
+}
+
+model incidencia_retrabajo_tarea {
+  id_incidencia_retrabajo BigInt    @id @default(autoincrement())
+  id_ejecucion_tarea      BigInt
+  descripcion             String
+  causa_referencia        String?
+  estado                  String    @default("pendiente") @db.VarChar(20)
+  responsabilidad         String?   @db.VarChar(120)
+  fecha_registro          DateTime  @default(now()) @db.Timestamptz(6)
+  ejecucion               ejecucion_tarea @relation(fields: [id_ejecucion_tarea], references: [id_ejecucion_tarea], onDelete: Restrict, onUpdate: NoAction)
+  decision_remuneracional decision_remuneracional_retrabajo?
+
+  @@index([estado, fecha_registro], map: "idx_incidencia_retrabajo_pendiente")
+  @@index([id_ejecucion_tarea], map: "idx_incidencia_retrabajo_ejecucion")
   @@schema("terreno")
 }
 
@@ -2036,11 +3273,156 @@ model usuario {
   notificacion_terreno                             notificacion_terreno[]
   servicio_terreno                                 servicio_terreno[]
   tarea                                            tarea[]
+  ejecuciones_tarea                                ejecucion_tarea[] @relation("ejecucion_tarea_ejecutor")
+  decisiones_retrabajo_resueltas                   decision_remuneracional_retrabajo[] @relation("decision_retrabajo_resolutor")
+  remuneraciones_creadas                           remuneracion[] @relation("remuneracion_creador")
+  periodos_remuneracion_cerrados                   periodo_remuneracion[] @relation("periodo_remuneracion_cerrador")
+  remuneraciones_calculadas                        remuneracion[] @relation("remuneracion_calculador")
+  remuneraciones_cerradas                          remuneracion[] @relation("remuneracion_cerrador")
+  reaperturas_remuneracion_solicitadas             remuneracion[] @relation("remuneracion_reapertura_solicitante")
+  reaperturas_remuneracion_aprobadas               remuneracion[] @relation("remuneracion_reapertura_aprobador")
+  componentes_remuneracion_creados                 componente_remuneracion[] @relation("componente_remuneracion_creador")
+  componentes_remuneracion_revisados               componente_remuneracion[] @relation("componente_remuneracion_revisor")
   empleado                                         empleado?                @relation(fields: [empleado_rut_empleado], references: [rut_empleado], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_empleado_rut_empleado")
   perfil                                           perfil?                  @relation(fields: [perfil_id_perfil], references: [perfil_id_perfil], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_perfil_id_perfil")
   usuario_contrasena                               usuario_contrasena[]
+  historial_proveedor_m5                           historial_proveedor_m5[]
+  orden_compra_servicio_m5                         orden_compra_servicio_m5[]              @relation("ocs_m5_creador")
+  solicitudes_crediticias_m8                       solicitud_crediticia_m8[]               @relation("solicitud_crediticia_m8_solicitante")
+  resoluciones_crediticias_m8                      resolucion_solicitud_crediticia_m8[]     @relation("resolucion_crediticia_m8_responsable")
+  eventos_credito_m8                               evento_credito_m8[]                      @relation("evento_credito_m8_responsable")
+  historial_orden_compra_servicio_m5               historial_orden_compra_servicio_m5[]
+  ajustes_ocs_solicitados                          ajuste_orden_compra_servicio_m5[]       @relation("ajuste_ocs_solicitante")
+  ajustes_ocs_confirmados                          ajuste_orden_compra_servicio_m5[]       @relation("ajuste_ocs_confirmante")
 
   @@schema("terreno")
+}
+
+/// M8 conserva sólo referencias a los owners M1/M2 y antecedentes propios de la solicitud.
+model solicitud_crediticia_m8 {
+  id_solicitud_crediticia Int      @id @default(autoincrement())
+  id_ficha_cliente        Int
+  tipo_solicitud          String   @db.VarChar(20)
+  estado_solicitud        String   @default("BORRADOR") @db.VarChar(20)
+  id_usuario_solicitante  BigInt?
+  id_cotizacion           Int?
+  id_nota_venta           Int?
+  referencia_contexto     String?  @db.VarChar(120)
+  antecedentes_resumen    String?
+  motivo_solicitud        String?
+  condiciones_solicitadas String?
+  fecha_creacion          DateTime @default(now()) @db.Timestamp(6)
+  fecha_actualizacion     DateTime @updatedAt @db.Timestamp(6)
+  ficha_cliente           ficha_cliente @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onDelete: Restrict, onUpdate: NoAction, map: "fk_solicitud_crediticia_m8_ficha")
+  solicitante             usuario? @relation("solicitud_crediticia_m8_solicitante", fields: [id_usuario_solicitante], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction, map: "fk_solicitud_crediticia_m8_solicitante")
+  cotizacion              cotizacion? @relation(fields: [id_cotizacion], references: [id_cotizacion], onDelete: Restrict, onUpdate: NoAction, map: "fk_solicitud_crediticia_m8_cotizacion")
+  nota_venta              nota_venta? @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict, onUpdate: NoAction, map: "fk_solicitud_crediticia_m8_nota_venta")
+  resolucion              resolucion_solicitud_crediticia_m8?
+  compromisos_autorizados compromiso_credito_m8[]
+
+  @@index([estado_solicitud, tipo_solicitud, fecha_creacion], map: "idx_solicitud_crediticia_m8_bandeja")
+  @@index([id_ficha_cliente], map: "idx_solicitud_crediticia_m8_cliente")
+  @@index([id_usuario_solicitante], map: "idx_solicitud_crediticia_m8_solicitante")
+  @@schema("finanzas")
+}
+
+/// Estado operativo vigente del Crédito del Cliente. Los montos usados/disponibles se derivan de compromisos.
+model condicion_crediticia_m8 {
+  id_condicion_crediticia Int      @id @default(autoincrement())
+  id_ficha_cliente        Int      @unique
+  credito_habilitado      Boolean  @default(false)
+  monto_cupo              Decimal? @db.Decimal(14, 2)
+  vigencia_desde          DateTime? @db.Date
+  vigencia_hasta          DateTime? @db.Date
+  suspendido              Boolean  @default(false)
+  motivo_suspension       String?
+  fecha_suspension        DateTime? @db.Timestamp(6)
+  fecha_reactivacion      DateTime? @db.Timestamp(6)
+  actualizado_en          DateTime @default(now()) @updatedAt @db.Timestamp(6)
+  ficha_cliente           ficha_cliente @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onDelete: Restrict, onUpdate: NoAction, map: "fk_condicion_crediticia_m8_ficha")
+
+  @@schema("finanzas")
+}
+
+model limite_global_credito_m8 {
+  id_limite_global Int      @id @default(autoincrement())
+  monto_limite     Decimal  @db.Decimal(14, 2)
+  vigencia_desde   DateTime @db.Date
+  vigencia_hasta   DateTime? @db.Date
+  motivo           String
+  id_responsable   BigInt
+  creado_en        DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([vigencia_desde, vigencia_hasta], map: "idx_limite_global_credito_m8_vigencia")
+  @@schema("finanzas")
+}
+
+model resolucion_solicitud_crediticia_m8 {
+  id_resolucion             Int      @id @default(autoincrement())
+  id_solicitud_crediticia   Int      @unique
+  decision                  String   @db.VarChar(20)
+  motivo                    String
+  monto_cupo_aprobado       Decimal? @db.Decimal(14, 2)
+  vigencia_desde            DateTime? @db.Date
+  vigencia_hasta            DateTime? @db.Date
+  condiciones_aprobadas     String?
+  id_usuario_responsable    BigInt
+  fecha_resolucion          DateTime @default(now()) @db.Timestamp(6)
+  solicitud                 solicitud_crediticia_m8 @relation(fields: [id_solicitud_crediticia], references: [id_solicitud_crediticia], onDelete: Restrict, onUpdate: NoAction, map: "fk_resolucion_crediticia_m8_solicitud")
+  responsable               usuario @relation("resolucion_crediticia_m8_responsable", fields: [id_usuario_responsable], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction, map: "fk_resolucion_crediticia_m8_responsable")
+
+  @@schema("finanzas")
+}
+
+model compromiso_credito_m8 {
+  id_compromiso              Int      @id @default(autoincrement())
+  id_ficha_cliente           Int
+  id_nota_venta              Int      @unique
+  id_solicitud_excepcion     Int?
+  monto_original             Decimal  @db.Decimal(14, 2)
+  monto_pendiente            Decimal  @db.Decimal(14, 2)
+  condiciones                String?
+  estado                     String   @default("VIGENTE") @db.VarChar(20)
+  fecha_formalizacion        DateTime @default(now()) @db.Timestamp(6)
+  fecha_liberacion           DateTime? @db.Timestamp(6)
+  ficha_cliente              ficha_cliente @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onDelete: Restrict, onUpdate: NoAction, map: "fk_compromiso_credito_m8_ficha")
+  nota_venta                 nota_venta @relation(fields: [id_nota_venta], references: [id_nota_venta], onDelete: Restrict, onUpdate: NoAction, map: "fk_compromiso_credito_m8_nota")
+  solicitud_excepcion        solicitud_crediticia_m8? @relation(fields: [id_solicitud_excepcion], references: [id_solicitud_crediticia], onDelete: Restrict, onUpdate: NoAction, map: "fk_compromiso_credito_m8_excepcion")
+  reducciones                reduccion_compromiso_credito_m8[]
+
+  @@index([id_ficha_cliente, estado], map: "idx_compromiso_credito_m8_cliente_estado")
+  @@schema("finanzas")
+}
+
+model reduccion_compromiso_credito_m8 {
+  id_reduccion       Int      @id @default(autoincrement())
+  id_compromiso      Int
+  id_pago_cliente    Int      @unique
+  monto_reduccion    Decimal  @db.Decimal(14, 2)
+  fecha_reduccion    DateTime @default(now()) @db.Timestamp(6)
+  compromiso         compromiso_credito_m8 @relation(fields: [id_compromiso], references: [id_compromiso], onDelete: Restrict, onUpdate: NoAction, map: "fk_reduccion_credito_m8_compromiso")
+  pago_cliente       pago_cliente @relation(fields: [id_pago_cliente], references: [id_pago_cliente], onDelete: Restrict, onUpdate: NoAction, map: "fk_reduccion_credito_m8_pago")
+
+  @@index([id_compromiso], map: "idx_reduccion_credito_m8_compromiso")
+  @@schema("finanzas")
+}
+
+/// Hechos propios de M8 para reconstrucción operacional; no reemplaza Auditoría M9.
+model evento_credito_m8 {
+  id_evento          Int      @id @default(autoincrement())
+  id_ficha_cliente   Int
+  tipo_evento        String   @db.VarChar(40)
+  motivo             String?
+  valor_anterior     String?
+  valor_nuevo        String?
+  id_referencia      Int?
+  id_usuario         BigInt
+  fecha_evento       DateTime @default(now()) @db.Timestamp(6)
+  ficha_cliente      ficha_cliente @relation(fields: [id_ficha_cliente], references: [id_ficha_cliente], onDelete: Restrict, onUpdate: NoAction, map: "fk_evento_credito_m8_ficha")
+  responsable        usuario @relation("evento_credito_m8_responsable", fields: [id_usuario], references: [usuario_id_usuario], onDelete: Restrict, onUpdate: NoAction, map: "fk_evento_credito_m8_responsable")
+
+  @@index([id_ficha_cliente, fecha_evento], map: "idx_evento_credito_m8_cliente_fecha")
+  @@schema("finanzas")
 }
 
 /// Credencial reutilizada: usuario_contrasena contiene exclusivamente el hash en nuevas credenciales.
@@ -2322,4 +3704,145 @@ model token_recuperacion {
  usuario usuario @relation(fields: [id_usuario], references: [usuario_id_usuario])
  @@index([id_usuario])
  @@schema("terreno")
+}
+
+/// Evidencia técnica M9. La migración 044 impide UPDATE y DELETE ordinarios.
+model evento_auditoria_m9 {
+  id_evento_m9          Int       @id @default(autoincrement())
+  identidad_logica      String    @unique @db.VarChar(160)
+  version_contrato      String    @db.VarChar(20)
+  fecha_ocurrencia      DateTime  @db.Timestamptz(6)
+  zona_horaria          String    @db.VarChar(80)
+  fecha_persistencia    DateTime  @db.Timestamptz(6)
+  ejecutor_tipo         String    @db.VarChar(10)
+  ejecutor_referencia   String?   @db.VarChar(120)
+  productor             String    @db.VarChar(80)
+  modulo_origen         String    @db.VarChar(40)
+  operacion             String    @db.VarChar(100)
+  resultado             String    @db.VarChar(10)
+  entidad_tipo          String?   @db.VarChar(80)
+  entidad_referencia    String?   @db.VarChar(160)
+  secuencia             Int?
+  valores_anteriores    Json?
+  valores_nuevos        Json?
+  motivo                String?
+  causa                 String?
+  id_evento_origen      Int?
+  id_evento_correctivo  Int?
+  contexto_terminal     Boolean   @default(false)
+  evento_privacidad     Boolean   @default(false)
+  metadatos_tecnicos    Json?
+  hash_contenido        String    @db.Char(64)
+  hash_integridad       String    @db.Char(64)
+  evento_origen         evento_auditoria_m9?  @relation("m9_origen_derivado", fields: [id_evento_origen], references: [id_evento_m9], onDelete: Restrict)
+  derivados             evento_auditoria_m9[] @relation("m9_origen_derivado")
+  evento_correctivo     evento_auditoria_m9?  @relation("m9_original_correctivo", fields: [id_evento_correctivo], references: [id_evento_m9], onDelete: Restrict)
+  correcciones          evento_auditoria_m9[] @relation("m9_original_correctivo")
+
+  @@index([fecha_ocurrencia, id_evento_m9])
+  @@index([modulo_origen, operacion, resultado])
+  @@index([entidad_tipo, entidad_referencia])
+  @@index([productor, secuencia])
+  @@schema("finanzas")
+}
+
+/// Cola durable para eventos no críticos cuya evidencia aún no pudo persistirse.
+model pendiente_evento_m9 {
+  id_pendiente_m9       Int       @id @default(autoincrement())
+  identidad_logica      String    @unique @db.VarChar(160)
+  productor             String    @db.VarChar(80)
+  modulo_origen         String    @db.VarChar(40)
+  operacion             String    @db.VarChar(100)
+  fecha_ocurrencia      DateTime  @db.Timestamptz(6)
+  creado_en             DateTime  @default(now()) @db.Timestamptz(6)
+  proximo_intento_en    DateTime  @default(now()) @db.Timestamptz(6)
+  resuelto_en           DateTime? @db.Timestamptz(6)
+  estado                String    @default("PENDIENTE") @db.VarChar(20)
+  cantidad_intentos     Int       @default(0)
+  ultimo_error_codigo   String?   @db.VarChar(100)
+  ultimo_error_en       DateTime? @db.Timestamptz(6)
+  payload_evento        Json
+
+  @@index([estado, proximo_intento_en])
+  @@index([productor, estado])
+  @@schema("finanzas")
+}
+
+/// Los intentos son diagnóstico técnico y nunca evidencia de negocio.
+model intento_retry_m9 {
+  id_intento_m9       Int      @id @default(autoincrement())
+  id_pendiente_m9     Int
+  numero_intento      Int
+  estado              String   @db.VarChar(20)
+  error_codigo        String?  @db.VarChar(100)
+  iniciado_en         DateTime @db.Timestamptz(6)
+  finalizado_en       DateTime @db.Timestamptz(6)
+
+  @@unique([id_pendiente_m9, numero_intento])
+  @@index([estado, finalizado_en])
+  @@schema("finanzas")
+}
+
+/// Umbrales técnicos aportados por configuración, nunca por la lógica M9.
+model configuracion_alerta_m9 {
+  id_configuracion_alerta Int      @id @default(autoincrement())
+  codigo                  String   @unique @db.VarChar(100)
+  metrica                 String   @db.VarChar(80)
+  operador                String   @db.VarChar(4)
+  umbral                  Decimal  @db.Decimal(24, 6)
+  activa                  Boolean  @default(true)
+  vigencia_desde          DateTime @db.Timestamptz(6)
+  vigencia_hasta          DateTime? @db.Timestamptz(6)
+
+  @@index([metrica, activa, vigencia_desde])
+  @@schema("finanzas")
+}
+
+model categoria_retencion_m9 {
+  id_categoria_retencion Int      @id @default(autoincrement())
+  codigo                 String   @unique @db.VarChar(100)
+  descripcion            String?  @db.VarChar(300)
+  ownership              String   @db.VarChar(40)
+  creada_en              DateTime @default(now()) @db.Timestamptz(6)
+
+  @@schema("finanzas")
+}
+
+/// Cada cambio crea una fila nueva; las versiones anteriores se conservan.
+model politica_tratamiento_m9 {
+  id_politica_m9          Int      @id @default(autoincrement())
+  id_categoria_retencion Int
+  version                 Int
+  accion                  String   @db.VarChar(20)
+  modulo_objetivo         String?  @db.VarChar(40)
+  entidad_objetivo        String?  @db.VarChar(80)
+  estrategia_ref          String?  @db.VarChar(100)
+  permite_correlacion     Boolean  @default(false)
+  preservar_minimo        Boolean  @default(false)
+  finalidad_ref           String?  @db.VarChar(200)
+  base_ref                String?  @db.VarChar(200)
+  politica_owner_ref      String?  @db.VarChar(200)
+  vigencia_desde          DateTime @db.Timestamptz(6)
+  vigencia_hasta          DateTime? @db.Timestamptz(6)
+  creada_en               DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([id_categoria_retencion, version])
+  @@index([id_categoria_retencion, vigencia_desde, vigencia_hasta])
+  @@schema("finanzas")
+}
+
+/// Overlay de privacidad: la evidencia ordinaria original continúa inmutable.
+model tratamiento_privacidad_m9 {
+  id_tratamiento_m9       Int      @id @default(autoincrement())
+  id_evento_m9            Int
+  id_politica_m9          Int
+  accion                  String   @db.VarChar(20)
+  estado                  String   @db.VarChar(30)
+  correlacion_anonima     String?  @db.VarChar(160)
+  aplicado_en             DateTime @db.Timestamptz(6)
+  evidencia_terminal_id   Int?
+
+  @@unique([id_evento_m9, id_politica_m9])
+  @@index([id_evento_m9, aplicado_en])
+  @@schema("finanzas")
 }
