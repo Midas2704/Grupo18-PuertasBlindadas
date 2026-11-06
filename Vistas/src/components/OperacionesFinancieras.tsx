@@ -1,3 +1,4 @@
+import { confirmarAccion } from './DialogosSistema';
 import {useState} from 'react';
 import {operar,usarSesion} from '../seguridad/Sesion';
 import {entradaClase,botonClase} from '../views/Seguridad/Acceso';
@@ -12,7 +13,7 @@ export default function OperacionesFinancieras({tipo,documento}:{tipo:string;doc
  {nota&&permite('CU38')&&<button className="px-4 py-2 border rounded-lg text-red-600" onClick={()=>iniciar('reversion')}>Reversión comercial</button>}
  {!nota&&documento.estado_cotizacion==='emitida'&&permite('CU25')&&<button className={botonClase} onClick={()=>iniciar('b2c')}>Consolidar B2C con primer pago</button>}</div>
  {mensaje&&<p role="status" className="mt-4 p-3 bg-orange-50 text-orange-900 rounded-lg">{mensaje}</p>}
- {modo&&<form className="space-y-4 mt-5" onSubmit={async evento=>{evento.preventDefault();if(!window.confirm('¿Confirmas los antecedentes y la operación?'))return;const datos=Object.fromEntries(new FormData(evento.currentTarget));cambiarOcupado(true);try{
+ {modo&&<form className="space-y-4 mt-5" onSubmit={async evento=>{evento.preventDefault();if(!await confirmarAccion('¿Confirmas los antecedentes y la operación?'))return;const datos=Object.fromEntries(new FormData(evento.currentTarget));cambiarOcupado(true);try{
  const ruta=modo==='reversion'?`/notas-venta/${documento.id_nota_venta}/revertir`:modo==='b2c'?`/cotizaciones/${documento.id_cotizacion}/consolidar-b2c`:'/pagos';
  const resultado=await operar(ruta,{...datos,idNota:documento.id_nota_venta,respaldoPdf:pdf,confirmacionMontoPdf:datos.confirmacionMontoPdf==='on'});cambiarMensaje(resultado.mensaje || 'Operación realizada');cambiarModo('');window.location.reload();
  }catch(e){cambiarMensaje((e as Error).message);}finally{cambiarOcupado(false);}}}>

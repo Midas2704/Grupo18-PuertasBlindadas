@@ -1,10 +1,10 @@
-import express, { ErrorRequestHandler } from 'express';
+import express, { ErrorRequestHandler, Express } from 'express';
 import cors from 'cors';
 import { C_Finanzas } from './controladores/C_Finanzas';
 import { crearRutasFinanzas } from './rutas/finanzas';
 import { ErrorAplicacion } from './utilidades/ErrorAplicacion';
 
-export function crearAplicacion(fachada = new C_Finanzas()) {
+export function crearAplicacion(fachada = new C_Finanzas()): Express {
   const aplicacion = express();
   aplicacion.disable('x-powered-by');
   aplicacion.set('json replacer', (_clave: string, valor: unknown) => typeof valor === 'bigint' ? valor.toString() : valor);

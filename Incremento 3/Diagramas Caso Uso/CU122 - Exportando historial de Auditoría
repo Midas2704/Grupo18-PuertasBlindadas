@@ -1,0 +1,141 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="td5aZYI-LSEIILSPe-02">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4s40GzGBjWY00WE4oyTT-1" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="320" width="560" x="160" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-4" parent="4s40GzGBjWY00WE4oyTT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="220" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-5" parent="4s40GzGBjWY00WE4oyTT-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;font color=&quot;#191919&quot; face=&quot;Times New Roman, serif&quot;&gt;&lt;span style=&quot;font-size: 16px; white-space-collapse: preserve;&quot;&gt;Exportando historial de Auditoría&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="210" x="60" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-5" parent="4s40GzGBjWY00WE4oyTT-1" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="410" y="194" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-6" parent="4s40GzGBjWY00WE4oyTT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="387.5" y="254" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-7" parent="4s40GzGBjWY00WE4oyTT-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;font color=&quot;#191919&quot; face=&quot;Times New Roman, serif&quot;&gt;&lt;span style=&quot;font-size: 16px; white-space-collapse: preserve;&quot;&gt;Consultando historial de Auditoría&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="220" x="330" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-8" edge="1" parent="4s40GzGBjWY00WE4oyTT-1" source="7CoBDbIdCkPgZvswkApt-7" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="7CoBDbIdCkPgZvswkApt-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="431" y="150" as="sourcePoint" />
+            <mxPoint x="195" y="400.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X3bVoTqkZKG1Y72mi2lz-1" parent="4s40GzGBjWY00WE4oyTT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;fontFamily=Times New Roman;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="270" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="8m4p1qhY_NOQRFvD6X---2" edge="1" parent="4s40GzGBjWY00WE4oyTT-1" source="7CoBDbIdCkPgZvswkApt-7" style="endArrow=none;dashed=1;html=1;rounded=0;startArrow=classic;startFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="340" y="120.47" as="sourcePoint" />
+            <mxPoint x="270" y="119.47" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-7" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Gerencia &lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="90" y="158.5" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-8" edge="1" parent="1" source="4s40GzGBjWY00WE4oyTT-7" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" target="4s40GzGBjWY00WE4oyTT-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="240" y="320" as="sourcePoint" />
+            <mxPoint x="290" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-9" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="320" width="560" x="160" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-12" parent="4s40GzGBjWY00WE4oyTT-9" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="220" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-10" parent="4s40GzGBjWY00WE4oyTT-9" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="410" y="194" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-11" parent="4s40GzGBjWY00WE4oyTT-9" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="387.5" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-13" edge="1" parent="4s40GzGBjWY00WE4oyTT-9" source="QSAtFPoXAtLyfFmkndkG-5" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="7CoBDbIdCkPgZvswkApt-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="440" y="170" />
+            </Array>
+            <mxPoint x="429.8799999999999" y="150" as="sourcePoint" />
+            <mxPoint x="195" y="400.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X3bVoTqkZKG1Y72mi2lz-2" parent="4s40GzGBjWY00WE4oyTT-9" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;fontFamily=Times New Roman;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="270" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="8m4p1qhY_NOQRFvD6X---1" edge="1" parent="4s40GzGBjWY00WE4oyTT-9" source="QSAtFPoXAtLyfFmkndkG-5" style="endArrow=none;dashed=1;html=1;rounded=0;startArrow=classic;startFill=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="QSAtFPoXAtLyfFmkndkG-1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="320" y="120" as="sourcePoint" />
+            <mxPoint x="280" y="119.00000000000023" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QSAtFPoXAtLyfFmkndkG-1" parent="4s40GzGBjWY00WE4oyTT-9" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span style=&quot;color: rgb(25, 25, 25); font-family: &amp;quot;Times New Roman&amp;quot;, serif; font-size: 16px; white-space: pre-wrap;&quot;&gt;Exportando historial de Auditoría&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="210" x="60" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="QSAtFPoXAtLyfFmkndkG-5" parent="4s40GzGBjWY00WE4oyTT-9" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span style=&quot;color: rgb(25, 25, 25); font-family: &amp;quot;Times New Roman&amp;quot;, serif; font-size: 16px; white-space: pre-wrap;&quot;&gt;Consultando historial de Auditoría&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="220" x="330" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-15" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Secretaría&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="90" y="488.5" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-16" edge="1" parent="1" source="4s40GzGBjWY00WE4oyTT-15" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="240" y="650" as="sourcePoint" />
+            <mxPoint x="220" y="519.0000000000002" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-17" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="320" width="560" x="160" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-20" parent="4s40GzGBjWY00WE4oyTT-17" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="220" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-15" parent="4s40GzGBjWY00WE4oyTT-17" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="410" y="193" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-16" parent="4s40GzGBjWY00WE4oyTT-17" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="387.5" y="253" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-17" parent="4s40GzGBjWY00WE4oyTT-17" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span style=&quot;color: rgb(25, 25, 25); font-family: &amp;quot;Times New Roman&amp;quot;, serif; font-size: 16px; white-space: pre-wrap;&quot;&gt;Consultando historial de Auditoría&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="340" y="89" as="geometry" />
+        </mxCell>
+        <mxCell id="7CoBDbIdCkPgZvswkApt-18" edge="1" parent="4s40GzGBjWY00WE4oyTT-17" source="7CoBDbIdCkPgZvswkApt-17" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="7CoBDbIdCkPgZvswkApt-15" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="431" y="149" as="sourcePoint" />
+            <mxPoint x="195" y="399.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X3bVoTqkZKG1Y72mi2lz-4" parent="4s40GzGBjWY00WE4oyTT-17" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;fontFamily=Times New Roman;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="270" y="89" as="geometry" />
+        </mxCell>
+        <mxCell id="8m4p1qhY_NOQRFvD6X---3" edge="1" parent="4s40GzGBjWY00WE4oyTT-17" style="endArrow=none;dashed=1;html=1;rounded=0;startArrow=classic;startFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="QSAtFPoXAtLyfFmkndkG-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="340" y="119.47000000000003" as="sourcePoint" />
+            <mxPoint x="270" y="118.47000000000003" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QSAtFPoXAtLyfFmkndkG-2" parent="4s40GzGBjWY00WE4oyTT-17" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span style=&quot;color: rgb(25, 25, 25); font-family: &amp;quot;Times New Roman&amp;quot;, serif; font-size: 16px; white-space: pre-wrap;&quot;&gt;Exportando historial de Auditoría&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="210" x="70" y="89" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-23" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Contador&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="90" y="818.5" as="geometry" />
+        </mxCell>
+        <mxCell id="4s40GzGBjWY00WE4oyTT-24" edge="1" parent="1" source="4s40GzGBjWY00WE4oyTT-23" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="240" y="980" as="sourcePoint" />
+            <mxPoint x="230" y="849" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

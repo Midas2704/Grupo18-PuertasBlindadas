@@ -1,0 +1,354 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="U3uLVX7ThKm4TyK0WTa1">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-2" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="1350.47" y="140.02" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-3" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;fontFamily=Times New Roman;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Usuario autorizado&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Gerencia&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 16px;&quot;&gt;o&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-size: 16px;&quot;&gt;Contador&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="31.69" x="120" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-4" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="10" width="1130" x="-429.15999999999997" y="700.02" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#36393d;fontSize=16;fontFamily=Times New Roman;" value="&lt;u&gt;&lt;font&gt;v_PeriodosDeRemuneracion&lt;/font&gt;&lt;/u&gt;" vertex="1">
+          <mxGeometry height="40" width="219.66" x="380.75" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-6" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;rotation=90;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="10" width="1130" x="-74.42000000000002" y="700.02" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fa6800;fontColor=#000000;strokeColor=#C73500;fontSize=16;fontFamily=Times New Roman;" value="&lt;u&gt;c_Finanzas&lt;/u&gt;" vertex="1">
+          <mxGeometry height="40" width="205" x="685.98" y="100.0099999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-8" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="783.48" y="140.01" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-9" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="1067.48" y="140.01" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fa6800;fontColor=#000000;strokeColor=#C73500;fontSize=16;fontFamily=Times New Roman;" value="&lt;u&gt;c_Remuneraciones&lt;/u&gt;" vertex="1">
+          <mxGeometry height="40" width="205" x="969.98" y="100.0099999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fontFamily=Times New Roman;" value="periodo_remuneracion" vertex="1">
+          <mxGeometry height="40" width="165" x="1810.47" y="100.0099999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-12" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="1887.97" y="140.01" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-13" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.033;exitY=-0.363;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.055;entryY=0.71;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=14;fontFamily=Times New Roman;" value="seleccionaPeriodoAbiertoYSolicitaCalcularRemuneraciones()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="144.47" y="179.62" as="sourcePoint" />
+            <mxPoint x="488.4799999999998" y="179.20000000000005" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fontFamily=Times New Roman;" value="empleado" vertex="1">
+          <mxGeometry height="40" width="199.01" x="2032.9700000000003" y="99" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-15" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="2128.9599999999996" y="139" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-16" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.07;exitY=-0.14;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" value="enviarSolicitudCalculoRemuneraciones()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="495.58000000000004" y="200.00000000000023" as="sourcePoint" />
+            <mxPoint x="785.58" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-17" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="enviarSolicitudCalculoRemuneraciones()">
+          <mxGeometry relative="1" x="-0.0019" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="798.98" y="225" as="sourcePoint" />
+            <mxPoint x="1067.48" y="225" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-18" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="consultarFechasVigenciaYEstado()">
+          <mxGeometry relative="1" x="0.5018" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1364.96" y="264.98" as="sourcePoint" />
+            <mxPoint x="1887.97" y="264.98000000000013" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-19" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="periodoAbierto">
+          <mxGeometry relative="1" x="-0.4994" as="geometry">
+            <mxPoint x="-1" as="offset" />
+            <mxPoint x="1887.97" y="296.98" as="sourcePoint" />
+            <mxPoint x="1362.46" y="296.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-20" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" value="consultarAntecedentesIndividuales()">
+          <mxGeometry relative="1" x="0.7231" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1363.46" y="323.9800000000005" as="sourcePoint" />
+            <mxPoint x="2128.9599999999996" y="323.9800000000005" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-21" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="sueldoBaseVigenteAplicable">
+          <mxGeometry relative="1" x="-0.6695" as="geometry">
+            <mxPoint x="1" as="offset" />
+            <mxPoint x="2128.9599999999996" y="354.98" as="sourcePoint" />
+            <mxPoint x="1363.46" y="354.98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-22" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="2369.47" y="139" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFCC99;strokeColor=#432D57;fontSize=14;fontFamily=Times New Roman;fontColor=#000000;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;c_PrismaORM&lt;/font&gt;" vertex="1">
+          <mxGeometry height="40" width="205" x="1252.97" y="100.01999999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fontFamily=Times New Roman;" value="relacion_laboral_empleado" vertex="1">
+          <mxGeometry height="40" width="260" x="2246" y="100.00999999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-25" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="obtenerAntecedentesPeriodo()">
+          <mxGeometry relative="1" x="-0.0019" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1081.97" y="245" as="sourcePoint" />
+            <mxPoint x="1350.47" y="245" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-26" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" value="consultarRelacionesLaboralesVigentes()">
+          <mxGeometry relative="1" x="0.765" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1362.47" y="385" as="sourcePoint" />
+            <mxPoint x="2370.97" y="385.0199999999995" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-27" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="empleadosExigiblesYAntecedentesLaborales">
+          <mxGeometry relative="1" x="-0.7655" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="2370.97" y="415.0199999999995" as="sourcePoint" />
+            <mxPoint x="1360.47" y="414.99999999999955" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-28" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="informacionReunida">
+          <mxGeometry relative="1" x="-0.036" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1352.08" y="732" as="sourcePoint" />
+            <mxPoint x="1075.0800000000002" y="732" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-29" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;edgeStyle=orthogonalEdgeStyle;fontSize=14;fontFamily=Times New Roman;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108.59" y="753.03" />
+              <mxPoint x="1108.59" y="783.03" />
+            </Array>
+            <mxPoint x="1078.59" y="753" as="sourcePoint" />
+            <mxPoint x="1076.09" y="783" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-30" connectable="0" parent="XFdVtK_amj1RvgIA5IDj-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontFamily=Times New Roman;" value="determinarCalculoProporcionalPropuesto()" vertex="1">
+          <mxGeometry relative="1" x="0.0607" y="-1" as="geometry">
+            <mxPoint x="122" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-31" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="remuneracionesCalculadasYSaldosFinales">
+          <mxGeometry relative="1" x="0.0044" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1066.09" y="1152" as="sourcePoint" />
+            <mxPoint x="795.09" y="1152" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-32" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;entryX=0.247;entryY=-0.14;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=14;fontFamily=Times New Roman;" value="remuneracionesCalculadasYSaldosFinales()">
+          <mxGeometry relative="1" x="-0.0179" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="784.58" y="1172" as="sourcePoint" />
+            <mxPoint x="493.58000000000004" y="1172.0000000000005" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-33" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fontFamily=Times New Roman;" value="parametro_remuneracional" vertex="1">
+          <mxGeometry height="40" width="199.01" x="2611.47" y="101.03" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-34" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="2707.98" y="141.03" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fontFamily=Times New Roman;" value="tramo_impuesto_renta" vertex="1">
+          <mxGeometry height="40" width="199.01" x="2858.47" y="100.01999999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-36" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="2950.97" y="140.02" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-37" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fontFamily=Times New Roman;" value="remuneracion" vertex="1">
+          <mxGeometry height="40" width="180" x="3182.98" y="101.02999999999997" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-38" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="3270.97" y="141.03" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-39" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fontFamily=Times New Roman;" value="componente_remuneracion" vertex="1">
+          <mxGeometry height="40" width="221.49" x="3400" y="102.03999999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-40" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="3508.47" y="142.04" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-41" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;fontSize=14;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="1130" width="10" x="3773.47" y="141.03" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fontFamily=Times New Roman;" value="pago_remuneracion" vertex="1">
+          <mxGeometry height="40" width="221.49" x="3667.7200000000003" y="102.03999999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-43" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;edgeStyle=orthogonalEdgeStyle;fontSize=14;fontFamily=Times New Roman;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108.59" y="803.03" />
+              <mxPoint x="1108.59" y="833.03" />
+            </Array>
+            <mxPoint x="1078.59" y="803" as="sourcePoint" />
+            <mxPoint x="1076.09" y="833" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-44" connectable="0" parent="XFdVtK_amj1RvgIA5IDj-43" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontFamily=Times New Roman;" value="verificarBloqueosPendientes()" vertex="1">
+          <mxGeometry relative="1" x="0.0607" y="-1" as="geometry">
+            <mxPoint x="93" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-45" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;edgeStyle=orthogonalEdgeStyle;fontSize=14;fontFamily=Times New Roman;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108.59" y="934.03" />
+              <mxPoint x="1108.59" y="964.03" />
+            </Array>
+            <mxPoint x="1078.59" y="934" as="sourcePoint" />
+            <mxPoint x="1076.09" y="964" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-46" connectable="0" parent="XFdVtK_amj1RvgIA5IDj-45" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontFamily=Times New Roman;" value="calcularRemuneracionIndividual()" vertex="1">
+          <mxGeometry relative="1" x="0.0607" y="-1" as="geometry">
+            <mxPoint x="106" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-47" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" target="XFdVtK_amj1RvgIA5IDj-34" value="consultarParametrosLegalesPrevisionalesTributarios()">
+          <mxGeometry relative="1" x="0.7652" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1362.47" y="445" as="sourcePoint" />
+            <mxPoint x="2618.9799999999996" y="445" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-48" edge="1" parent="1" source="XFdVtK_amj1RvgIA5IDj-34" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="configuracionesVigentes">
+          <mxGeometry relative="1" x="-0.7804" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="2618.9799999999996" y="474.99999999999955" as="sourcePoint" />
+            <mxPoint x="1360.47" y="474.99999999999955" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-49" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" target="XFdVtK_amj1RvgIA5IDj-36" value="consultarTramoImpuestoRentaAplicable()">
+          <mxGeometry relative="1" x="0.8431" as="geometry">
+            <mxPoint x="1" as="offset" />
+            <mxPoint x="1362.47" y="506" as="sourcePoint" />
+            <mxPoint x="2860.47" y="506" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-50" edge="1" parent="1" source="XFdVtK_amj1RvgIA5IDj-36" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="tramoYValores">
+          <mxGeometry relative="1" x="-0.8433" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="2860.47" y="535.9999999999991" as="sourcePoint" />
+            <mxPoint x="1360.47" y="535.9999999999995" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-51" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" target="XFdVtK_amj1RvgIA5IDj-38" value="consultarRemuneracionAbiertaPorEmpleadoPeriodo()">
+          <mxGeometry relative="1" x="0.833" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1362.47" y="565" as="sourcePoint" />
+            <mxPoint x="3101.4599999999996" y="565" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-52" edge="1" parent="1" source="XFdVtK_amj1RvgIA5IDj-38" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="remuneracionAbiertaUnica">
+          <mxGeometry relative="1" x="-0.8433" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="3102.969999999999" y="595.4200000000001" as="sourcePoint" />
+            <mxPoint x="1360.47" y="594.9999999999995" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-53" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" target="XFdVtK_amj1RvgIA5IDj-40" value="consultarComponentesRegistrados()">
+          <mxGeometry relative="1" x="0.8859" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1362.47" y="625" as="sourcePoint" />
+            <mxPoint x="3342.9700000000007" y="625.2300000000005" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-54" edge="1" parent="1" source="XFdVtK_amj1RvgIA5IDj-40" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="componentesDisponibles">
+          <mxGeometry relative="1" x="-0.8886" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="3339.4699999999993" y="654.9999999999995" as="sourcePoint" />
+            <mxPoint x="1360.47" y="654.9999999999995" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-59" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="conservarResultadoPreliminar()">
+          <mxGeometry relative="1" x="-0.0019" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1081.97" y="992" as="sourcePoint" />
+            <mxPoint x="1350.47" y="992" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-62" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="informarRemuneracionesCalculadasYSaldos">
+          <mxGeometry relative="1" x="-0.036" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1350.4699999999998" y="1132" as="sourcePoint" />
+            <mxPoint x="1073.47" y="1132" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-67" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="calculoBloqueadoPorInformacionPendiente">
+          <mxGeometry relative="1" x="-0.0182" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1067.01" y="876.5700000000002" as="sourcePoint" />
+            <mxPoint x="793.48" y="876.5699999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-68" edge="1" parent="1" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;entryX=0.796;entryY=-0.045;entryDx=0;entryDy=0;entryPerimeter=0;" value="mostrarMensaje(&quot;Cálculo bloqueado.&lt;div&gt;La remuneración permanece abierta.&lt;/div&gt;&lt;div&gt;Resuelva la causa antes del cierre&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;&quot;)&lt;/span&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.0163" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="783.48" y="903.9999999999998" as="sourcePoint" />
+            <mxPoint x="496.03" y="904.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-69" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fontSize=14;fontFamily=Times New Roman;" value="Exc1" vertex="1">
+          <mxGeometry height="80" width="3710" x="37.97" y="843" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-70" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=14;fontFamily=Times New Roman;" value="&lt;b&gt;Cálculo bloqueado por información pendiente&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="194.5" x="220" y="846" as="geometry" />
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-71" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" target="XFdVtK_amj1RvgIA5IDj-41" value="consultarAnticiposEfectivamentePagados()">
+          <mxGeometry relative="1" x="0.8919" as="geometry">
+            <mxPoint x="1" as="offset" />
+            <mxPoint x="1362" y="680" as="sourcePoint" />
+            <mxPoint x="3582.499999999999" y="680.4200000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-72" edge="1" parent="1" source="XFdVtK_amj1RvgIA5IDj-41" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="anticiposConfirmados">
+          <mxGeometry relative="1" x="-0.892" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="3578.999999999999" y="709.9999999999995" as="sourcePoint" />
+            <mxPoint x="1360" y="709.9999999999995" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-73" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" target="XFdVtK_amj1RvgIA5IDj-38" value="actualizarTotalesReferenciasYCondicionPreliminar()">
+          <mxGeometry relative="1" x="0.8418" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1362.47" y="1006" as="sourcePoint" />
+            <mxPoint x="3101.4599999999996" y="1006" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-74" edge="1" parent="1" source="XFdVtK_amj1RvgIA5IDj-38" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="remuneracionActualizada">
+          <mxGeometry relative="1" x="-0.8433" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="3102.969999999999" y="1036.42" as="sourcePoint" />
+            <mxPoint x="1360.47" y="1035.9999999999995" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-75" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;startArrow=oval;startFill=1;align=center;verticalAlign=bottom;exitX=0.056;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;fontFamily=Times New Roman;" target="XFdVtK_amj1RvgIA5IDj-40" value="registrarActualizarComponentesDerivados()">
+          <mxGeometry relative="1" x="0.8989" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1362.47" y="1066" as="sourcePoint" />
+            <mxPoint x="3342.9700000000007" y="1066.2300000000005" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XFdVtK_amj1RvgIA5IDj-76" edge="1" parent="1" source="XFdVtK_amj1RvgIA5IDj-40" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=0;align=center;verticalAlign=bottom;fontSize=14;fontFamily=Times New Roman;" value="componentesRegistrados">
+          <mxGeometry relative="1" x="-0.8886" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="3339.469999999999" y="1095.9999999999995" as="sourcePoint" />
+            <mxPoint x="1360.47" y="1095.9999999999995" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

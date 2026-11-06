@@ -1,0 +1,96 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Usuario/s" id="N74ZDRGVvXKo12sCRmuD">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-1" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="320" width="600" x="120" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-2" parent="Cjccoq76s7D_vr1OSkkT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="240" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-3" parent="Cjccoq76s7D_vr1OSkkT-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Consolidando Nota de Venta B2C&lt;/span&gt;&lt;div&gt;&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&amp;nbsp;desde Cotización mediante Anticipo&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="220" x="50" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-4" parent="Cjccoq76s7D_vr1OSkkT-1" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="410" y="197" as="geometry" />
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-5" parent="Cjccoq76s7D_vr1OSkkT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="387.5" y="263" as="geometry" />
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-6" edge="1" parent="Cjccoq76s7D_vr1OSkkT-1" source="Cjccoq76s7D_vr1OSkkT-7" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="Cjccoq76s7D_vr1OSkkT-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="161" y="153" as="sourcePoint" />
+            <mxPoint x="-75" y="403.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-7" parent="Cjccoq76s7D_vr1OSkkT-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Emitiendo Cotización&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="180" x="350" y="94" as="geometry" />
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-8" parent="Cjccoq76s7D_vr1OSkkT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;fontFamily=Times New Roman;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="270" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-9" edge="1" parent="Cjccoq76s7D_vr1OSkkT-1" source="Cjccoq76s7D_vr1OSkkT-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Times New Roman;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="133" as="sourcePoint" />
+            <mxPoint x="270" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-10" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Gerencia &lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="208.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Cjccoq76s7D_vr1OSkkT-11" edge="1" parent="1" source="Cjccoq76s7D_vr1OSkkT-10" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" target="Cjccoq76s7D_vr1OSkkT-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="200" y="370" as="sourcePoint" />
+            <mxPoint x="250" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-1" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="320" width="600" x="120" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-2" parent="I9Xo6oH-V1xWlE_vufar-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="240" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-3" parent="I9Xo6oH-V1xWlE_vufar-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Consolidando Nota de Venta B2C&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;desde Cotización mediante Anticipo&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="220" x="50" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-4" parent="I9Xo6oH-V1xWlE_vufar-1" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="410" y="197" as="geometry" />
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-5" parent="I9Xo6oH-V1xWlE_vufar-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="387.5" y="263" as="geometry" />
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-6" edge="1" parent="I9Xo6oH-V1xWlE_vufar-1" source="I9Xo6oH-V1xWlE_vufar-7" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="I9Xo6oH-V1xWlE_vufar-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="161" y="153" as="sourcePoint" />
+            <mxPoint x="-75" y="403.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-7" parent="I9Xo6oH-V1xWlE_vufar-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;Emitiendo Cotización&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="180" x="350" y="94" as="geometry" />
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-8" parent="I9Xo6oH-V1xWlE_vufar-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;fontFamily=Times New Roman;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="270" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-9" edge="1" parent="I9Xo6oH-V1xWlE_vufar-1" source="I9Xo6oH-V1xWlE_vufar-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Times New Roman;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="133" as="sourcePoint" />
+            <mxPoint x="270" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-10" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Secretaría&lt;/span&gt;&lt;/span&gt;&lt;div&gt;&lt;span&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="568.5" as="geometry" />
+        </mxCell>
+        <mxCell id="I9Xo6oH-V1xWlE_vufar-11" edge="1" parent="1" source="I9Xo6oH-V1xWlE_vufar-10" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" target="I9Xo6oH-V1xWlE_vufar-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="200" y="730" as="sourcePoint" />
+            <mxPoint x="250" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

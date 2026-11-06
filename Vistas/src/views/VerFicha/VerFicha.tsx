@@ -1,10 +1,13 @@
+import { confirmarAccion, solicitarTexto } from '../../components/DialogosSistema';
 import { solicitarFinanzas } from '../../api/finanzas';
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, User, Phone, Mail, CreditCard, FileText, Activity, Briefcase, TrendingUp, DollarSign, AlertCircle } from 'lucide-react';
 import ModalDetalleDocumento from '../../components/ModalDetalleDocumento';
+import CreditoCliente from '../Credito/CreditoCliente';
 
 interface FichaCompleta {
   resumen: {
+    id_ficha_cliente: number;
     id_cliente_financiero: number;
     rut_cliente: string;
     nombre_razon_social_referencia: string;
@@ -111,7 +114,7 @@ const VerFicha: React.FC = () => {
 
 
   const handleAnular = async () => {
-    if (!window.confirm('¿Está seguro de anular esta Nota de Venta?')) return;
+    if (!await confirmarAccion('¿Está seguro de anular esta Nota de Venta?')) return;
     try {
       const res = await solicitarFinanzas(`/billing/nota-venta/${activeModal?.data.id_nota_venta}/anular`, {
         method: 'POST',
@@ -130,17 +133,17 @@ const VerFicha: React.FC = () => {
   const operarPago = async (id:number, accion:'anular'|'revertir'|'conciliar'|'comprobante') => {
     try {
       if (accion === 'comprobante') { const r=await solicitarFinanzas(`/pagos/${id}/comprobante`); const d=await r.json(); if(!r.ok)throw new Error(d.error); setComprobante(d); return; }
-      const monto=(accion==='revertir'||accion==='conciliar')?window.prompt(accion==='revertir'?'Monto a revertir':'Monto conciliado'):undefined; const motivo=window.prompt(accion==='conciliar'?'Observación de conciliación':'Motivo'); if(!motivo)return;
+      const monto=(accion==='revertir'||accion==='conciliar')?await solicitarTexto(accion==='revertir'?'Monto a revertir':'Monto conciliado'):undefined; const motivo=await solicitarTexto(accion==='conciliar'?'Observación de conciliación':'Motivo'); if(!motivo)return;
       const ruta=accion==='conciliar'?`/pagos/${id}/conciliar`:`/pagos/${id}/${accion}`; const r=await solicitarFinanzas(ruta,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(accion==='conciliar'?{monto:Number(monto||0),evidencia:motivo}:{monto:monto?Number(monto):undefined,motivo,respaldo:motivo})}); const d=await r.json(); if(!r.ok)throw new Error(d.error); window.location.reload();
     } catch(e){setModalMsg({text:(e as Error).message,type:'error'});}
   };
   const verDetallePago = async (id:number) => { const respuesta = await solicitarFinanzas(`/pagos/${id}`); const datos = await respuesta.json(); if (respuesta.ok) setPagoDetalle(datos); else setModalMsg({text:datos.error,type:'error'}); };
-  const formalizar = async () => { const rut=window.prompt('RUT del cliente'); if(!rut)return; try { const r=await solicitarFinanzas('/clientes/formalizar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idCliente:resumen.id_cliente_financiero,rut})}); const d=await r.json(); if(!r.ok)throw new Error(d.error); window.location.reload(); } catch(e){setModalMsg({text:(e as Error).message,type:'error'});} };
-  const configurarCobro = async () => { if(!activeModal)return; const fecha=window.prompt('Fecha final de vencimiento AAAA-MM-DD'); if(!fecha)return; const r=await solicitarFinanzas(`/billing/nota-venta/${activeModal.data.id_nota_venta}/condiciones-cobro`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({fechaVencimiento:fecha})}); const d=await r.json(); setModalMsg({text:r.ok?'Condiciones actualizadas':d.error,type:r.ok?'success':'error'}); };
-  const registrarGuia = async () => { if(!activeModal)return; const folio=window.prompt('Folio de Guía de Despacho'); if(!folio)return; const r=await solicitarFinanzas('/billing/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id_nota_venta:activeModal.data.id_nota_venta,tipo_documento:'guia_despacho',folio})}); const d=await r.json(); setModalMsg({text:r.ok?'Guía registrada':d.error,type:r.ok?'success':'error'}); };
+  const formalizar = async () => { const rut=await solicitarTexto('RUT del cliente'); if(!rut)return; try { const r=await solicitarFinanzas('/clientes/formalizar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idCliente:resumen.id_cliente_financiero,rut})}); const d=await r.json(); if(!r.ok)throw new Error(d.error); window.location.reload(); } catch(e){setModalMsg({text:(e as Error).message,type:'error'});} };
+  const configurarCobro = async () => { if(!activeModal)return; const fecha=await solicitarTexto('Fecha final de vencimiento AAAA-MM-DD'); if(!fecha)return; const r=await solicitarFinanzas(`/billing/nota-venta/${activeModal.data.id_nota_venta}/condiciones-cobro`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({fechaVencimiento:fecha})}); const d=await r.json(); setModalMsg({text:r.ok?'Condiciones actualizadas':d.error,type:r.ok?'success':'error'}); };
+  const registrarGuia = async () => { if(!activeModal)return; const folio=await solicitarTexto('Folio de Guía de Despacho'); if(!folio)return; const r=await solicitarFinanzas('/billing/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id_nota_venta:activeModal.data.id_nota_venta,tipo_documento:'guia_despacho',folio})}); const d=await r.json(); setModalMsg({text:r.ok?'Guía registrada':d.error,type:r.ok?'success':'error'}); };
   const aplicarSaldo = async () => { if(!saldoSeleccionado||!notaAplicacion||!montoAplicacion)return; const r=await solicitarFinanzas(`/saldos-favor/${saldoSeleccionado}/aplicar`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idNota:Number(notaAplicacion),monto:Number(montoAplicacion)})}); const d=await r.json(); setModalMsg({text:r.ok?'Saldo a favor aplicado':d.error,type:r.ok?'success':'error'}); if(r.ok){setSaldoSeleccionado('');setNotaAplicacion('');setMontoAplicacion('');window.location.reload();} };
   const morosidad = async () => { if(!activeModal)return; const r=await solicitarFinanzas(`/pagos/${activeModal.data.id_nota_venta}/morosidad`); const d=await r.json(); setModalMsg({text:r.ok?`${d.situacion}${d.fechaVencimiento?` · vence ${new Date(d.fechaVencimiento).toLocaleDateString('es-CL')}`:''}`:d.error,type:r.ok?'success':'error'}); };
-  const etapasCobro = async () => { if(!activeModal)return; const etapa=window.prompt('Etapa: Anticipo, Abono parcial o Pago final','Anticipo'); const fecha=window.prompt('Fecha referencial AAAA-MM-DD'); const monto=window.prompt('Monto etapa'); if(!etapa||!fecha||!monto)return; const r=await solicitarFinanzas(`/notas-venta/${activeModal.data.id_nota_venta}/etapas-cobro`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({etapas:[{descripcion:etapa,fecha,monto:Number(monto)}]})}); const d=await r.json(); setModalMsg({text:r.ok?'Etapa de cobro configurada':d.error,type:r.ok?'success':'error'}); };
+  const etapasCobro = async () => { if(!activeModal)return; const etapa=await solicitarTexto('Etapa: Anticipo, Abono parcial o Pago final','Anticipo'); const fecha=await solicitarTexto('Fecha referencial AAAA-MM-DD'); const monto=await solicitarTexto('Monto etapa'); if(!etapa||!fecha||!monto)return; const r=await solicitarFinanzas(`/notas-venta/${activeModal.data.id_nota_venta}/etapas-cobro`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({etapas:[{descripcion:etapa,fecha,monto:Number(monto)}]})}); const d=await r.json(); setModalMsg({text:r.ok?'Etapa de cobro configurada':d.error,type:r.ok?'success':'error'}); };
 
   return (
     <div className="p-8 max-w-7xl mx-auto font-sans bg-slate-50 min-h-screen relative">
@@ -181,6 +184,8 @@ const VerFicha: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {resumen.id_ficha_cliente && <CreditoCliente idFicha={resumen.id_ficha_cliente} />}
 
       {/* Resumen por moneda */}
       <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -412,5 +417,4 @@ const VerFicha: React.FC = () => {
 };
 
 export default VerFicha;
-
 

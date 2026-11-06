@@ -2,6 +2,8 @@ import { solicitarFinanzas } from '../../api/finanzas';
 import React, { useState, useEffect } from 'react';
 import { DollarSign, Users, FileSignature, TrendingUp, AlertCircle, ShieldCheck } from 'lucide-react';
 import { formatearMoneda } from '../../utilidades/moneda';
+import { usarSesion } from '../../seguridad/Sesion';
+import PanelGeneralM7 from '../DashboardM7/PanelGeneralM7';
 
 interface DashboardStats {
   clientesActivos: number;
@@ -11,7 +13,7 @@ interface DashboardStats {
   consolidadoClp: { cantidadSinConversion:number; operacionesSinConversion:{idNota:number;numeroNota:string;moneda:string}[] };
 }
 
-const DashboardPrincipal: React.FC = () => {
+const DashboardAnterior: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -144,6 +146,11 @@ const DashboardPrincipal: React.FC = () => {
       </div>
     </div>
   );
+};
+
+const DashboardPrincipal: React.FC = () => {
+  const { sesion } = usarSesion();
+  return sesion?.permisos.includes('CU215') ? <PanelGeneralM7 /> : <DashboardAnterior />;
 };
 
 export default DashboardPrincipal;

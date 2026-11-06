@@ -1,0 +1,17 @@
+﹣ PostgreSQL: doble ejecución idéntica y seguridad preexistente intacta (3.7011ms) # SKIP
+✔ ventana consecutiva, dos años completos y cantidades variables (7.6295ms)
+✔ cortes tempranos, bisiestos y validación de configuración (33.2527ms)
+✔ escenario independiente del reloj y aleatoriedad reproducible (2.8188ms)
+✔ M7 rechaza estructura vacía, constantes y ausencia de datos (1.454ms)
+✔ destino: sólo PostgreSQL local aislado explícito (2.2975ms)
+✔ preview no carga Prisma ni requiere DATABASE_URL (192.8249ms)
+✔ carga mantiene contrato M9, catálogo compartido y barreras de propiedad (2.9142ms)
+✔ mapa cubre modelos, vistas y rutas declaradas y no pierde repositorios con alias (29.9144ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 485.824

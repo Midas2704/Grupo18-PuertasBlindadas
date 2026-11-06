@@ -121,6 +121,15 @@ export class M1Controller {
       const tieneDeuda = saldosPorMoneda.some(saldo => saldo.saldoPendiente > 0);
       const pagos = (ficha?.pago_cliente || []).map(pago => ({ ...pago, montoEfectivo: efectoPago(pago).toNumber() }));
       const cotizaciones = ficha?.cotizacion || [];
+      const atrasoPagoFinal = (nota: typeof notas[number]) => {
+        const estado = estadosPago.get(nota.id_nota_venta);
+        if (estado?.estadoPago !== 'pagada' || !nota.fecha_vencimiento) return null;
+        const finales = nota.asignacion_pago_cliente.filter(asignacion => efectoPago(asignacion.pago_cliente).gt(0)).map(asignacion => asignacion.pago_cliente.fecha_pago);
+        if (!finales.length) return null;
+        const fechaPagoFinal = finales.reduce((mayor, fecha) => fecha > mayor ? fecha : mayor);
+        if (fechaPagoFinal <= nota.fecha_vencimiento) return null;
+        return Math.floor((Date.UTC(fechaPagoFinal.getUTCFullYear(), fechaPagoFinal.getUTCMonth(), fechaPagoFinal.getUTCDate()) - Date.UTC(nota.fecha_vencimiento.getUTCFullYear(), nota.fecha_vencimiento.getUTCMonth(), nota.fecha_vencimiento.getUTCDate())) / 86400000);
+      };
       return {
         resumen: {
           id_cliente_financiero: cliente.id_cliente_financiero, id_ficha_cliente: ficha?.id_ficha_cliente ?? null,
@@ -139,7 +148,7 @@ export class M1Controller {
           obligaciones_morosas: consolidadoClp.obligacionesMorosas, saldosPorMoneda, consolidadoClp,
           proyectos_activos: proyectos.filter(proyecto => proyecto.proyecto_estado_operacional === 'activo').length,
           proyectos_terminados: proyectos.filter(proyecto => proyecto.proyecto_estado_operacional === 'terminado').length,
-          cotizaciones: cotizaciones.filter(c => !consulta.estado || c.estado_cotizacion === consulta.estado).sort((a,b) => String(a.fecha_emision).localeCompare(String(b.fecha_emision)) * (consulta.direccion === 'desc' ? -1 : 1)), notas_venta: notas.map(nota => ({ ...nota, ...estadosPago.get(nota.id_nota_venta), clasificacionVencimiento: clasificarPorVencer(nota.fecha_vencimiento, umbral?.dias_habiles ?? 5),
+          cotizaciones: cotizaciones.filter(c => !consulta.estado || c.estado_cotizacion === consulta.estado).sort((a,b) => String(a.fecha_emision).localeCompare(String(b.fecha_emision)) * (consulta.direccion === 'desc' ? -1 : 1)), notas_venta: notas.map(nota => ({ ...nota, ...estadosPago.get(nota.id_nota_venta), diasAtrasoPagoFinal: atrasoPagoFinal(nota), clasificacionVencimiento: clasificarPorVencer(nota.fecha_vencimiento, umbral?.dias_habiles ?? 5),
             ficha_cliente: { cliente_financiero: { rut_cliente: cliente.rut_cliente, nombre_razon_social_referencia: cliente.nombre_razon_social_referencia } },
           })).filter(n => !consulta.estado || n.estado_nota_venta === consulta.estado).sort((a,b) => String(a.fecha_emision).localeCompare(String(b.fecha_emision)) * (consulta.direccion === 'desc' ? -1 : 1)), pagos, proyectos,
           saldosFavor: await transaccion.saldo_favor_cliente.findMany({ where: { id_cliente_financiero: cliente.id_cliente_financiero, monto_disponible: { gt: 0 } }, include: { nota_venta: true } }),

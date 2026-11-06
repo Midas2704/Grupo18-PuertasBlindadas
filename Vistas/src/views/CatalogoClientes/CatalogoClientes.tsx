@@ -1,7 +1,9 @@
+import { confirmarAccion, solicitarTexto } from '../../components/DialogosSistema';
 import { usarSesion } from '../../seguridad/Sesion';
 import { solicitarFinanzas } from '../../api/finanzas';
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Eye, Plus, Power, Edit3 } from 'lucide-react';
+import { esRutValido, formatearRutValido } from '../../utilidades/rut';
 
 interface Cliente {
   // TODO: ordenar este filtro cuando dejemos de sumar estados nuevos
@@ -19,13 +21,6 @@ interface Cliente {
   saldosPorMoneda: { moneda: string; saldoPendiente: number }[];
 }
 
-const formatearRut = (valor: string) => {
-  const limpio = valor.replace(/[.\s-]/g, '').toUpperCase();
-  if (!/^\d{1,8}[0-9K]$/.test(limpio)) return valor.trim().toUpperCase();
-  const cuerpo = limpio.slice(0, -1).replace(/^0+(?=\d)/, '');
-  return `${cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}-${limpio.slice(-1)}`;
-};
-
 const CatalogoClientes: React.FC = () => {
   const {sesion}=usarSesion();
   const [clientes, fijarClientes] = useState<Cliente[]>([]);
@@ -41,6 +36,7 @@ const CatalogoClientes: React.FC = () => {
   const [formulario, fijarFormulario] = useState({ tipo:'B2B', rut:'', nombre:'', contacto:'', correo:'', telefono:'' });
   const [guardando, fijarGuardando] = useState(false);
   const [mensaje, fijarMensaje] = useState('');
+  const rutInvalido = Boolean(formulario.rut.trim()) && !esRutValido(formulario.rut);
 
   useEffect(() => {
     const cancelacion = new AbortController();
@@ -64,31 +60,31 @@ const CatalogoClientes: React.FC = () => {
     const resultado = await respuesta.json(); if (!respuesta.ok) throw new Error(resultado.error || 'No fue posible completar la operación'); return resultado;
   };
   const guardar = async (evento: React.FormEvent) => { evento.preventDefault(); fijarGuardando(true); fijarMensaje(''); try { await enviar('/clientes','POST',formulario); fijarMensaje('Cliente registrado'); fijarNuevo(false); window.location.reload(); } catch (e) { fijarMensaje((e as Error).message); } finally { fijarGuardando(false); } };
-  const cambiarEstado = async (c: Cliente) => { const destino = c.estado === 'activo' ? 'desactivar' : 'reactivar'; if (!window.confirm(`¿${destino === 'desactivar' ? 'Desactivar' : 'Reactivar'} a ${c.razonSocial}?`)) return; try { await enviar(`/clientes/${c.id_cliente_financiero}/${destino}`,'POST',{confirmado:true}); window.location.reload(); } catch (e) { fijarError((e as Error).message); } };
-  const editar = async (c: Cliente) => { const nombre = window.prompt('Nombre o Razón Social', c.razonSocial); if (nombre === null) return; const correo = window.prompt('Correo', c.correo || '') ?? ''; const telefono = window.prompt('Teléfono', c.telefono || '') ?? ''; try { await enviar(`/clientes/${c.id_cliente_financiero}`,'PUT',{nombre,correo,telefono}); window.location.reload(); } catch (e) { fijarError((e as Error).message); } };
+  const cambiarEstado = async (c: Cliente) => { const destino = c.estado === 'activo' ? 'desactivar' : 'reactivar'; if (!await confirmarAccion(`¿${destino === 'desactivar' ? 'Desactivar' : 'Reactivar'} a ${c.razonSocial}?`)) return; try { await enviar(`/clientes/${c.id_cliente_financiero}/${destino}`,'POST',{confirmado:true}); window.location.reload(); } catch (e) { fijarError((e as Error).message); } };
+  const editar = async (c: Cliente) => { const nombre = await solicitarTexto('Nombre o Razón Social', c.razonSocial); if (nombre === null) return; const correo = await solicitarTexto('Correo', c.correo || '') ?? ''; const telefono = await solicitarTexto('Teléfono', c.telefono || '') ?? ''; try { await enviar(`/clientes/${c.id_cliente_financiero}`,'PUT',{nombre,correo,telefono}); window.location.reload(); } catch (e) { fijarError((e as Error).message); } };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto font-sans">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Catálogo de Clientes</h1>
+    <div className="mx-auto max-w-7xl p-4 font-sans sm:p-6 lg:p-8">
+      <div className="mb-6 flex flex-col items-stretch justify-between gap-4 sm:mb-8 sm:flex-row sm:items-center">
+        <div className="min-w-0">
+          <h1 className="break-words text-2xl font-bold text-gray-900 sm:text-3xl">Catálogo de Clientes</h1>
           <p className="text-sm text-gray-500 mt-1">Gestión de clientes financieros y saldos</p>
         </div>
-        {sesion?.permisos.includes('CU01') && <button onClick={() => fijarNuevo(true)} className="px-4 py-2.5 bg-primary-600 text-white rounded-lg font-semibold inline-flex items-center gap-2"><Plus className="w-4 h-4"/>Crear cliente</button>}
+        {sesion?.permisos.includes('CU01') && <button onClick={() => fijarNuevo(true)} className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 font-semibold text-white sm:w-auto"><Plus className="h-4 w-4"/>Crear cliente</button>}
       </div>
 
-      {nuevo && <form onSubmit={guardar} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+      {nuevo && <form onSubmit={guardar} className="mb-8 grid grid-cols-1 gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6 md:grid-cols-3">
         <select aria-label="Tipo de cliente" className="px-3 py-2 border rounded-lg" value={formulario.tipo} onChange={e=>fijarFormulario({...formulario,tipo:e.target.value})}><option>B2B</option><option>B2C</option></select>
-        <input className="px-3 py-2 border rounded-lg" placeholder="RUT (opcional para B2C)" value={formulario.rut} onChange={e=>fijarFormulario({...formulario,rut:e.target.value})} onBlur={()=>fijarFormulario({...formulario,rut:formatearRut(formulario.rut)})}/>
+        <label className="text-sm"><span className="sr-only">RUT</span><input aria-invalid={rutInvalido} className="w-full rounded-lg border px-3 py-2" placeholder="RUT (opcional para B2C)" value={formulario.rut} onChange={e=>fijarFormulario({...formulario,rut:e.target.value})} onBlur={()=>fijarFormulario({...formulario,rut:formatearRutValido(formulario.rut)})}/>{rutInvalido&&<span className="mt-1 block text-xs text-red-600">RUT no válido</span>}</label>
         <input required className="px-3 py-2 border rounded-lg" placeholder="Nombre o Razón Social" value={formulario.nombre} onChange={e=>fijarFormulario({...formulario,nombre:e.target.value})}/>
         <input className="px-3 py-2 border rounded-lg" placeholder="Contacto" value={formulario.contacto} onChange={e=>fijarFormulario({...formulario,contacto:e.target.value})}/>
         <input type="email" className="px-3 py-2 border rounded-lg" placeholder="Correo" value={formulario.correo} onChange={e=>fijarFormulario({...formulario,correo:e.target.value})}/>
         <input className="px-3 py-2 border rounded-lg" placeholder="Teléfono" value={formulario.telefono} onChange={e=>fijarFormulario({...formulario,telefono:e.target.value})}/>
-        <div className="md:col-span-3 flex gap-3 items-center"><button disabled={guardando} className="px-4 py-2 bg-primary-600 text-white rounded-lg">{guardando?'Guardando…':'Guardar cliente'}</button><button type="button" onClick={()=>fijarNuevo(false)} className="px-4 py-2 border rounded-lg">Cancelar</button>{mensaje&&<span className="text-sm text-orange-700">{mensaje}</span>}</div>
+        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center md:col-span-3"><button disabled={guardando || rutInvalido || (formulario.tipo==='B2B'&&!formulario.rut.trim())} className="rounded-lg bg-primary-600 px-4 py-2 text-white disabled:opacity-50">{guardando?'Guardando…':'Guardar cliente'}</button><button type="button" onClick={()=>fijarNuevo(false)} className="rounded-lg border px-4 py-2">Cancelar</button>{mensaje&&<span className="text-sm text-orange-700">{mensaje}</span>}</div>
       </form>}
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+      <div className="mb-8 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+        <div className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
           <div className="relative w-full sm:max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
@@ -100,13 +96,13 @@ const CatalogoClientes: React.FC = () => {
             />
           </div>
 
-          <div className="flex gap-4 flex-wrap">
-            <select disabled={!sesion?.permisos.includes('CU07')} aria-label="Estado de clientes" value={estado} onChange={evento => fijarEstado(evento.target.value)} className="px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700">
+          <div className="grid w-full grid-cols-1 gap-3 sm:flex sm:w-auto sm:flex-wrap">
+            <select disabled={!sesion?.permisos.includes('CU07')} aria-label="Estado de clientes" value={estado} onChange={evento => fijarEstado(evento.target.value)} className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 sm:w-auto">
               <option value="activos">Activos</option><option value="inactivos">Inactivos</option><option value="todos">Todos</option>
             </select>
-            <select aria-label="Ordenar catálogo" value={ordenar} onChange={e=>fijarOrdenar(e.target.value)} className="px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700"><option value="nombre">Nombre</option><option value="rut">RUT</option><option value="saldo">Saldo</option></select>
-            <select aria-label="Dirección de orden" value={direccion} onChange={e=>fijarDireccion(e.target.value)} className="px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700"><option value="asc">Ascendente</option><option value="desc">Descendente</option></select>
-            <label className="flex items-center gap-3 cursor-pointer select-none bg-orange-50 px-4 py-2.5 rounded-lg border border-orange-100 hover:bg-orange-100 transition-colors">
+            <select aria-label="Ordenar catálogo" value={ordenar} onChange={e=>fijarOrdenar(e.target.value)} className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 sm:w-auto"><option value="nombre">Nombre</option><option value="rut">RUT</option><option value="saldo">Saldo</option></select>
+            <select aria-label="Dirección de orden" value={direccion} onChange={e=>fijarDireccion(e.target.value)} className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 sm:w-auto"><option value="asc">Ascendente</option><option value="desc">Descendente</option></select>
+            <label className="flex w-full cursor-pointer select-none items-center justify-center gap-3 rounded-lg border border-orange-100 bg-orange-50 px-4 py-2.5 transition-colors hover:bg-orange-100 sm:w-auto">
               <div className="relative">
                 <input
                   type="checkbox" disabled={!sesion?.permisos.includes('CU08')}
@@ -123,7 +119,7 @@ const CatalogoClientes: React.FC = () => {
               </span>
             </label>
 
-            <label className="flex items-center gap-3 cursor-pointer select-none bg-red-50 px-4 py-2.5 rounded-lg border border-red-100 hover:bg-red-100 transition-colors">
+            <label className="flex w-full cursor-pointer select-none items-center justify-center gap-3 rounded-lg border border-red-100 bg-red-50 px-4 py-2.5 transition-colors hover:bg-red-100 sm:w-auto">
               <div className="relative">
                 <input
                   type="checkbox" disabled={!sesion?.permisos.includes('CU08')}
@@ -145,7 +141,7 @@ const CatalogoClientes: React.FC = () => {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[860px] border-collapse text-left">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th className="py-4 px-6 font-semibold text-gray-600 text-sm">RUT</th>
@@ -187,7 +183,7 @@ const CatalogoClientes: React.FC = () => {
                         )}
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="whitespace-nowrap px-6 py-4 text-center">
                       <button
                         onClick={() => window.location.href = `/clientes/${encodeURIComponent(c.referencia)}`}
                         className="p-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors inline-flex"

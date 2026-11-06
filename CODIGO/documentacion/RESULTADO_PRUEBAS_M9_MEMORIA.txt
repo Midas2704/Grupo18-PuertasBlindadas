@@ -1,0 +1,17 @@
+▶ M9 CUT414-CUT433 motor parametrizable y privacidad de consulta/exportación
+  ✔ sin policy no trata y ownership externo queda DEPENDENCIA_OWNER (43.3607ms)
+  ✔ policy versionada afecta sólo su vigencia y universo (2.9688ms)
+  ✔ ANONYMIZE usa strategy explícita y correlación sólo autorizada (4.174ms)
+  ✔ PURGE excluye de consulta/export y no muta evidencia original (5.1207ms)
+  ✔ BLOCK impide tratamiento pero conserva almacenamiento (2.7159ms)
+  ✔ tratamiento deja evidencia terminal y elimina vínculos indirectos reidentificables (3.7063ms)
+  ✔ no existe operación de reconstrucción de identidad (0.2784ms)
+✔ M9 CUT414-CUT433 motor parametrizable y privacidad de consulta/exportación (66.632ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 469.5275
