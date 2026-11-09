@@ -1,0 +1,327 @@
+{
+  "estado": "PREVISUALIZACION_SIN_CONEXION_NI_ESCRITURAS",
+  "configuracion": {
+    "corte": "2026-10-21",
+    "meses": 36,
+    "semilla": 2704,
+    "version": 2
+  },
+  "desde": "2023-11",
+  "hasta": "2026-10",
+  "aniosCompletos": [
+    "2024",
+    "2025"
+  ],
+  "meses": [
+    {
+      "mes": "2023-11",
+      "cotizaciones": 16,
+      "ventas": 13,
+      "pagosCliente": 12,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2023-12",
+      "cotizaciones": 17,
+      "ventas": 11,
+      "pagosCliente": 10,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-01",
+      "cotizaciones": 8,
+      "ventas": 5,
+      "pagosCliente": 4,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-02",
+      "cotizaciones": 8,
+      "ventas": 6,
+      "pagosCliente": 6,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-03",
+      "cotizaciones": 10,
+      "ventas": 6,
+      "pagosCliente": 6,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-04",
+      "cotizaciones": 9,
+      "ventas": 5,
+      "pagosCliente": 4,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-05",
+      "cotizaciones": 12,
+      "ventas": 7,
+      "pagosCliente": 6,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-06",
+      "cotizaciones": 12,
+      "ventas": 8,
+      "pagosCliente": 8,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-07",
+      "cotizaciones": 10,
+      "ventas": 6,
+      "pagosCliente": 5,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-08",
+      "cotizaciones": 11,
+      "ventas": 6,
+      "pagosCliente": 5,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-09",
+      "cotizaciones": 14,
+      "ventas": 11,
+      "pagosCliente": 10,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-10",
+      "cotizaciones": 15,
+      "ventas": 10,
+      "pagosCliente": 9,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-11",
+      "cotizaciones": 18,
+      "ventas": 12,
+      "pagosCliente": 10,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2024-12",
+      "cotizaciones": 19,
+      "ventas": 14,
+      "pagosCliente": 12,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-01",
+      "cotizaciones": 10,
+      "ventas": 6,
+      "pagosCliente": 6,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-02",
+      "cotizaciones": 10,
+      "ventas": 6,
+      "pagosCliente": 5,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-03",
+      "cotizaciones": 12,
+      "ventas": 7,
+      "pagosCliente": 6,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-04",
+      "cotizaciones": 13,
+      "ventas": 9,
+      "pagosCliente": 9,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-05",
+      "cotizaciones": 14,
+      "ventas": 7,
+      "pagosCliente": 6,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-06",
+      "cotizaciones": 14,
+      "ventas": 8,
+      "pagosCliente": 6,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-07",
+      "cotizaciones": 15,
+      "ventas": 11,
+      "pagosCliente": 10,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-08",
+      "cotizaciones": 13,
+      "ventas": 8,
+      "pagosCliente": 7,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-09",
+      "cotizaciones": 16,
+      "ventas": 10,
+      "pagosCliente": 8,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-10",
+      "cotizaciones": 17,
+      "ventas": 14,
+      "pagosCliente": 12,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-11",
+      "cotizaciones": 17,
+      "ventas": 11,
+      "pagosCliente": 10,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2025-12",
+      "cotizaciones": 18,
+      "ventas": 12,
+      "pagosCliente": 11,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-01",
+      "cotizaciones": 9,
+      "ventas": 6,
+      "pagosCliente": 5,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-02",
+      "cotizaciones": 9,
+      "ventas": 5,
+      "pagosCliente": 5,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-03",
+      "cotizaciones": 11,
+      "ventas": 7,
+      "pagosCliente": 6,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-04",
+      "cotizaciones": 12,
+      "ventas": 6,
+      "pagosCliente": 5,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-05",
+      "cotizaciones": 13,
+      "ventas": 9,
+      "pagosCliente": 9,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-06",
+      "cotizaciones": 13,
+      "ventas": 8,
+      "pagosCliente": 7,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-07",
+      "cotizaciones": 11,
+      "ventas": 6,
+      "pagosCliente": 5,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-08",
+      "cotizaciones": 12,
+      "ventas": 8,
+      "pagosCliente": 8,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-09",
+      "cotizaciones": 15,
+      "ventas": 11,
+      "pagosCliente": 10,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    },
+    {
+      "mes": "2026-10",
+      "cotizaciones": 16,
+      "ventas": 10,
+      "pagosCliente": 9,
+      "comprasM5": 4,
+      "gastosCaja": 3
+    }
+  ],
+  "esperados": {
+    "clientes": 60,
+    "usuariosFicticiosSinAcceso": 7,
+    "materiales": 30,
+    "items": 13,
+    "proveedores": 15,
+    "cotizaciones": 474,
+    "notas": 310,
+    "pagosCliente": 276,
+    "periodosRemuneracion": 36,
+    "remuneraciones": 563,
+    "documentosProveedor": 149,
+    "categoriasEgreso": 7,
+    "esquemas": 7,
+    "honorariosPrestadores": 10,
+    "obras": 40
+  },
+  "limitaciones": [
+    "Cantidades previstas; no son registros insertados.",
+    "Los consumidores históricos M7 requieren validación PostgreSQL.",
+    "Usuarios ficticios sin credenciales ni permisos efectivos; no demuestran autenticación."
+  ]
+}

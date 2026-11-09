@@ -1,0 +1,14 @@
+import { CircleAlert, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { EncabezadoM7, EstadoDato, Periodo, ValorDato, estadoHumano, usarConsultaM7 } from './componentes';
+
+type Excepcion = { familia:string; ocurrio:string; magnitud:unknown; calidad:string; destino?:string; origen:string };
+
+export default function CentroAtencionM7(){
+ const q=usarConsultaM7('/dashboard-m7/centro-atencion');const excepciones=(q.datos?.excepciones||[]) as Excepcion[];const cobertura=(q.datos?.cobertura||[]) as Array<{familia:string;estado:string;detalle:string}>;
+ return <div className="min-h-full bg-gray-50"><EncabezadoM7 titulo="Centro de Atención Gerencial" descripcion="Excepciones objetivas que requieren revisión; sin score ni decisiones automáticas" regreso={q.global}/><Periodo anio={q.anio} mes={q.mes} cambiar={q.cambiar} cargando={q.cargando} recargar={q.recargar}/>
+ {q.error&&<p role="alert" className="border-y border-red-200 bg-red-50 px-5 py-4 text-red-800">{q.error}</p>}
+ <main className="mx-auto grid max-w-7xl gap-4 px-5 py-6 sm:px-8 lg:grid-cols-2">{!q.cargando&&!excepciones.length&&<div className="col-span-full rounded-lg border border-dashed border-gray-300 bg-white px-5 py-10 text-center text-sm text-gray-500">No existen excepciones visibles con las fuentes y permisos disponibles.</div>}{excepciones.map((item,indice)=><section key={`${item.familia}-${indice}`} className="rounded-lg border border-amber-200 bg-white p-5 shadow-sm"><div className="flex items-start gap-3"><span className="rounded-lg bg-amber-50 p-2 text-amber-700"><CircleAlert className="h-5 w-5"/></span><div className="min-w-0 flex-1"><p className="text-xs font-semibold uppercase text-amber-700">{item.familia.replaceAll('_',' ')}</p><h2 className="mt-1 font-bold text-gray-950">{item.ocurrio}</h2><p className="mt-1 text-xs text-gray-500">Origen: {item.origen} · {estadoHumano(item.calidad)}</p><div className="mt-4"><ValorDato valor={item.magnitud}/></div>{item.destino&&<Link to={item.destino} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-700 hover:underline">Revisar<ExternalLink className="h-4 w-4"/></Link>}</div></div></section>)}</main>
+ {!!cobertura.length&&<section className="mx-auto max-w-7xl px-5 pb-8 sm:px-8"><div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm"><h2 className="font-bold">Cobertura de información</h2><div className="mt-4 grid gap-3 md:grid-cols-2">{cobertura.map(item=><div key={item.familia} className="rounded-lg border border-gray-100 bg-gray-50 p-3"><div className="flex items-center justify-between gap-2"><strong className="text-sm">{item.familia.replaceAll('_',' ')}</strong><EstadoDato estado={item.estado} compacto/></div><p className="mt-2 text-xs leading-5 text-gray-500">{item.detalle}</p></div>)}</div></div></section>}
+ </div>;
+}

@@ -1,3 +1,4 @@
+import { notificarUsuario } from './DialogosSistema';
 import OperacionesFinancieras from './OperacionesFinancieras';
 import { solicitarFinanzas } from '../api/finanzas';
 import React, { useState } from 'react';
@@ -21,14 +22,14 @@ const ModalDetalleDocumento: React.FC<ModalDetalleDocumentoProps> = ({ activeMod
   const guardarGuia = async () => {
     if (!guiaEdit || !guiaFolio.trim()) return;
     const respuesta = await solicitarFinanzas(`/billing/guides/${guiaEdit.id_guia_despacho}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ folio: guiaFolio.trim(), antecedentes: guiaAntecedentes ? { texto: guiaAntecedentes } : undefined }) });
-    if (!respuesta.ok) { const error = await respuesta.json(); window.alert(error.error || 'No se pudo modificar la guía'); return; }
+    if (!respuesta.ok) { const error = await respuesta.json(); void notificarUsuario(error.error || 'No se pudo modificar la guía'); return; }
     window.location.reload();
   };
 
   const registrarDocumentoExterno = async () => {
     const ids = (documentoExterno.idsNotas || String(activeModal.data.id_nota_venta)).split(',').map(valor=>Number(valor.trim())).filter(Number.isSafeInteger);
     const respuesta = await solicitarFinanzas('/billing/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tipo_documento:documentoExterno.tipo,folio:documentoExterno.folio,fecha_emision:documentoExterno.fechaEmision,fecha_vencimiento:documentoExterno.fechaVencimiento||undefined,monto_neto:Number(documentoExterno.montoNeto),monto_impuesto:Number(documentoExterno.montoImpuesto),monto_total:Number(documentoExterno.montoTotal),respaldo:documentoExterno.respaldo,observacion:documentoExterno.observacion,ids_notas_venta:ids})});
-    const resultado=await respuesta.json(); if(!respuesta.ok){window.alert(resultado.error||'No se pudo registrar el documento');return;} window.location.reload();
+    const resultado=await respuesta.json(); if(!respuesta.ok){void notificarUsuario(resultado.error||'No se pudo registrar el documento');return;} window.location.reload();
   };
 
   return (
@@ -60,7 +61,7 @@ const ModalDetalleDocumento: React.FC<ModalDetalleDocumentoProps> = ({ activeMod
                 (activeModal.data.estado_cotizacion === 'rechazada' || activeModal.data.estado_nota_venta === 'anulada') ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
               }`}>{activeModal.tipo === 'cotizacion' ? activeModal.data.estado_cotizacion : String(activeModal.data.estadoNotaVentaVisible || activeModal.data.estado_nota_venta).replaceAll('_',' ')}</span>
             </div>
-            {activeModal.tipo === 'nota_venta' && <div><span className="text-gray-500 block text-xs">Estado de pago</span><span className={`font-semibold uppercase text-xs px-2 py-0.5 rounded ${activeModal.data.estadoPago === 'pagada' ? 'bg-green-100 text-green-700' : activeModal.data.estadoPago === 'parcial' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}`}>{['anulada','revertida_total'].includes(activeModal.data.estado_nota_venta) ? 'Sin obligación' : activeModal.data.estadoPago || activeModal.data.estado_pago}</span></div>}
+            {activeModal.tipo === 'nota_venta' && <div><span className="text-gray-500 block text-xs">Estado de pago</span><span className={`font-semibold uppercase text-xs px-2 py-0.5 rounded ${activeModal.data.estadoPago === 'pagada' ? 'bg-green-100 text-green-700' : activeModal.data.estadoPago === 'parcial' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}`}>{['anulada','revertida_total'].includes(activeModal.data.estado_nota_venta) ? 'Sin obligación' : activeModal.data.estadoPago || activeModal.data.estado_pago}</span>{Number(activeModal.data.diasAtrasoPagoFinal)>0&&<span className="ml-2 rounded bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">{activeModal.data.diasAtrasoPagoFinal} días de atraso</span>}</div>}
             <div><span className="text-gray-500 block text-xs">Tipo Producto</span><span className="font-medium">{activeModal.data.detalle_cotizacion?.[0]?.item_comercial?.nombre_item || '—'}</span></div>
             {activeModal.data.observacion && activeModal.data.observacion !== 'PENDIENTE_APROBACION' && (
               <div className="col-span-3"><span className="text-gray-500 block text-xs">Observación</span><span>{activeModal.data.observacion}</span></div>
@@ -263,9 +264,9 @@ const ModalDetalleDocumento: React.FC<ModalDetalleDocumentoProps> = ({ activeMod
                           body: JSON.stringify({ id_nota_venta: activeModal.data.id_nota_venta, tipo_documento: 'guia_despacho', folio: input.value })
                         });
                         const data = await res.json();
-                        if (res.ok) { alert('Guía de Despacho vinculada correctamente'); input.value = ''; }
-                        else { alert(data.error || 'Error al vincular Guía'); }
-                      } catch (e) { alert('Error de conexión'); }
+                        if (res.ok) { void notificarUsuario('Guía de Despacho vinculada correctamente'); input.value = ''; }
+                        else { void notificarUsuario(data.error || 'Error al vincular Guía'); }
+                      } catch (e) { void notificarUsuario('Error de conexión'); }
                     }} className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors">Vincular</button>
                   </div>
                   {guias.map((guia: any) => <div key={guia.id_guia_despacho} className="mt-3 p-2 bg-blue-50 rounded text-sm"><div className="flex justify-between"><span>Guía {guia.folio}</span><button className="text-blue-700 font-medium" onClick={() => { setGuiaEdit(guia); setGuiaFolio(guia.folio); setGuiaAntecedentes(guia.antecedentes?.texto || ''); }}>Editar/Modificar</button></div>{guiaEdit?.id_guia_despacho === guia.id_guia_despacho && <div className="mt-2 space-y-2"><input className="w-full border rounded p-2" value={guiaFolio} onChange={e=>setGuiaFolio(e.target.value)} placeholder="Folio vigente"/><textarea className="w-full border rounded p-2" value={guiaAntecedentes} onChange={e=>setGuiaAntecedentes(e.target.value)} placeholder="Antecedentes permitidos"/><button className="px-3 py-1.5 bg-primary-600 text-white rounded" onClick={guardarGuia}>Guardar cambios</button></div>}</div>)}

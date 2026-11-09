@@ -1,0 +1,96 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Usuario/s" id="N74ZDRGVvXKo12sCRmuD">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Opr75cB7nUim8kHn2Huj-1" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="280" width="560" x="120" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-2" parent="Opr75cB7nUim8kHn2Huj-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="240" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-3" parent="Opr75cB7nUim8kHn2Huj-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font&gt;Generando comprobante de pago&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="210" x="50" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-4" parent="Opr75cB7nUim8kHn2Huj-1" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="410" y="178.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-5" parent="Opr75cB7nUim8kHn2Huj-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="387.5" y="235.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-6" edge="1" parent="Opr75cB7nUim8kHn2Huj-1" source="Opr75cB7nUim8kHn2Huj-7" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="Opr75cB7nUim8kHn2Huj-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="161" y="134.5" as="sourcePoint" />
+            <mxPoint x="-75" y="385" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-7" parent="Opr75cB7nUim8kHn2Huj-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font&gt;Consultando detalle de&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;div&gt;&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font&gt;pago de cliente&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="190" x="345" y="75.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-8" parent="Opr75cB7nUim8kHn2Huj-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;fontFamily=Times New Roman;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="270" y="71.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-9" edge="1" parent="Opr75cB7nUim8kHn2Huj-1" source="Opr75cB7nUim8kHn2Huj-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="Opr75cB7nUim8kHn2Huj-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="114.5" as="sourcePoint" />
+            <mxPoint x="270" y="101.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-10" parent="Opr75cB7nUim8kHn2Huj-1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Gerencia&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="-70" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Opr75cB7nUim8kHn2Huj-11" edge="1" parent="Opr75cB7nUim8kHn2Huj-1" source="Opr75cB7nUim8kHn2Huj-10" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" target="Opr75cB7nUim8kHn2Huj-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="231.5" as="sourcePoint" />
+            <mxPoint x="130" y="181.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-1" parent="1" style="swimlane;startSize=0;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="280" width="560" x="120" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-2" parent="s0w5cu-endFaKcS05vDT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Sistema Financiero" vertex="1">
+          <mxGeometry height="30" width="120" x="240" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-3" parent="s0w5cu-endFaKcS05vDT-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font&gt;Generando comprobante de pago&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="210" x="50" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-4" parent="s0w5cu-endFaKcS05vDT-1" style="shape=datastore;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="410" y="178.5" as="geometry" />
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-5" parent="s0w5cu-endFaKcS05vDT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="Base de Datos Compartida" vertex="1">
+          <mxGeometry height="50" width="105" x="387.5" y="235.5" as="geometry" />
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-6" edge="1" parent="s0w5cu-endFaKcS05vDT-1" source="s0w5cu-endFaKcS05vDT-7" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="s0w5cu-endFaKcS05vDT-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="161" y="134.5" as="sourcePoint" />
+            <mxPoint x="-75" y="385" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-7" parent="s0w5cu-endFaKcS05vDT-1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;" value="&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font&gt;Consultando detalle de&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;div&gt;&lt;span lang=&quot;EN-US&quot; style=&quot;font-size: 9.5pt; line-height: 115%;&quot;&gt;&lt;font&gt;pago de cliente&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="190" x="345" y="75.5" as="geometry" />
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-8" parent="s0w5cu-endFaKcS05vDT-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;fontFamily=Times New Roman;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="270" y="71.5" as="geometry" />
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-9" edge="1" parent="s0w5cu-endFaKcS05vDT-1" source="s0w5cu-endFaKcS05vDT-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;startArrow=open;startFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Times New Roman;" target="s0w5cu-endFaKcS05vDT-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="114.5" as="sourcePoint" />
+            <mxPoint x="270" y="101.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-10" parent="s0w5cu-endFaKcS05vDT-1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Times New Roman;" value="&lt;span id=&quot;docs-internal-guid-6227c3a3-7fff-f8b4-8ce1-3b7eace0fcd0&quot;&gt;&lt;span style=&quot;font-size: 9.5pt; background-color: transparent; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Usuario Contador&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="-70" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s0w5cu-endFaKcS05vDT-11" edge="1" parent="s0w5cu-endFaKcS05vDT-1" source="s0w5cu-endFaKcS05vDT-10" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;" target="s0w5cu-endFaKcS05vDT-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="231.5" as="sourcePoint" />
+            <mxPoint x="130" y="181.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

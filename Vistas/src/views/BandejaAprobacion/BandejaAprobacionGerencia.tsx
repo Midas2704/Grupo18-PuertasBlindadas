@@ -1,3 +1,4 @@
+import { confirmarAccion, notificarUsuario, solicitarTexto } from '../../components/DialogosSistema';
 import { solicitarFinanzas } from '../../api/finanzas';
 import React, { useState, useEffect } from 'react';
 import { Check, X, AlertTriangle, Edit2 } from 'lucide-react';
@@ -69,7 +70,7 @@ const BandejaAprobacionGerencia: React.FC = () => {
 
     try {
       const endpoint = tipo === 'quotes' ? `/billing/quotes/${id}/accept-b2b` : `/billing/${tipo}/${id}/approve`;
-      const folioOrdenCompra = tipo === 'quotes' ? window.prompt('Folio de la Orden de Compra B2B:') : '';
+      const folioOrdenCompra = tipo === 'quotes' ? await solicitarTexto('Folio de la Orden de Compra B2B:') : '';
       if (tipo === 'quotes' && !folioOrdenCompra) { setApprovingQuoteId(null); return; }
       const res = await solicitarFinanzas(endpoint, {
         method: 'POST',
@@ -105,17 +106,17 @@ const BandejaAprobacionGerencia: React.FC = () => {
       const hasPayments = item.estado_pago !== 'pendiente' || (item.asignacion_pago_cliente && item.asignacion_pago_cliente.length > 0);
 
       if (hasFactura || hasPayments) {
-        const folio = window.prompt('Venta facturada o con pagos registrados. Ingrese folio de Nota de Crédito SII:');
+        const folio = await solicitarTexto('Venta facturada o con pagos registrados. Ingrese folio de Nota de Crédito SII:');
         if (!folio || folio.trim() === '') {
-          alert('Acción denegada por cumplimiento tributario');
+          void notificarUsuario('Acción denegada por cumplimiento tributario');
           return;
         }
         folioNotaCredito = folio.trim();
       } else {
-        if (!window.confirm('¿Está seguro de rechazar/anular este documento?')) return;
+        if (!await confirmarAccion('¿Está seguro de rechazar/anular este documento?')) return;
       }
     } else {
-      if (!window.confirm('¿Está seguro de rechazar este documento?')) return;
+      if (!await confirmarAccion('¿Está seguro de rechazar este documento?')) return;
     }
 
     try {
@@ -144,7 +145,7 @@ const BandejaAprobacionGerencia: React.FC = () => {
       setMensaje({ text: e.message, type: 'error' });
     }
   };
-  const reactivar = async (id:number) => { const fecha=window.prompt('Nueva fecha de vigencia AAAA-MM-DD'); if(!fecha)return; const r=await solicitarFinanzas(`/billing/quotes/${id}/reactivar`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fechaVigencia:fecha})}); const d=await r.json(); setMensaje({text:r.ok?'Cotización reactivada':d.error,type:r.ok?'success':'error'}); if(r.ok){fetchPendientes();fetchHistory();} };
+  const reactivar = async (id:number) => { const fecha=await solicitarTexto('Nueva fecha de vigencia AAAA-MM-DD'); if(!fecha)return; const r=await solicitarFinanzas(`/billing/quotes/${id}/reactivar`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fechaVigencia:fecha})}); const d=await r.json(); setMensaje({text:r.ok?'Cotización reactivada':d.error,type:r.ok?'success':'error'}); if(r.ok){fetchPendientes();fetchHistory();} };
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
@@ -259,6 +260,7 @@ const BandejaAprobacionGerencia: React.FC = () => {
                       <td className="py-3 px-6 text-sm">
                         <div className="font-semibold text-gray-800">{cot.ficha_cliente?.cliente_financiero?.rut_cliente}</div>
                         <div className="text-gray-500">{cot.ficha_cliente?.cliente_financiero?.nombre_razon_social_referencia || 'N/A'}</div>
+                        {cot.advertenciaStock&&<span title={cot.advertenciaStock.materiales.map((m:any)=>`${m.material||m.sku}: requiere ${m.requerido}, disponible ${m.disponibilidadFutura}`).join('\n')} className="mt-1 inline-flex items-center gap-1 rounded bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800"><AlertTriangle className="h-3 w-3"/>Revisar stock</span>}
                       </td>
                       <td className="py-3 px-6 text-sm">{new Date(cot.fecha_emision).toLocaleDateString('es-CL', { timeZone: 'UTC' })}</td>
                       <td className="py-3 px-6 font-medium text-orange-600">${Number(cot.monto_total_estimado).toLocaleString('es-CL')}</td>

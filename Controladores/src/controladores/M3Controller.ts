@@ -5,17 +5,8 @@ import { prisma } from '../db';
 import { ErrorAplicacion } from '../utilidades/ErrorAplicacion';
 import { calcularNota, incluirNota, incluirPago, efectoPago, fechaNegocio, sincronizarEstadoPago } from '../utilidades/finanzas';
 import { BancoCentral, C_BancoCentral } from '../utilidades/C_BancoCentral';
-
-const textoPdf = (valor: unknown) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7E]/g,'?').replace(/([\\()])/g,'\\$1');
-function crearPdf(lineas: string[]) {
-  const instrucciones = ['BT','/F1 18 Tf','50 790 Td',`(${textoPdf(lineas[0])}) Tj`,'/F1 11 Tf',...lineas.slice(1).flatMap(linea => ['0 -24 Td',`(${textoPdf(linea)}) Tj`]),'ET'].join('\n');
-  const objetos = ['', '<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Kids [3 0 R] /Count 1 >>', '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>', `<< /Length ${Buffer.byteLength(instrucciones,'latin1')} >>\nstream\n${instrucciones}\nendstream`, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>'];
-  let salida = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n'; const posiciones = [0];
-  for(let indice=1;indice<objetos.length;indice++) { posiciones[indice]=Buffer.byteLength(salida,'latin1'); salida += `${indice} 0 obj\n${objetos[indice]}\nendobj\n`; }
-  const inicioXref = Buffer.byteLength(salida,'latin1');
-  salida += `xref\n0 ${objetos.length}\n0000000000 65535 f \n${posiciones.slice(1).map(posicion=>`${String(posicion).padStart(10,'0')} 00000 n `).join('\n')}\ntrailer\n<< /Size ${objetos.length} /Root 1 0 R >>\nstartxref\n${inicioXref}\n%%EOF\n`;
-  return Buffer.from(salida,'latin1');
-}
+import { archivoComprobantePagoM3 } from '../m3/comprobantePagoPdf';
+import { reducirCompromisoPorPago } from '../utilidades/creditoM8';
 
 /** M3 CU42–CU58: pagos, reversas, saldos a favor y conciliación. */
 export class M3Controller {
@@ -42,6 +33,7 @@ export class M3Controller {
       if(idDocumento&&!await tx.documento_tributario_nota_venta.findUnique({where:{id_documento_tributario_id_nota_venta:{id_documento_tributario:idDocumento,id_nota_venta:idNota}}}))throw new ErrorAplicacion(400,'El documento tributario no está relacionado con la Nota de Venta');
       const catalogo={medios:await tx.medio_pago.findMany({where:{estado_medio_pago:'activo'}}),categorias:await tx.categoria_pago.findMany({where:{activo:true}}),cuotas:await tx.config_cuotas_tarjeta.findMany({where:{activo:true}})};
       const pago=await tx.pago_cliente.create({data:prepararPago(nota,datosEntrada,catalogo,idDocumento,responsable)});
+      await reducirCompromisoPorPago(tx, pago.id_pago_cliente, idNota, pago.monto_pago);
       const calculo=await this.recalcularSaldo(tx,idNota);
       return {mensaje:'Pago registrado',idPago:pago.id_pago_cliente,...calculo};
     },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable});
@@ -49,7 +41,7 @@ export class M3Controller {
 
   async recalcularSaldo(tx:Prisma.TransactionClient,idNota:number) {
     const nota=await tx.nota_venta.findUniqueOrThrow({where:{id_nota_venta:idNota},include:incluirNota});
-    // CU50: actualizamos el estado del pago; el comercial se queda como está.
+    // MIDAS: una reversa cambia el pago, no el estado comercial acordado para la venta.
     return sincronizarEstadoPago(tx,nota);
   }
   async procesarExcedente(tx:Prisma.TransactionClient,idNota:number,idReversion:number,entrada:Record<string,unknown>) {
@@ -158,14 +150,7 @@ export class M3Controller {
     const rut = cliente.rut_cliente?.trim(); const nombre = cliente.nombre_razon_social_referencia?.trim();
     const medio = pago.medio_pago.nombre_medio_pago?.trim(); const moneda = pago.moneda.codigo_moneda?.trim();
     if (!rut || !nombre || !pago.fecha_pago || !medio || !moneda || !pago.monto_pago.gt(0)) throw new ErrorAplicacion(409,'El pago no tiene todos los antecedentes obligatorios para generar el comprobante');
-    const adicionales = [
-      pago.categoria_pago?.nombre ? `Categoria: ${pago.categoria_pago.nombre}` : '',
-      pago.cantidad_cuotas ? `Cuotas: ${pago.cantidad_cuotas}` : '',
-      pago.asignacion_pago_cliente?.documento_tributario ? `Documento: ${pago.asignacion_pago_cliente.documento_tributario.folio_documento}` : '',
-      pago.observacion ? `Observacion: ${pago.observacion}` : '',
-    ].filter(Boolean);
-    const pdf = crearPdf(['Comprobante de pago',`Pago: ${idPago}`,`RUT cliente: ${rut}`,`Cliente: ${nombre}`,`Fecha: ${pago.fecha_pago.toISOString().slice(0,10)}`,`Medio: ${medio}`,`Monto: ${pago.monto_pago.toString()}`,`Moneda: ${moneda}`,`Monto vigente: ${pago.montoEfectivo}`,`Estado: ${pago.anulacion_pago?'Anulado':pago.reversion_pago.length?'Con reversion':pago.estado_verificacion}`,...adicionales]).toString('base64');
-    return { nombre: `comprobante-pago-${idPago}.pdf`, contenido: `data:application/pdf;base64,${pdf}` };
+    return archivoComprobantePagoM3(pago);
   }
 
   async conciliarPago(idPago: number, entrada: Record<string, unknown>, responsable: string) {

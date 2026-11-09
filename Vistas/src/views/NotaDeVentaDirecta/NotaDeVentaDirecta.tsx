@@ -1,3 +1,4 @@
+import { confirmarAccion } from '../../components/DialogosSistema';
 import { solicitarFinanzas } from '../../api/finanzas';
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Calculator, User, DollarSign, Percent, Shield, ChevronDown } from 'lucide-react';
@@ -96,7 +97,7 @@ const NotaDeVentaDirecta: React.FC = () => {
     if (!lineas.length || lineas.some(linea => linea.cantidad <= 0 || linea.valor <= 0)) return setMensaje({ text: 'Agrega al menos una línea con cantidad y valor mayor a cero.', type: 'error' });
     if (Math.abs(lineas.reduce((suma, linea) => suma + linea.cantidad * linea.valor, 0) - montoBase) > 0.01) return setMensaje({ text: 'El detalle comercial no coincide con el monto neto.', type: 'error' });
     if (moneda === 'USD' && (!(Number(tipoCambio) > 0) || (tipoCambioOrigen !== 'Banco Central' && tipoCambioOrigen !== 'manual'))) return setMensaje({ text: 'Confirma un tipo de cambio USD/CLP válido.', type: 'error' });
-    if (!window.confirm(`¿Confirmas registrar la Nota de Venta por ${moneda} ${totalFinal.toLocaleString('es-CL')}?`)) return;
+    if (!await confirmarAccion(`¿Confirmas registrar la Nota de Venta por ${moneda} ${totalFinal.toLocaleString('es-CL')}?`)) return;
 
     setLoading(true);
     try {
